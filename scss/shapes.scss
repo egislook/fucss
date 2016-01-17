@@ -1,0 +1,86 @@
+$triangleSize: 8px;
+
+.triangle{
+    &:after, &:before{
+        content: '';
+        display: block;
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-style: solid;
+    }
+    &.triangle-tl{
+        &:after{
+            top: $triangleSize;
+            left: -($triangleSize*2);
+            border-color: transparent #fff transparent transparent;
+            border-width: $triangleSize + 1;
+        }
+        &:before{
+            top: $triangleSize + 1;
+            left: -($triangleSize*2);
+            border-color: transparent rgba(130,130,130,0.2) transparent transparent;
+            border-width: $triangleSize;
+        }
+    }
+    &.triangle-rb{
+        &:after{
+            bottom: -(($triangleSize*2) + 1);
+            right: ($triangleSize*2);
+            border-color: #f9f9f9 transparent transparent transparent;
+            border-width: $triangleSize + 1;
+        }
+        &:before{
+            bottom: -(($triangleSize*2) + 3);
+            right: ($triangleSize*2);
+            border-color: rgba(130,130,130,0.2) transparent transparent transparent;
+            border-width: $triangleSize;
+        }
+    }
+    &.triangle-tr{
+        &:after{
+            top: -($triangleSize*2);
+            right: ($triangleSize*2);
+            border-color: transparent transparent #f9f9f9 transparent;
+            border-width: $triangleSize + 1;
+        }
+        &:before{
+            top: -(($triangleSize*2) + 1);
+            right: ($triangleSize*2);
+            border-color: transparent transparent rgba(130,130,130,0.2) transparent;
+            border-width: $triangleSize;
+        }
+    }
+}
+
+$radioSize: 10px;
+
+input[type="radio"].second {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+    width: 0 !important;
+    height: 0;
+}
+input[type="radio"].second + span {
+    @extend .brd-grey;
+    @extend .dsp-inline;
+    @extend .brd-rad-50;
+    width: $radioSize;
+    height: $radioSize;
+}
+input[type="radio"].second:checked + span {
+    @extend .pdg-1px;
+    @extend .pos-relative;
+    width: $radioSize - 2;
+    height: $radioSize - 2;
+    &:after{
+        left: 1px;
+        content: '';
+        @extend .pos-absolute;
+        width: $radioSize - 2;
+        height: $radioSize - 2;
+        @extend .brd-rad-50;
+        @extend .bg-second;
+    }
+}

@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css?family=Abel');
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,300,600');
+
+// Screens
+$screen-sm: 400px;
+$screen-md: 860px;
+$screen-lg: 1000px;
+$screen-xl: 1280px;
+
+$headerHeight: 64px;
+
+$duration: 0.1s;
+$trans-duration: 0.08s;
+
+//default values
+$brd-default: ' solid 1px';
+$font-main: 'Open Sans';
+
+$base-font-size: 16;
+$md-base-font-size: 19;
+$sm-base-font-size: 20;
+
+//padding margin sizes
+$prc : (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+$em : (1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 200);
+$px : (10, 20, 30, 40, 50);
+
+$w-prc : (100, 98, 96, 94, 92, 90, 50);
+$w-px : (5, 10, 20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900);
+
+//font sizes
+$fnt-size : (
+    xs: 70,
+    sm: 90,
+    md: 110,
+    lg: 130,
+    xl: 150,
+    xxl: 200,
+    xxxl: 250
+);
+ 
+// Colours
+$shade1: 8;
+$shade2: 12;
+$shade3: 16;
+
+
+$clr-white: #ffffff;
+$clr-black: #262626;
+$clr-grey: #DADADA;
+
+
+$clr-main: #353B8F;
+$clr-second: #2cab8f;
+
+$clr-yellow: #ffcb05;
+$clr-green: #79B22E;
+$clr-blue: #4581d2;
+$clr-red: #d42b2b;
+$clr-navy: #49474E;
+
+$clr-twitter: #5AACF2;
+$clr-facebook: #3C599C;
+$clr-google: #D8503D;
+
+$ptrn-sky: url('http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/broken_noise.png');
+
+$clr : (
+    white: $clr-white,
+    black: $clr-black,
+    grey : $clr-grey,
+
+    main: $clr-main,
+    second: $clr-second,
+    
+    yellow: $clr-yellow,
+    green:  $clr-green,
+    blue:   $clr-blue,
+    red:    $clr-red,
+    navy:   $clr-navy,
+
+    twitter: $clr-twitter,
+    facebook: $clr-facebook,
+    google: $clr-google,
+    
+    blackl1: lighten($clr-black, $shade1),
+    blackl2: lighten($clr-black, $shade2),
+    blackl3: lighten($clr-black, $shade3),
+    blackd1: darken($clr-black, $shade1),
+    blackd2: darken($clr-black, $shade2),
+    blackd3: darken($clr-black, $shade3),
+
+    navyl1: lighten($clr-navy, $shade1),
+    navyl2: lighten($clr-navy, $shade2),
+    navyl3: lighten($clr-navy, $shade3),
+    navyd1: darken($clr-navy, $shade1),
+    navyd2: darken($clr-navy, $shade2),
+    navyd3: darken($clr-navy, $shade3),
+    
+    greyl1: lighten($clr-grey, $shade1),
+    greyl2: lighten($clr-grey, $shade2),
+    greyl3: lighten($clr-grey, $shade3),
+    greyd1: darken($clr-grey, $shade1),
+    greyd2: darken($clr-grey, $shade2),
+    greyd3: darken($clr-grey, $shade3),
+
+    mainl1: lighten($clr-main, $shade1),
+    mainl2: lighten($clr-main, $shade2),
+    mainl3: lighten($clr-main, $shade3),
+    maind1: darken($clr-main, $shade1),
+    maind2: darken($clr-main, $shade2),
+    maind3: darken($clr-main, $shade3),
+
+    secondl1: lighten($clr-second, $shade1),
+    secondl2: lighten($clr-second, $shade2),
+    secondl3: lighten($clr-second, $shade3),
+    secondd1: darken($clr-second, $shade1),
+    secondd2: darken($clr-second, $shade2),
+    secondd3: darken($clr-second, $shade3),
+    
+    yellowl1: lighten($clr-yellow, $shade1),
+    yellowl2: lighten($clr-yellow, $shade2),
+    yellowl3: lighten($clr-yellow, $shade3),
+    yellowd1: darken($clr-yellow, $shade1),
+    yellowd2: darken($clr-yellow, $shade2),
+    yellowd3: darken($clr-yellow, $shade3),
+    
+    greenl1: lighten($clr-green, $shade1),
+    greenl2: lighten($clr-green, $shade2),
+    greenl3: lighten($clr-green, $shade3),
+    greend1: darken($clr-green, $shade1),
+    greend2: darken($clr-green, $shade2),
+    greend3: darken($clr-green, $shade3),
+    
+    bluel1: lighten($clr-blue, $shade1),
+    bluel2: lighten($clr-blue, $shade2), 
+    bluel3: lighten($clr-blue, $shade3), 
+    blued1: darken($clr-blue, $shade1),
+    blued2: darken($clr-blue, $shade2),
+    blued3: darken($clr-blue, $shade3),
+    
+    redl1: lighten($clr-red, $shade1),
+    redl2: lighten($clr-red, $shade2),
+    redl3: lighten($clr-red, $shade3),
+    redd1: darken($clr-red, $shade1),
+    redd2: darken($clr-red, $shade2),
+    redd3: darken($clr-red, $shade3),
+);

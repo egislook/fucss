@@ -1,0 +1,64 @@
+@function px($number) {
+  @return $number * 1px;
+}
+
+@function em($px, $base: $base-font-size) {
+  @return ($px / $base) * 1em;
+}
+
+@function constructName($nameStructure, $value, $type: '.', $seperator: '-'){
+  $name: nth($nameStructure, 1);
+  $valueName: nth($value,1);
+  $end: '';
+  $val: '';
+  
+  @if(length($nameStructure) > 1){ $end: nth($nameStructure, 2); }
+  @if(length($nameStructure) == 3){ $val: nth($value,2); }
+  
+  $nameStructue: $type+$name+$seperator+$valueName+$val+$end;
+  @return $nameStructue;
+}
+
+@function constructType($type){
+  @if $type == 'class'{
+    $type : '.';
+  } @else if $type == 'hold'{
+    $type : '%';
+  } @else if $type == 'id'{
+    $type : '#';
+  }
+  @return $type;
+}
+
+@mixin mx_set($val, $nm, $prp : color, $unit : '', $type : class, $prpAdd : ''){
+  
+  
+  $nm: constructName($nm, $val, constructType($type));
+  
+  @if(type-of($val) == list) {
+    $val : nth($val, 2);
+  }
+  
+  @if($unit == 'em'){
+    $val : #{em($val)}#{$prpAdd};
+  } @else {
+    $val : #{$val}#{$unit}#{$prpAdd};
+  }
+  
+  #{$nm}{
+    @if(type-of($prp) == list){
+        @each $prop in $prp{
+          #{$prop} : $val;
+        }
+    } @else {
+        #{$prp} : $val;
+    }
+  }
+  
+}
+
+@mixin mx_loop($arr, $n, $prp : color, $unit : '', $type : class, $prpAdd : ''){
+  @each $val in $arr {
+    @include mx_set($val, $n, $prp, $unit, $type, $prpAdd);
+  }
+}
