@@ -1,0 +1,19 @@
+{
+  "name": "fcss-generator",
+  "version": "0.0.1",
+  "private": false,
+  "engines": {
+    "node": "4.2.5"
+  },
+  "dependencies": {
+    "async": "latest",
+    "lodash": "latest",
+    "request": "latest",
+    "node-sass": "^3.3.3",
+    "nodemon": "latest"
+  },
+  "scripts": {
+    "start": "nodemon index.js",
+    "nodemon": "nodemon --debug --ignore 'public/**/*.js' -e js,scss index.js"
+  }
+}
