@@ -5,21 +5,27 @@ var lodash = require('lodash');
 var defaultSass = 'style.scss';
 var defaultDir = '../examples/';
 var endpointFile = './test.css';
-var acceptedExtensions = ['html'];
+var acceptedExtensions = ['html', 'js'];
 
 var properties = {
-  //pdg: 'padding',
-  //mrg: 'margin',
+  pdg: 'padding',
+  mrg: 'margin',
   clr: 'color',
   bg: 'background',
-  //txt: 'text',
-  //brd: 'border',
-  //dsp: 'display',
-  //pos: 'position',
-  //h: 'height',
-  //w: 'width',
-  //fnt: 'font',
+  txt: 'text',
+  brd: 'border',
+  dsp: 'display',
+  pos: 'position',
+  h: 'height',
+  w: 'width',
+  fnt: 'font',
+  flt:  'float',
+  vlgn: 'vertical-align',
+  hlgn: 'text-align',
+  col: 'width',
 };
+
+var ignore = ['fa', 'tb', 'fix', 'trans', 'cursor', 'wrap', 'tr'];
 
 
 var addons = {
@@ -33,9 +39,13 @@ var addons = {
 
 var values = {
   greyd1: '#ffcb05',
-  blackl3: '#ajsdas',
+  blackl3: '#f24543',
   cc: 'center center',
-}
+  bot: 'bottom',
+  c: 'center',
+  r: 'right',
+  l: 'left',
+};
 
 
 var allClassList = loadHtmlFilesFromDir(defaultDir);
@@ -46,11 +56,17 @@ allClassList.forEach(function(className){
   var splitedClassName = className.split('-');
   
   var key   = splitedClassName.shift();
+  
+  if(ignore.indexOf(key) !== -1){
+    return;
+  }
+  
+  
   var value = !!splitedClassName.length && splitedClassName.pop();
   var addon = splitedClassName.shift();
   
   if(!properties[key]){
-    //console.log('missing class => ', key);
+    console.log('missing class => ', key);
     return;
   }
   
