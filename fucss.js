@@ -65,11 +65,17 @@ function generateStyling(){
       var addon = splitedClassName.shift();
       
       if(!properties[key]){
-        console.log('missing class => ', key);
+        //console.log('missing class => ', key);
         return;
       }
       
-      value = values[value] || value;
+      switch(key){
+        case 'bg':
+        case 'clr':
+          value = values[value] || '#'+value;
+        break;
+      }
+      
       key = properties[key];
       addon = addons[addon] && ('-' + addons[addon]);
       
@@ -83,6 +89,7 @@ function generateStyling(){
         + ';} \n';
     });
   
+  console.log(cssString);
   document.getElementsByTagName("style")[0].innerHTML = cssString;
   
   return true;
