@@ -85,6 +85,8 @@ window.onload=function(){
 function generateStyling(){
   
   var cssString = '';
+  var cssMediaQueries = {};
+  
   harvestClassesFromOneFile(document.body.outerHTML)
     .forEach(function(className){
   
@@ -105,6 +107,11 @@ function generateStyling(){
       
       
       var value = !!splitedClassName.length && splitedClassName.pop();
+      
+      if(!value){
+        return;
+      }
+      
       var addon = splitedClassName.shift();
       
       /*if(!properties[key]){
@@ -136,17 +143,28 @@ function generateStyling(){
       
       var cssRule = '.' + className + '{' 
         + property + ':' + value 
-      + ';}';
+      + ';}\n';
         
+      console.log(mediaQuery, cssRule);
         
       if(mediaQuery){
-        cssRule = '@media only screen and (min-width: ' + media[mediaQuery] + 'px) {' + cssRule + '}';
+        cssMediaQueries[mediaQuery] = cssMediaQueries[mediaQuery] ? (cssMediaQueries[mediaQuery] + cssRule) : cssRule;
+      } else {
+        cssString += cssRule;
       }
       
-      cssString = cssString + cssRule + '\n';
+    });
+    
+  //cssRule = '@media only screen and (min-width: ' + media[mediaQuery] + 'px) {' + cssRule + '}';
+  console.log(cssMediaQueries);
+  
+  //sets media queries at the end
+  Object.keys(cssMediaQueries).length 
+    && Object.keys(cssMediaQueries).forEach(function(mediaName){
+      cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {' + cssMediaQueries[mediaName] + '}'
     });
   
-  //console.log(cssString);
+  console.log(cssString);
   document.getElementsByTagName("style")[0].innerHTML = cssString;
   
   return true;
