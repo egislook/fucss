@@ -62,6 +62,7 @@ var values = {
   td: 'table-cell',
   tr: 'table-row',
   tb: 'table',
+  no: 0,
 };
 
 
