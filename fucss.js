@@ -10,6 +10,7 @@ var media = {
 }
 
 var properties = {
+  bs: 'border-sizing',
   pdg: 'padding',
   mrg: 'margin',
   clr: 'color',
@@ -29,6 +30,7 @@ var properties = {
   r: 'right',
   b: 'bottom',
   l: 'left',
+  of: 'overflow',
 };
 
 var ignore = ['fa', 'tb', 'fix', 'trans', 'cursor', 'wrap', 'tr'];
@@ -46,6 +48,7 @@ var addons = {
 
 
 var values = {
+  bb: 'border-box',
   greyd1: '#ffcb05',
   blackl3: '#f24543',
   bot: 'bottom',
@@ -63,6 +66,8 @@ var values = {
   tr: 'table-row',
   tb: 'table',
   no: 0,
+  hid: 'hidden',
+  vis: 'visible',
 };
 
 
