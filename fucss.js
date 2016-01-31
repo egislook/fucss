@@ -14,7 +14,7 @@ var properties = {
   mrg: 'margin',
   clr: 'color',
   bg: 'background',
-  txt: 'text',
+  txt: 'text-align',
   brd: 'border',
   dsp: 'display',
   pos: 'position',
@@ -52,10 +52,16 @@ var values = {
   c: 'center',
   r: 'right',
   l: 'left',
+  t: 'top',
+  b: 'bottom',
   rel: 'relative',
   abs: 'absolute',
   fix: 'fixed',
   inh: 'inherit',
+  tc: 'table-cell',
+  td: 'table-cell',
+  tr: 'table-row',
+  tb: 'table',
 };
 
 
@@ -89,10 +95,10 @@ function generateStyling(){
       var value = !!splitedClassName.length && splitedClassName.pop();
       var addon = splitedClassName.shift();
       
-      if(!properties[key]){
+      /*if(!properties[key]){
         //console.log('missing class => ', key);
         return;
-      }
+      }*/
       
       switch(key){
         case 'bg':
