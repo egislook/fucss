@@ -91,6 +91,10 @@ function generateStyling(){
         break;
       }
       
+      if(value.indexOf('pc')){
+        value = value.replace('pc', '%');
+      }
+      
       key = properties[key];
       addon = addons[addon] && ('-' + addons[addon]);
       
@@ -106,7 +110,7 @@ function generateStyling(){
         
         
       if(mediaQuery){
-        cssRule = '@media only screen and (min-width: ' + media[mediaQuery] + 'px) {' + cssRule + '};';
+        cssRule = '@media only screen and (min-width: ' + media[mediaQuery] + 'px) {' + cssRule + '}';
       }
       
       cssString = cssString + cssRule + '\n';
