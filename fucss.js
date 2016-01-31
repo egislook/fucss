@@ -41,6 +41,7 @@ var addons = {
   l: 'left',
   pos: 'position',
   rad: 'radius',
+  fml: 'family',
 };
 
 
