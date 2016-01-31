@@ -1,5 +1,14 @@
 var watch = 5000;
 
+var sign = '-';
+
+var media = {
+  'mbl': 480,
+  'tbt': 768,
+  'lpt': 1024,
+  'dsk': 1280,
+}
+
 var properties = {
   pdg: 'padding',
   mrg: 'margin',
@@ -52,12 +61,18 @@ function generateStyling(){
   harvestClassesFromOneFile(document.body.innerHTML)
     .forEach(function(className){
   
-      var splitedClassName = className.split('-');
+      var splitedClassName = className.split(sign);
       
       var key = splitedClassName.shift();
+      var mediaQuery = null;
       
       if(ignore.indexOf(key) !== -1){
         return;
+      }
+      
+      if(Object.keys(media).indexOf(key) !== -1){
+        mediaQuery = key;
+        key = splitedClassName.shift();
       }
       
       
@@ -82,14 +97,22 @@ function generateStyling(){
       var property = addon 
         ? key + addon
         : key;
+        
+      console.log(mediaQuery);
       
-      cssString = cssString 
-        + '.' + className + '{' 
-          + property + ':' + value 
-        + ';} \n';
+      var cssRule = '.' + className + '{' 
+        + property + ':' + value 
+      + ';}';
+        
+        
+      if(mediaQuery){
+        cssRule = '@media only screen and (min-width: ' + media[mediaQuery] + 'px) {' + cssRule + '};';
+      }
+      
+      cssString = cssString + cssRule + '\n';
     });
   
-  console.log(cssString);
+  //console.log(cssString);
   document.getElementsByTagName("style")[0].innerHTML = cssString;
   
   return true;
