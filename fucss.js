@@ -79,6 +79,7 @@ function generateStyling(){
         return;
       }
       
+      
       if(Object.keys(media).indexOf(key) !== -1){
         mediaQuery = key;
         key = splitedClassName.shift();
@@ -105,13 +106,11 @@ function generateStyling(){
       }
       
       key = properties[key];
-      addon = addons[addon] && ('-' + addons[addon]);
+      addon = addon ? addons[addon] && ('-' + addons[addon]) || ('-' + addon) : addon;
       
       var property = addon 
         ? key + addon
         : key;
-        
-      console.log(mediaQuery);
       
       var cssRule = '.' + className + '{' 
         + property + ':' + value 
