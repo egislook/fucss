@@ -107,6 +107,10 @@ function generateStyling(){
         break;
       }
       
+      if(values[value]){
+        value = values[value];
+      }
+      
       if(value.indexOf('pc')){
         value = value.replace('pc', '%');
       }
