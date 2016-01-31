@@ -10,7 +10,7 @@ var media = {
 }
 
 var properties = {
-  bs: 'border-sizing',
+  bs: 'box-sizing',
   pdg: 'padding',
   mrg: 'margin',
   clr: 'color',
