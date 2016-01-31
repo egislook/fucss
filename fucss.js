@@ -57,6 +57,7 @@ var values = {
   l: 'left',
   t: 'top',
   b: 'bottom',
+  m: 'middle',
   rel: 'relative',
   abs: 'absolute',
   fix: 'fixed',
