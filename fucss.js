@@ -51,6 +51,10 @@ var values = {
   c: 'center',
   r: 'right',
   l: 'left',
+  rel: 'relative',
+  abs: 'absolute',
+  fix: 'fixed',
+  inh: 'inherit',
 };
 
 
