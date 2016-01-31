@@ -85,8 +85,7 @@ window.onload=function(){
 function generateStyling(){
   
   var cssString = '';
-  
-  harvestClassesFromOneFile(document.body.innerHTML)
+  harvestClassesFromOneFile(document.body.outerHTML)
     .forEach(function(className){
   
       var splitedClassName = className.split(sign);
