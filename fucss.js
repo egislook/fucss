@@ -31,6 +31,10 @@ var properties = {
   b: 'bottom',
   l: 'left',
   of: 'overflow',
+  lh: 'line-height',
+  crs: 'cursor',
+  dec: 'text-decoration',
+  
 };
 
 var ignore = ['fa', 'tb', 'fix', 'trans', 'cursor', 'wrap', 'tr'];
@@ -58,6 +62,7 @@ var values = {
   t: 'top',
   b: 'bottom',
   m: 'middle',
+  clr: 'color',
   rel: 'relative',
   abs: 'absolute',
   fix: 'fixed',
@@ -69,6 +74,7 @@ var values = {
   no: 0,
   hid: 'hidden',
   vis: 'visible',
+  pnt: 'pointer',
 };
 
 
@@ -122,7 +128,7 @@ function generateStyling(){
         value = value.replace('pc', '%');
       }
       
-      key = properties[key];
+      key = properties[key] || key;
       addon = addon ? addons[addon] && ('-' + addons[addon]) || ('-' + addon) : addon;
       
       var property = addon 
