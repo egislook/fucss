@@ -25,6 +25,10 @@ var properties = {
   vlgn: 'vertical-align',
   hlgn: 'text-align',
   col: 'width',
+  t: 'top',
+  r: 'right',
+  b: 'bottom',
+  l: 'left',
 };
 
 var ignore = ['fa', 'tb', 'fix', 'trans', 'cursor', 'wrap', 'tr'];
@@ -36,13 +40,13 @@ var addons = {
   b: 'bottom',
   l: 'left',
   pos: 'position',
+  rad: 'radius',
 };
 
 
 var values = {
   greyd1: '#ffcb05',
   blackl3: '#f24543',
-  cc: 'center center',
   bot: 'bottom',
   c: 'center',
   r: 'right',
