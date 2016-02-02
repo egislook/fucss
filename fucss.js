@@ -6,10 +6,16 @@ var seps = {
 }
 
 var media = {
-  'mbl': 480,
-  'tbt': 768,
-  'lpt': 1024,
-  'dsk': 1280,
+  mbl: 480,
+  tbt: 768,
+  lpt: 1024,
+  dsk: 1280,
+}
+
+var states = {
+  hov: 'hover',
+  act: 'active',
+  foc: 'focus',
 }
 
 var properties = {
@@ -112,9 +118,12 @@ function generateStyling(){
       
       var props = splitedClassName.shift().split(seps.space);
       var mediaQuery = extractMediaQuery(props);
+      var state = extractState(props);
       
       var value = splitedClassName.pop();
       var prop = props.shift();
+      
+      console.log(prop, props, state, value);
       
       if(!prop || !value){return}
       if(ignore.indexOf(prop) !== -1){return}
@@ -125,7 +134,7 @@ function generateStyling(){
       props = modifyProps(props);
       prop = combineProps(prop, props);
       
-      var cssRule = generateCssRule(className, prop, value);
+      var cssRule = generateCssRule(className, prop, value, state);
       
       mediaQuery
         ? cssMediaQueries[mediaQuery] = cssMediaQueries[mediaQuery] ? (cssMediaQueries[mediaQuery] + cssRule) : cssRule
@@ -169,6 +178,13 @@ function extractMediaQuery(props){
   }
 }
 
+function extractState(props){
+  var stateValue = props.length && props[0];
+  if(Object.keys(states).indexOf(stateValue) !== -1){
+    return states[props.shift()];
+  }
+}
+
 function modifyValue(value, prop){
   
   
@@ -195,6 +211,7 @@ function combineProps(prop, props){
   return prop.join('-');
 }
 
-function generateCssRule(className, prop, value){
+function generateCssRule(className, prop, value, state){
+  state ? className += (':' + state) : false;
   return '.' + className+ '{' + prop + ':' + value + ';}\n';
 }
