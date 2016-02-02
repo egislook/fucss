@@ -1,6 +1,9 @@
 var watch = 5000;
 
-var sign = '-';
+var seps = {
+  'value': '_',
+  'space': '-',
+}
 
 var media = {
   'mbl': 480,
@@ -34,10 +37,14 @@ var properties = {
   lh: 'line-height',
   crs: 'cursor',
   dec: 'text-decoration',
-  
+  tb: 'table',
+   // added by me
+  idx: 'z-index',
+  op: 'opacity',
+  tran: 'text-transform',
 };
 
-var ignore = ['fa', 'tb', 'fix', 'trans', 'cursor', 'wrap', 'tr'];
+var ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap'];
 
 
 var addons = {
@@ -48,6 +55,14 @@ var addons = {
   pos: 'position',
   rad: 'radius',
   fml: 'family',
+   // added by me
+  sz: 'size',
+  rd: 'radius',
+  w: 'width',
+  clr: 'color',
+  stl: 'style',
+  lyt: 'layout',
+  wg: 'weight',
 };
 
 
@@ -75,6 +90,8 @@ var values = {
   hid: 'hidden',
   vis: 'visible',
   pnt: 'pointer',
+  // added by me
+  ib: 'inline-block',
 };
 
 
@@ -86,82 +103,40 @@ function generateStyling(){
   
   var cssString = '';
   var cssMediaQueries = {};
+  var cssMissing = [];
   
   harvestClassesFromOneFile(document.body.outerHTML)
     .forEach(function(className){
   
-      var splitedClassName = className.split(sign);
+      var splitedClassName = className.split(seps.value);
       
-      var key = splitedClassName.shift();
-      var mediaQuery = null;
+      var props = splitedClassName.shift().split(seps.space);
+      var mediaQuery = extractMediaQuery(props);
       
-      if(ignore.indexOf(key) !== -1){
-        return;
-      }
+      var value = splitedClassName.pop();
+      var prop = props.shift();
       
-      
-      if(Object.keys(media).indexOf(key) !== -1){
-        mediaQuery = key;
-        key = splitedClassName.shift();
-      }
+      if(!prop || !value){return}
+      if(ignore.indexOf(prop) !== -1){return}
+      if(!properties[prop]){cssMissing.concat([prop])}
       
       
-      var value = !!splitedClassName.length && splitedClassName.pop();
+      value = modifyValue(value, prop);
+      props = modifyProps(props);
+      prop = combineProps(prop, props);
       
-      if(!value){
-        return;
-      }
+      var cssRule = generateCssRule(className, prop, value);
       
-      var addon = splitedClassName.shift();
-      
-      /*if(!properties[key]){
-        //console.log('missing class => ', key);
-        return;
-      }*/
-      
-      switch(key){
-        case 'bg':
-        case 'clr':
-          value = values[value] || '#'+value;
-        break;
-      }
-      
-      if(values[value]){
-        value = values[value];
-      }
-      
-      if(value.indexOf('pc')){
-        value = value.replace('pc', '%');
-      }
-      
-      key = properties[key] || key;
-      addon = addon ? addons[addon] && ('-' + addons[addon]) || ('-' + addon) : addon;
-      
-      var property = addon 
-        ? key + addon
-        : key;
-      
-      var cssRule = '.' + className + '{' 
-        + property + ':' + value 
-      + ';}\n';
-        
-      console.log(mediaQuery, cssRule);
-        
-      if(mediaQuery){
-        cssMediaQueries[mediaQuery] = cssMediaQueries[mediaQuery] ? (cssMediaQueries[mediaQuery] + cssRule) : cssRule;
-      } else {
-        cssString += cssRule;
-      }
+      mediaQuery
+        ? cssMediaQueries[mediaQuery] = cssMediaQueries[mediaQuery] ? (cssMediaQueries[mediaQuery] + cssRule) : cssRule
+        : cssString += cssRule;
       
     });
-    
-  //cssRule = '@media only screen and (min-width: ' + media[mediaQuery] + 'px) {' + cssRule + '}';
-  console.log(cssMediaQueries);
   
   //sets media queries at the end
   Object.keys(cssMediaQueries).length 
     && Object.keys(cssMediaQueries).forEach(function(mediaName){
-      cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {' + cssMediaQueries[mediaName] + '}'
+      cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}'
     });
   
   console.log(cssString);
@@ -182,4 +157,44 @@ function harvestClassesFromOneFile(string){
   }
   
   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+}
+
+
+// from class to css rule
+
+function extractMediaQuery(props){
+  var mediaValue = props.length && props[0];
+  if(Object.keys(media).indexOf(mediaValue) !== -1){
+    return props.shift();
+  }
+}
+
+function modifyValue(value, prop){
+  
+  
+  if(new RegExp(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i).test('#' + value)){ return '#' + value }
+  
+  if(values[value]){ return values[value] }
+  if(value.indexOf('pc') !== -1 ){ return value.replace('pc', '%') }
+  
+  return value;
+}
+
+function modifyProps(props){
+  var combinedProps = [];
+  props.forEach(function(prop){
+    combinedProps.push(addons[prop] || prop)
+  });
+  
+  return combinedProps;
+}
+
+function combineProps(prop, props){
+  prop = properties[prop] || prop;
+  prop = [prop].concat(props);
+  return prop.join('-');
+}
+
+function generateCssRule(className, prop, value){
+  return '.' + className+ '{' + prop + ':' + value + ';}\n';
 }
