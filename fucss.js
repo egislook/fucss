@@ -123,11 +123,12 @@ function generateStyling(){
       var value = splitedClassName.pop();
       var prop = props.shift();
       
-      console.log(prop, props, state, value);
+      //console.log(prop, props, state, value);
       
-      if(!prop || !value){return}
+      if(!value){return console.warn('No value specified. Use value seperator ' + seps.value + ' for ' + className)}
+      if(!prop){return console.warn('No prop specified. Use prop seperator ' + seps.space + ' for ' + className)}
       if(ignore.indexOf(prop) !== -1){return}
-      if(!properties[prop]){cssMissing.concat([prop])}
+      if(!properties[prop]){cssMissing = cssMissing.concat([prop])}
       
       
       value = modifyValue(value, prop);
@@ -148,8 +149,10 @@ function generateStyling(){
       cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}'
     });
   
-  console.log(cssString);
+  //console.log(cssString);
   document.getElementsByTagName("style")[0].innerHTML = cssString;
+  
+  if(cssMissing.length){console.warn('Used as full prop [ ' + cssMissing + ' ]')}
   
   return true;
 }
