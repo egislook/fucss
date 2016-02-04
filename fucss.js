@@ -57,6 +57,8 @@ var properties = {
 
 var ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap'];
 
+var groups = ['tb', 'rl'];
+
 
 var addons = {
   t: 'top',
@@ -137,8 +139,8 @@ function generateStyling(){
       
       //console.log(prop, props, state, value);
       
-      if(!value){return console.warn('No value specified. Use value seperator ' + seps.value + ' for ' + className)}
-      if(!prop){return console.warn('No prop specified. Use prop seperator ' + seps.space + ' for ' + className)}
+      if(!value){return console.warn('No value specified. Use value seperator ' + seps.value + ' for "' + className + '"')}
+      if(!prop){return console.warn('No prop specified. Use prop seperator ' + seps.space + ' for "' + className + '"')}
       if(ignore.indexOf(prop) !== -1){return}
       if(!properties[prop]){cssMissing = cssMissing.concat([prop])}
       
@@ -147,7 +149,7 @@ function generateStyling(){
       props = modifyProps(props);
       prop = combineProps(prop, props);
       
-      var cssRule = generateCssRule(className, prop, value, state);
+      var cssRule = generateCssRule(className, prop, props, value, state);
       
       mediaQuery
         ? cssMediaQueries[mediaQuery] = cssMediaQueries[mediaQuery] ? (cssMediaQueries[mediaQuery] + cssRule) : cssRule
@@ -221,12 +223,30 @@ function modifyProps(props){
 }
 
 function combineProps(prop, props){
-  prop = properties[prop] || prop;
+  return prop = properties[prop] || prop;
   prop = [prop].concat(props);
   return prop.join('-');
 }
 
-function generateCssRule(className, prop, value, state){
+function generateCssRule(className, prop, props, value, state){
+  
+  var firstAddon = props.length && props[0];
+  var isGroup = groups.indexOf(firstAddon) !== -1;
+  
   state ? className += (':' + state) : false;
-  return '.' + className+ '{' + prop + ':' + value + ';}\n';
+  var rules = '';
+  
+  if(!isGroup){
+    prop = [prop].concat(props).join('-');
+    rules = prop + ':' + value + ';';
+  }
+  
+  if(isGroup){
+    firstAddon.split('').forEach(function(char){
+      rules += prop + '-' + addons[char] + ':' + value + ';';
+    });
+  }
+  
+  return '.' + className+ '{' + rules + '}\n';
+  
 }
