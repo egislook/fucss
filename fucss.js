@@ -48,6 +48,11 @@ var properties = {
   idx: 'z-index',
   op: 'opacity',
   tran: 'text-transform',
+  mh: 'min-height',
+  mxw: 'max-width',
+  mxh: 'max-height',
+  mnw: 'min-width',
+  mnh: 'mib-height',
 };
 
 var ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap'];
@@ -69,6 +74,7 @@ var addons = {
   stl: 'style',
   lyt: 'layout',
   wg: 'weight',
+  upc: 'uppercase',
 };
 
 
@@ -98,6 +104,7 @@ var values = {
   pnt: 'pointer',
   // added by me
   ib: 'inline-block',
+  blk: 'block',
 };
 
 
@@ -108,7 +115,12 @@ window.onload=function(){
 function generateStyling(){
   
   var cssString = '';
-  var cssMediaQueries = {};
+  var cssMediaQueries = {
+    mbl: [],
+    tbt: [],
+    lpt: [],
+    dsk: [],
+  };
   var cssMissing = [];
   
   harvestClassesFromOneFile(document.body.outerHTML)
@@ -146,7 +158,7 @@ function generateStyling(){
   //sets media queries at the end
   Object.keys(cssMediaQueries).length 
     && Object.keys(cssMediaQueries).forEach(function(mediaName){
-      cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}'
+      cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n'
     });
   
   //console.log(cssString);
