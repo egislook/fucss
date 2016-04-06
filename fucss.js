@@ -84,6 +84,8 @@ var properties = {
   nw: 'min-width',
   td: 'text-decoration',
   z: 'z-index',
+  fl: 'float',
+  cl: 'clear',
   
 };
 
@@ -163,6 +165,7 @@ var values = {
   // added by me
   ib: 'inline-block',
   blk: 'block',
+  cl: 'clear',
   
   //version 4
   hd: 'hidden',
@@ -174,6 +177,7 @@ var values = {
   sd: 'solid',
   ts: 'transparent',
   np: 'nowrap',
+  bt: 'both',
 };
 
 
@@ -302,8 +306,8 @@ function modifyValue(valueList, prop){
     if(unit && (unit.length === 3 || unit.length === 2)){
       value = value.replace(unit, '');
       
-      if(unit.indexOf('pc') !== -1 ) return value + '%';
       if(unit.indexOf('n') !== -1) value = -value;
+      if(unit.indexOf('pc') !== -1 ) return value + '%';
       return value + unit.replace('n', '');
     }
     return value;
