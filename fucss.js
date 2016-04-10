@@ -1,4 +1,4 @@
-var watch = 5000;
+var watch = 0;
 
 var seps = {
   'value': ':',
@@ -56,7 +56,7 @@ var properties = {
   mxw: 'max-width',
   mxh: 'max-height',
   mnw: 'min-width',
-  mnh: 'mib-height',
+  mnh: 'min-height',
   
   ls: 'list-style',
   ltrs: 'letter-spacing',
@@ -86,10 +86,11 @@ var properties = {
   z: 'z-index',
   fl: 'float',
   cl: 'clear',
-  
+  sh: 'box-shadow',
+  tr: 'text-transform',
 };
 
-var ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap'];
+var ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
 
 //version 4
 var colorazable = [
@@ -133,6 +134,8 @@ var addons = {
   //version 4
   c: 'color',
   s: 'style',
+  rp: 'repeat',
+  ps: 'position',
 };
 
 
@@ -178,6 +181,11 @@ var values = {
   ts: 'transparent',
   np: 'nowrap',
   bt: 'both',
+  fx: 'fixed',
+  cv: 'cover',
+  uc: 'uppercase',
+  rp: 'no-repeat',
+  nrp: 'no-repeat',
 };
 
 
@@ -214,9 +222,8 @@ function generateStyling(){
       var prop = props.shift();
       
       //console.log(prop, props, state, value);
-      
-      
-      if(ignore.indexOf(prop) !== -1){return}
+      if(Object.keys(properties).indexOf(prop) === -1 && prop.indexOf(',') === -1){return}
+      //if(ignore.indexOf(prop) !== -1){return}
       if(!value){return console.warn('No value specified. Use value seperator ' + seps.value + ' for "' + className + '"')}
       if(!prop){return console.warn('No prop specified. Use prop seperator ' + seps.space + ' for "' + className + '"')}
       if(!properties[prop]){cssMissing = cssMissing.concat([prop])}
@@ -240,7 +247,7 @@ function generateStyling(){
     });
   
   //console.log(cssString);
-  document.getElementsByTagName("style")[0].innerHTML = cssString;
+  document.getElementsByTagName("style")[0].innerHTML = cssString + document.getElementsByTagName("style")[0].innerHTML;
   
   if(cssMissing.length){console.warn('Used as full prop [ ' + cssMissing + ' ]')}
   
