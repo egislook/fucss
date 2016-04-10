@@ -1,3 +1,10 @@
+#FUCSS stand alone version  
+
+Fucss css static predefined class list by tag (0.5.0)
+https://cdn.rawgit.com/noneedsystem/fucss/0.5.0/fucss.js
+
+```javascript
+
 var states = {
   hov: 'hover',
   act: 'active',
@@ -70,3 +77,5 @@ var properties = {
   sh: 'box-shadow',
   tr: 'text-transform',
 };
+
+```
