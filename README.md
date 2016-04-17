@@ -1,7 +1,7 @@
 #FUCSS stand alone version  
 
-Fucss css static predefined class list by tag (0.5.1)
-https://cdn.rawgit.com/noneedsystem/fucss/0.5.1/fucss.js
+Fucss css static predefined class list by tag (0.5.2)
+https://cdn.rawgit.com/noneedsystem/fucss/0.5.2/fucss.js
 
 ```javascript
 
