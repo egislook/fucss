@@ -5,7 +5,29 @@ https://cdn.rawgit.com/noneedsystem/fucss/0.5.1/fucss.js
 
 ```javascript
 
-var states = {
+// set fucss.init = false and fucss will not initiate after document is loaded
+
+// function fucss.generateStyling(html, returnStyle) lets you to initate style rendering in js
+// u can pass 2 props to this function
+// html lets you to pass htmlString
+// returnStyle lets you to get back the cssString instead of inserting automatically to your html header
+
+fucss.watch = 0;
+fucss.init = true;
+
+fucss.seps = {
+  'value': ':',
+  'space': '-',
+  'target': '_',
+};
+
+fucss.media = {
+  sm: 480,
+  md: 768,
+  lg: 1024,
+};
+
+fucss.states = {
   hov: 'hover',
   act: 'active',
   foc: 'focus',
@@ -15,7 +37,7 @@ var states = {
   fc: 'focus',
 };
 
-var properties = {
+fucss.properties = {
   bs: 'box-sizing',
   pdg: 'padding',
   mrg: 'margin',
@@ -78,7 +100,53 @@ var properties = {
   tr: 'text-transform',
 };
 
-var values = {
+//version 4
+fucss.colorazable = [
+  'color', 
+  'background', 
+  'background-color', 
+  'border', 
+  'border-color', 
+  'border-bottom',
+  'border-top',,
+  'border-left',
+  'border-right',
+  'border-right-color',
+  'border-left-color',
+  'border-top-color',
+  'border-bottom-color',
+];
+
+fucss.units = ['px', 'em', 'pc', 'vh', 'vw']; 
+
+fucss.groups = ['tb', 'rl'];
+
+fucss.addons = {
+  t: 'top',
+  r: 'right',
+  b: 'bottom',
+  l: 'left',
+  pos: 'position',
+  rad: 'radius',
+  fml: 'family',
+   // added by me
+  sz: 'size',
+  rd: 'radius',
+  w: 'width',
+  clr: 'color',
+  stl: 'style',
+  lyt: 'layout',
+  wg: 'weight',
+  upc: 'uppercase',
+  //version 4
+  c: 'color',
+  s: 'style',
+  rp: 'repeat',
+  ps: 'position',
+};
+
+
+fucss.values = {
   bb: 'border-box',
   greyd1: '#ffcb05',
   blackl3: '#f24543',

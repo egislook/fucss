@@ -1,23 +1,21 @@
-var watch = 0;
+var fucss = {};
 
-var seps = {
+fucss.watch = 0;
+fucss.init = true;
+
+fucss.seps = {
   'value': ':',
   'space': '-',
   'target': '_',
 };
 
-var media = {
-  mbl: 480,
-  tbt: 768,
-  lpt: 1024,
-  dsk: 1280,
-  
+fucss.media = {
   sm: 480,
   md: 768,
   lg: 1024,
 };
 
-var states = {
+fucss.states = {
   hov: 'hover',
   act: 'active',
   foc: 'focus',
@@ -27,7 +25,7 @@ var states = {
   fc: 'focus',
 };
 
-var properties = {
+fucss.properties = {
   bs: 'box-sizing',
   pdg: 'padding',
   mrg: 'margin',
@@ -90,10 +88,10 @@ var properties = {
   tr: 'text-transform',
 };
 
-var ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
+fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
 
 //version 4
-var colorazable = [
+fucss.colorazable = [
   'color', 
   'background', 
   'background-color', 
@@ -109,12 +107,11 @@ var colorazable = [
   'border-bottom-color',
 ];
 
-var units = ['px', 'em', 'pc', 'vh', 'vw']; 
+fucss.units = ['px', 'em', 'pc', 'vh', 'vw']; 
 
-var groups = ['tb', 'rl'];
+fucss.groups = ['tb', 'rl'];
 
-
-var addons = {
+fucss.addons = {
   t: 'top',
   r: 'right',
   b: 'bottom',
@@ -139,7 +136,7 @@ var addons = {
 };
 
 
-var values = {
+fucss.values = {
   bb: 'border-box',
   greyd1: '#ffcb05',
   blackl3: '#f24543',
@@ -190,47 +187,47 @@ var values = {
 
 
 window.onload=function(){
-  generateStyling() && watch && setInterval(generateStyling, watch);
+  fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
+  fucss.init && fucss.generateStyling();
 };
 
-function generateStyling(){
+fucss.generateStyling = function(html, returnStyle){
   
   var cssString = '';
   var cssMediaQueries = {
-    mbl: [],
-    tbt: [],
-    lpt: [],
-    dsk: [],
+    sm: [],
+    md: [],
+    lg: []
   };
   var cssMissing = [];
   
-  harvestClassesFromOneFile(document.body.outerHTML)
+  harvestClassesFromOneFile(html || document.body.outerHTML)
     .forEach(function(className){
       
-      var target = className.split(seps.target);
+      var target = className.split(fucss.seps.target);
       
-      var splitedClassName = target.shift().split(seps.value);
+      var splitedClassName = target.shift().split(fucss.seps.value);
       
       //props
-      var props = splitedClassName.shift().split(seps.space);
+      var props = splitedClassName.shift().split(fucss.seps.space);
       var mediaQuery = extractMediaQuery(props);
       var state = extractState(props);
       
-      //values
+      //fucss.values
       
       var value = splitedClassName.pop();
       var prop = props.shift();
       
       //console.log(prop, props, state, value);
-      if(Object.keys(properties).indexOf(prop) === -1 && prop.indexOf(',') === -1){return}
-      //if(ignore.indexOf(prop) !== -1){return}
-      if(!value){return console.warn('No value specified. Use value seperator ' + seps.value + ' for "' + className + '"')}
-      if(!prop){return console.warn('No prop specified. Use prop seperator ' + seps.space + ' for "' + className + '"')}
-      if(!properties[prop]){cssMissing = cssMissing.concat([prop])}
+      if(Object.keys(fucss.properties).indexOf(prop) === -1 && prop.indexOf(',') === -1){return}
+      //if(fucss.ignore.indexOf(prop) !== -1){return}
+      if(!value){return console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"')}
+      if(!prop){return console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"')}
+      if(!fucss.properties[prop]){cssMissing = cssMissing.concat([prop])}
       
       prop = combineProps(prop, props);
       props = modifyProps(props);
-      value = modifyValue(value.split(seps.space), prop);
+      value = modifyValue(value.split(fucss.seps.space), prop);
       
       var cssRule = generateCssRule(className, prop, props, value, state, target);
       
@@ -240,156 +237,161 @@ function generateStyling(){
       
     });
   
-  //sets media queries at the end
+  //sets fucss.media queries at the end
   Object.keys(cssMediaQueries).length 
     && Object.keys(cssMediaQueries).forEach(function(mediaName){
-      cssString += '@media only screen and (min-width: ' + media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
+      cssString += '@media only screen and (min-width: ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
     });
   
   //console.log(cssString);
-  document.getElementsByTagName("style")[0].innerHTML = cssString + document.getElementsByTagName("style")[0].innerHTML;
+  if(!returnStyle){
+    document.getElementsByTagName("style")[0].innerHTML = cssString + document.getElementsByTagName("style")[0].innerHTML;
+  }else{
+    return cssString;
+  }
   
   if(cssMissing.length){console.warn('Used as full prop [ ' + cssMissing + ' ]')}
   
-  return true;
-}
-
-function harvestClassesFromOneFile(string){
-  
-  var myRegexp = (/class="(.*?)"/gi);
-  var myArray;
-  var allHarvestedClassNames = [];
-  
-  while ((myArray = myRegexp.exec(string)) !== null) {
-    var harvestedClassNames = myArray[0].split('"')[1].split(' ');
-    allHarvestedClassNames = allHarvestedClassNames.concat(harvestedClassNames);
-  }
-  
-  return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
-}
-
-
-// from class to css rule
-
-function extractMediaQuery(props){
-  var mediaValue = props.length && props[0];
-  if(Object.keys(media).indexOf(mediaValue) !== -1){
-    return props.shift();
-  }
-}
-
-function extractState(props){
-  var stateValue = props.length && props[0];
-  if(Object.keys(states).indexOf(stateValue) !== -1){
-    return states[props.shift()];
-  }
-}
-
-function modifyValue(valueList, prop){
-  //console.log(prop, value);
-  
-  //console.log(prop, );
-  valueList = valueList.map(function(value){
-    if(colorazable.indexOf(prop) !== -1){
-      
-      //alpha hunter
-      var alpha = 1;
-      var length = value.length;
-      if((length === 5 || length === 8) && (value.lastIndexOf('a') === 3 || value.lastIndexOf('a') === 6)){
-        alpha = value.substring(length-2);
-        value = value.replace(alpha, '');
-        alpha = '0.' + alpha.replace('a', '');
-      }
-      
-      //color hunter
-      if(new RegExp(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i).test('#' + value)){
-        return hex2rgb(value, alpha);
-      }
+  function harvestClassesFromOneFile(string){
+    
+    var myRegexp = (/class="(.*?)"/gi);
+    var myArray;
+    var allHarvestedClassNames = [];
+    
+    while ((myArray = myRegexp.exec(string)) !== null) {
+      var harvestedClassNames = myArray[0].split('"')[1].split(' ');
+      allHarvestedClassNames = allHarvestedClassNames.concat(harvestedClassNames);
     }
     
-    if(values[value]){ return values[value] }
-    
-    var unit = value.replace(/\d/g, '');
-    if(unit && (unit.length === 3 || unit.length === 2)){
-      value = value.replace(unit, '');
-      
-      if(unit.indexOf('n') !== -1) value = -value;
-      if(unit.indexOf('pc') !== -1 ) return value + '%';
-      return value + unit.replace('n', '');
+    return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+  }
+  
+  
+  // from class to css rule
+  
+  function extractMediaQuery(props){
+    var mediaValue = props.length && props[0];
+    if(Object.keys(fucss.media).indexOf(mediaValue) !== -1){
+      return props.shift();
     }
-    return value;
-  });
+  }
   
+  function extractState(props){
+    var stateValue = props.length && props[0];
+    if(Object.keys(fucss.states).indexOf(stateValue) !== -1){
+      return fucss.states[props.shift()];
+    }
+  }
   
-  
-  
-  return valueList.join(' ');
-}
-
-function modifyProps(props){
-  var combinedProps = [];
-  props.forEach(function(prop){
-    combinedProps.push(addons[prop] || prop);
-  });
-  
-  return combinedProps;
-}
-
-function combineProps(prop, props){
-  return prop = properties[prop] || prop;
-  prop = [prop].concat(props);
-  return prop.join('-');
-}
-
-function generateCssRule(className, prop, props, value, state, target){
-  
-  className = className.replace(':', '\\:');
-  
-  var firstAddon = props.length && props[0];
-  var isGroup = groups.indexOf(firstAddon) !== -1;
-  
-  state ? className += (':' + state) : false;
-  var rules = '';
-  
-  //grouped props by comma
-  var groupedProps = prop.split(',');
-  
-  if(groupedProps && groupedProps.length > 1){
-    groupedProps.forEach(function(char){
-      rules += (properties[char] || char) + ':' + value + ';';
+  function modifyValue(valueList, prop){
+    //console.log(prop, value);
+    
+    //console.log(prop, );
+    valueList = valueList.map(function(value){
+      if(fucss.colorazable.indexOf(prop) !== -1){
+        
+        //alpha hunter
+        var alpha = 1;
+        var length = value.length;
+        if((length === 5 || length === 8) && (value.lastIndexOf('a') === 3 || value.lastIndexOf('a') === 6)){
+          alpha = value.substring(length-2);
+          value = value.replace(alpha, '');
+          alpha = '0.' + alpha.replace('a', '');
+        }
+        
+        //color hunter
+        if(new RegExp(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i).test('#' + value)){
+          return hex2rgb(value, alpha);
+        }
+      }
+      
+      if(fucss.values[value]){ return fucss.values[value] }
+      
+      var unit = value.replace(/\d/g, '');
+      if(unit && (unit.length === 3 || unit.length === 2)){
+        value = value.replace(unit, '');
+        
+        if(unit.indexOf('n') !== -1) value = -value;
+        if(unit.indexOf('pc') !== -1 ) return value + '%';
+        return value + unit.replace('n', '');
+      }
+      return value;
     });
-    className = className.split(',').join('\\,');
-  } else {
     
-    //grouped addons
-    if(!isGroup){
-      prop = [prop].concat(props).join('-');
-      rules = prop + ':' + value + ';';
-    }else{
-      firstAddon.split('').forEach(function(char){
-        rules += prop + '-' + addons[char] + ':' + value + ';';
+    
+    
+    
+    return valueList.join(' ');
+  }
+  
+  function modifyProps(props){
+    var combinedProps = [];
+    props.forEach(function(prop){
+      combinedProps.push(fucss.addons[prop] || prop);
+    });
+    
+    return combinedProps;
+  }
+  
+  function combineProps(prop, props){
+    return prop = fucss.properties[prop] || prop;
+    prop = [prop].concat(props);
+    return prop.join('-');
+  }
+  
+  function generateCssRule(className, prop, props, value, state, target){
+    
+    className = className.replace(':', '\\:');
+    className = className.replace('.', '\\.');
+    
+    var firstAddon = props.length && props[0];
+    var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
+    
+    state ? className += (':' + state) : false;
+    var rules = '';
+    
+    //grouped props by comma
+    var groupedProps = prop.split(',');
+    
+    if(groupedProps && groupedProps.length > 1){
+      groupedProps.forEach(function(char){
+        rules += (fucss.properties[char] || char) + ':' + value + ';';
       });
+      className = className.split(',').join('\\,');
+    } else {
+      
+      //grouped fucss.addons
+      if(!isGroup){
+        prop = [prop].concat(props).join('-');
+        rules = prop + ':' + value + ';';
+      }else{
+        firstAddon.split('').forEach(function(char){
+          rules += prop + '-' + fucss.addons[char] + ':' + value + ';';
+        });
+      }
     }
+    
+    if(target){
+      var allIndex = target.indexOf('all');
+      if(allIndex !== -1) {target[allIndex] = '*'};
+      className = className + ' ' + target.join(' ');
+    }
+    
+    return '.' + className+ '{' + rules + '}\n';
+    
   }
   
-  if(target){
-    var allIndex = target.indexOf('all');
-    if(allIndex !== -1) {target[allIndex] = '*'};
-    className = className + ' ' + target.join(' ');
+  function hex2rgb(hex, opacity) {
+    var h=hex.replace('#', '');
+    h =  h.match(new RegExp('(.{'+h.length/3+'})', 'g'));
+  
+    for(var i=0; i<h.length; i++)
+        h[i] = parseInt(h[i].length==1? h[i]+h[i]:h[i], 16);
+  
+    if (typeof opacity != 'undefined')  h.push(opacity);
+  
+    return 'rgba('+h.join(',')+')';
   }
   
-  return '.' + className+ '{' + rules + '}\n';
-  
-}
-
-function hex2rgb(hex, opacity) {
-  var h=hex.replace('#', '');
-  h =  h.match(new RegExp('(.{'+h.length/3+'})', 'g'));
-
-  for(var i=0; i<h.length; i++)
-      h[i] = parseInt(h[i].length==1? h[i]+h[i]:h[i], 16);
-
-  if (typeof opacity != 'undefined')  h.push(opacity);
-
-  return 'rgba('+h.join(',')+')';
+  return true;
 }
