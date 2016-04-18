@@ -86,6 +86,9 @@ fucss.properties = {
   cl: 'clear',
   sh: 'box-shadow',
   tr: 'text-transform',
+  
+  // version 0.5.3
+  ol: 'outline',
 };
 
 fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
