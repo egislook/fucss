@@ -1,9 +1,29 @@
 #FUCSS stand alone version  
 
-Fucss css static predefined class list by tag (0.5.2)
-https://cdn.rawgit.com/noneedsystem/fucss/0.5.2/fucss.js
+Fucss css static predefined class list by tag (0.5.4)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.5.4/fucss.js
 
+#0.5.4  
+Change log
+```
+  <!-- Atlast we have two "font-family" word support -->
+  ff:Open+Sans              // font-family:"Open+Sans";
+  
+  <!-- ls changed to lis "list-style"-->
+  ls => lis                 // list-style
+  
+  <!-- We need ls for "letter-spacing" more then "list-style" -->
+  ls                        // letter-spacing
+  
+  <!-- Added Important functionality -->
+  c:fff-!                   // color:#fff !important;
+```
+
+#0.5.2  
+Stuff
 ```javascript
+
+
 
 // set fucss.init = false and fucss will not initiate after document is loaded
 

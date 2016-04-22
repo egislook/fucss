@@ -56,8 +56,6 @@ fucss.properties = {
   mnw: 'min-width',
   mnh: 'min-height',
   
-  ls: 'list-style',
-  ltrs: 'letter-spacing',
   ws: 'white-space',
   
   //version 4
@@ -186,6 +184,10 @@ fucss.values = {
   uc: 'uppercase',
   rp: 'no-repeat',
   nrp: 'no-repeat',
+  
+  //version 6
+  li: 'list-style',
+  ls: 'letter-spacing',
 };
 
 
@@ -287,9 +289,7 @@ fucss.generateStyling = function(html, returnStyle){
   }
   
   function modifyValue(valueList, prop){
-    //console.log(prop, value);
     
-    //console.log(prop, );
     valueList = valueList.map(function(value){
       if(fucss.colorazable.indexOf(prop) !== -1){
         
@@ -318,10 +318,18 @@ fucss.generateStyling = function(html, returnStyle){
         if(unit.indexOf('pc') !== -1 ) return value + '%';
         return value + unit.replace('n', '');
       }
+      
+      if(value === '!'){
+        return '!important';
+      }
+      
+      if(prop === 'font-family'){
+        value = value.replace('+', ' ');
+        return '"'+value+'"';
+      }
+      
       return value;
     });
-    
-    
     
     
     return valueList.join(' ');
@@ -346,6 +354,8 @@ fucss.generateStyling = function(html, returnStyle){
     
     className = className.replace(':', '\\:');
     className = className.replace('.', '\\.');
+    className = className.replace('!', '\\!');
+    className = className.replace('+', '\\+');
     
     var firstAddon = props.length && props[0];
     var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
