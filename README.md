@@ -1,6 +1,6 @@
-#FUCSS stand alone version  
+#FUCSS client side styling generator  
 
-Fucss css static predefined class list by tag (0.5.4)  
+Fucss styling generator Hell YEAH!!!! (0.5.4)  
 https://cdn.rawgit.com/noneedsystem/fucss/0.5.4/fucss.js
 
 #0.5.4  
@@ -22,8 +22,6 @@ Change log
 #0.5.2  
 Stuff
 ```javascript
-
-
 
 // set fucss.init = false and fucss will not initiate after document is loaded
 
