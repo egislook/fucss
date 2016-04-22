@@ -15,6 +15,11 @@ fucss.media = {
   lg: 1024,
 };
 
+fucss.extras = {
+  'fux-bb': 'border-sizing: border-box;',
+  'fux-clear': 'overflow: hidden;',
+}
+
 fucss.states = {
   hov: 'hover',
   act: 'active',
@@ -26,7 +31,6 @@ fucss.states = {
 };
 
 fucss.properties = {
-  bs: 'box-sizing',
   pdg: 'padding',
   mrg: 'margin',
   clr: 'color',
@@ -87,6 +91,10 @@ fucss.properties = {
   
   // version 0.5.3
   ol: 'outline',
+  
+  // version 0.5.5
+  bz: 'box-sizing',
+  bs: 'box-shadow',
 };
 
 fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
@@ -186,12 +194,21 @@ fucss.values = {
   nrp: 'no-repeat',
   
   //version 6
-  li: 'list-style',
+  lis: 'list-style',
   ls: 'letter-spacing',
 };
 
 
 window.onload=function(){
+  console.log(window.fucssInit);
+  //assigning custom client stuff
+  !!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
+  !!window.fucssExtras && Object.assign(fucss.extras, window.fucssExtras);
+  fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : fucss.watch;
+  fucss.init = window.fucssInit !== undefined ? window.fucssInit : fucss.init;
+  
+  console.log(fucss);
+  //initiating the generator
   fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
   fucss.init && fucss.generateStyling();
 };
@@ -228,7 +245,7 @@ fucss.generateStyling = function(html, returnStyle){
       //if(fucss.ignore.indexOf(prop) !== -1){return}
       if(!value){return console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"')}
       if(!prop){return console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"')}
-      if(!fucss.properties[prop]){cssMissing = cssMissing.concat([prop])}
+      if(!fucss.properties[prop] && prop.indexOf(',') < 0){cssMissing = cssMissing.concat([prop])}
       
       prop = combineProps(prop, props);
       props = modifyProps(props);
@@ -247,6 +264,10 @@ fucss.generateStyling = function(html, returnStyle){
     && Object.keys(cssMediaQueries).forEach(function(mediaName){
       cssString += '@media only screen and (min-width: ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
     });
+    
+  for(var fux in fucss.extras){
+    cssString += ('.'+fux+'{'+fucss.extras[fux]+'}\n');
+  }
   
   //console.log(cssString);
   if(!returnStyle){

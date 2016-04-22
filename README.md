@@ -1,11 +1,46 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.5.4)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.5.4/fucss.js
+Fucss styling generator Hell YEAH!!!! (0.5.5)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.5.5/fucss.js
+
+#0.5.5
+Change log
+
+Properties
+```html
+<!-- "bs" changed to "bz" "box-sizing"-->
+bs => bz                 // box-sizing
+
+<!-- We need bs for "box-shadow" more then "box-sizing" -->
+bs                        // box-shadow
+```
+
+Now fucss is a bit more customizable. ATLAST WE CAN PREDEFINE COLORS and create custom rules
+```html
+<script>
+  
+  // Your custom values
+  var fucssValues = {
+    main: '#ffcb05'
+  };
+  
+  // Your custom extra classess (fux)
+  var fucssExtras = {
+    'fux-grd-blue': 'background: linear-gradient(to right, rgba(25,32,68,0.9) 0%, rgba(25,32,68,0) 100%);'
+  };
+  
+  // Starts fucss checking function every 5s
+  var fucssWatch = 5000;
+  
+  // Stops fucss init function
+  var fucssInit = false; 
+  
+</script>
+```
 
 #0.5.4  
 Change log
-```
+```html
   <!-- Atlast we have two "font-family" word support -->
   ff:Open+Sans              // font-family:"Open+Sans";
   
