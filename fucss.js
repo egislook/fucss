@@ -1,7 +1,8 @@
 var fucss = {};
 
-fucss.watch = 0;
-fucss.init = true;
+fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
+fucss.init = window.fucssInit !== undefined ? window.fucssInit : true;
+fucss.splash = window.fucssSplash !== undefined ? window.fucssSplash : true;
 
 fucss.seps = {
   'value': ':',
@@ -10,9 +11,9 @@ fucss.seps = {
 };
 
 fucss.media = {
-  sm: 480,
-  md: 768,
-  lg: 1024,
+  sm: 768,
+  md: 1024,
+  lg: 1280,
 };
 
 fucss.extras = {
@@ -95,6 +96,7 @@ fucss.properties = {
   // version 0.5.5
   bz: 'box-sizing',
   bs: 'box-shadow',
+  tl: 'table-layout',
 };
 
 fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
@@ -198,16 +200,14 @@ fucss.values = {
   ls: 'letter-spacing',
 };
 
+fucss.bodyHide && document.body ? document.body.style.display = 'none' : false;
 
 window.onload=function(){
-  console.log(window.fucssInit);
+  
   //assigning custom client stuff
   !!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
   !!window.fucssExtras && Object.assign(fucss.extras, window.fucssExtras);
-  fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : fucss.watch;
-  fucss.init = window.fucssInit !== undefined ? window.fucssInit : fucss.init;
   
-  console.log(fucss);
   //initiating the generator
   fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
   fucss.init && fucss.generateStyling();
@@ -215,6 +215,7 @@ window.onload=function(){
 
 fucss.generateStyling = function(html, returnStyle){
   
+  console.time('Fucss');
   var cssString = '';
   var cssMediaQueries = {
     sm: [],
@@ -271,10 +272,14 @@ fucss.generateStyling = function(html, returnStyle){
   
   //console.log(cssString);
   if(!returnStyle){
-    document.getElementsByTagName("style")[0].innerHTML = cssString + document.getElementsByTagName("style")[0].innerHTML;
+    document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
   }else{
     return cssString;
   }
+  
+  
+  fucss.splash ? document.body.className += (' '+fucss.loader.ready) : false;
+  console.timeEnd('Fucss');
   
   if(cssMissing.length){console.warn('Used as full prop [ ' + cssMissing + ' ]')}
   
@@ -429,3 +434,33 @@ fucss.generateStyling = function(html, returnStyle){
   
   return true;
 }
+
+// loader prototype
+fucss.loader = {
+  'ready': 'fux-ready',
+  'spin': 'fux-spin',
+};
+
+fucss.loader.generate = function(){
+  var loader = {};
+  loader['.'+fucss.loader.spin] = 'position: absolute; top: calc(50% - 10px); left: calc(50% - 40px);width: 50px;height: 50px;border: 3px solid rgba(0,0,0,.3);\
+    border-radius: 50%;border-top-color: #000;animation: spin 1s ease-in-out infinite;-webkit-animation: spin 0.75s ease-in-out infinite;';
+  loader['@keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
+  loader['@-webkit-keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
+  
+  //body fade in stuff
+  loader['body *:not(.'+fucss.loader.spin+')'] = 'opacity: 0;';
+  loader['body.'+fucss.loader.ready+' *'] = 'opacity: 1; transition: opacity 0.25s ease-in;';
+  loader['body.'+fucss.loader.ready+' .'+fucss.loader.spin] = 'opacity:0; transition: opacity 0.1s ease-out;'
+    
+  var loaderStyle = '';
+  for(var rule in loader){
+    loaderStyle += (rule + '{'+ loader[rule] +'}\n');
+  }
+  return loaderStyle;
+
+}
+
+fucss.splash 
+  ? document.querySelector('style').innerHTML = document.querySelector('style').innerHTML + fucss.loader.generate()
+  : false;

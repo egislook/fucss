@@ -6,16 +6,27 @@ https://cdn.rawgit.com/noneedsystem/fucss/0.5.5/fucss.js
 #0.5.5
 Change log
 
+Splash screen implemented
+```html
+// put inside body
+<body>
+  <div class="fux-spin"></div>
+</body>
+```
+
 Properties
 ```html
 <!-- "bs" changed to "bz" "box-sizing"-->
-bs => bz                 // box-sizing
+bs => bz                  // box-sizing
 
 <!-- We need bs for "box-shadow" more then "box-sizing" -->
 bs                        // box-shadow
+
+<!-- NEW table-layout prop-->
+tl                        //table-layout
 ```
 
-Now fucss is a bit more customizable. ATLAST WE CAN PREDEFINE COLORS and create custom rules
+Now fucss is a bit more customizable. AT LAST WE CAN PREDEFINE COLORS and create custom rules
 ```html
 <script>
   
@@ -35,6 +46,8 @@ Now fucss is a bit more customizable. ATLAST WE CAN PREDEFINE COLORS and create 
   // Stops fucss init function
   var fucssInit = false; 
   
+  // Disables fucss splash screen
+  var fucssSplash = false;
 </script>
 ```
 
