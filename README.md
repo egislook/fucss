@@ -3,6 +3,18 @@
 Fucss styling generator Hell YEAH!!!! (0.5.5)  
 https://cdn.rawgit.com/noneedsystem/fucss/0.5.5/fucss.js
 
+#0.5.6
+Change log
+
+Media queries changed
+```javascript
+  fucss.media = {
+    sm: 400,
+    md: 768,
+    lg: 1024,
+  };
+```
+
 #0.5.5
 Change log
 

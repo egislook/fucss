@@ -11,9 +11,9 @@ fucss.seps = {
 };
 
 fucss.media = {
-  sm: 768,
-  md: 1024,
-  lg: 1280,
+  sm: 400,
+  md: 768,
+  lg: 1024,
 };
 
 fucss.extras = {
