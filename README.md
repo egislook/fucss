@@ -3,6 +3,30 @@
 Fucss styling generator Hell YEAH!!!! (0.5.6)  
 https://cdn.rawgit.com/noneedsystem/fucss/0.5.6/fucss.js
 
+#0.5.7
+Change log
+```javascript
+  //default splash value now is set to false
+  fucss.splash = false;
+  
+  /** new function for react.js and classNames library implemented
+    
+    <div className="bg:000"/>
+    
+    or
+    
+    var getDivClassNames = classNames({
+      'bg:000': true,
+    });
+    
+  **/
+  fucss.generateStyling({jsx: _scriptString});
+```
+
+```html
+  <!--now it is possible to use lighten(l25) / darken(d25) / alpha(a25) for colours. Can be used with predifined values eg: (bg:mainl25)-->
+  <div class="bg:ffcb05l25">colour #ffcb05 lightened by 25%</div>
+```
 #0.5.6
 Change log
 
@@ -20,7 +44,7 @@ Change log
 
 Splash screen implemented
 ```html
-// put inside body
+<!-- put inside body -->
 <body>
   <div class="fux-spin"></div>
 </body>

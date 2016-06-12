@@ -2,7 +2,7 @@ var fucss = {};
 
 fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
 fucss.init = window.fucssInit !== undefined ? window.fucssInit : true;
-fucss.splash = window.fucssSplash !== undefined ? window.fucssSplash : true;
+fucss.splash = window.fucssSplash !== undefined ? window.fucssSplash : false;
 
 fucss.seps = {
   'value': ':',
@@ -213,7 +213,7 @@ window.onload=function(){
   fucss.init && fucss.generateStyling();
 };
 
-fucss.generateStyling = function(html, returnStyle){
+fucss.generateStyling = function(opts){
   
   console.time('Fucss');
   var cssString = '';
@@ -224,7 +224,11 @@ fucss.generateStyling = function(html, returnStyle){
   };
   var cssMissing = [];
   
-  harvestClassesFromOneFile(html || document.body.outerHTML)
+  var classHarvestingMethodName = opts && opts.jsx 
+    ? 'harvestClassesFromJsx'
+    : 'harvestClassesFromHtml';
+  
+  fucss[classHarvestingMethodName]((opts && (opts.jsx || opts.html)) || document.body.outerHTML)
     .forEach(function(className){
       
       var target = className.split(fucss.seps.target);
@@ -242,11 +246,11 @@ fucss.generateStyling = function(html, returnStyle){
       var prop = props.shift();
       
       //console.log(prop, props, state, value);
-      if(Object.keys(fucss.properties).indexOf(prop) === -1 && prop.indexOf(',') === -1){return}
+      if(Object.keys(fucss.properties).indexOf(prop) === -1 && prop.indexOf(',') === -1) return;
       //if(fucss.ignore.indexOf(prop) !== -1){return}
-      if(!value){return console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"')}
-      if(!prop){return console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"')}
-      if(!fucss.properties[prop] && prop.indexOf(',') < 0){cssMissing = cssMissing.concat([prop])}
+      if(!value) return console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"');
+      if(!prop) return console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"');
+      if(!fucss.properties[prop] && prop.indexOf(',') < 0) cssMissing = cssMissing.concat([prop]);
       
       prop = combineProps(prop, props);
       props = modifyProps(props);
@@ -267,14 +271,14 @@ fucss.generateStyling = function(html, returnStyle){
     });
     
   for(var fux in fucss.extras){
-    cssString += ('.'+fux+'{'+fucss.extras[fux]+'}\n');
+    cssString += ('.' + fux + '{' + fucss.extras[fux] + '}\n');
   }
   
   //console.log(cssString);
-  if(!returnStyle){
-    document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
-  }else{
+  if(opts && opts.returnStyle){
     return cssString;
+  }else{
+    document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
   }
   
   
@@ -282,21 +286,6 @@ fucss.generateStyling = function(html, returnStyle){
   console.timeEnd('Fucss');
   
   if(cssMissing.length){console.warn('Used as full prop [ ' + cssMissing + ' ]')}
-  
-  function harvestClassesFromOneFile(string){
-    
-    var myRegexp = (/class="(.*?)"/gi);
-    var myArray;
-    var allHarvestedClassNames = [];
-    
-    while ((myArray = myRegexp.exec(string)) !== null) {
-      var harvestedClassNames = myArray[0].split('"')[1].split(' ');
-      allHarvestedClassNames = allHarvestedClassNames.concat(harvestedClassNames);
-    }
-    
-    return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
-  }
-  
   
   // from class to css rule
   
@@ -317,24 +306,39 @@ fucss.generateStyling = function(html, returnStyle){
   function modifyValue(valueList, prop){
     
     valueList = valueList.map(function(value){
+      
+      if(fucss.values[value]) return fucss.values[value];
+      
       if(fucss.colorazable.indexOf(prop) !== -1){
         
-        //alpha hunter
-        var alpha = 1;
-        var length = value.length;
-        if((length === 5 || length === 8) && (value.lastIndexOf('a') === 3 || value.lastIndexOf('a') === 6)){
-          alpha = value.substring(length-2);
-          value = value.replace(alpha, '');
-          alpha = '0.' + alpha.replace('a', '');
-        }
-        
-        //color hunter
-        if(new RegExp(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i).test('#' + value)){
-          return hex2rgb(value, alpha);
+        if(new RegExp(/(a\d\d\b)|(l\d\d\b)|(d\d\d\b)/).test(value)){
+          
+          var length = value.length;
+          
+          var clrModifier = {
+            type: value.substring(length-3, length-2),
+            value: value.substr(length-2)
+          }
+          var tempValue = value.substr(0, length-3);
+          
+          if(fucss.values[tempValue]){
+            value = fucss.values[tempValue];
+          } else if(tempValue && tempValue.length !== 6){
+            value = tempValue[0] + tempValue[0] + tempValue[1] + tempValue[1] + tempValue[2] + tempValue[2];
+          } else {
+            value = tempValue;
+          }
+          
+          switch(clrModifier.type){
+            case 'a':
+              return hex2rgb(value, {alpha: '0.' + clrModifier.value});
+            case 'l':
+              return hex2rgb(value, {alpha: 1, percent: clrModifier.value * 0.01});
+            case 'd':
+              return hex2rgb(value, {alpha: 1, percent: (clrModifier.value * -1) * 0.01});
+          }
         }
       }
-      
-      if(fucss.values[value]){ return fucss.values[value] }
       
       var unit = value.replace(/\d/g, '');
       if(unit && (unit.length === 3 || unit.length === 2)){
@@ -420,19 +424,73 @@ fucss.generateStyling = function(html, returnStyle){
     
   }
   
-  function hex2rgb(hex, opacity) {
-    var h=hex.replace('#', '');
-    h =  h.match(new RegExp('(.{'+h.length/3+'})', 'g'));
+  function hex2rgb(hex, opts){
+    var h = hex.replace('#', '');
+    
+    h = h.match(new RegExp('(.{'+h.length/3+'})', 'g'));
   
-    for(var i=0; i<h.length; i++)
-        h[i] = parseInt(h[i].length==1? h[i]+h[i]:h[i], 16);
-  
-    if (typeof opacity != 'undefined')  h.push(opacity);
-  
+    for(var i=0; i<h.length; i++){
+      h[i] = parseInt(h[i], 16);
+      if(opts.percent){
+        h[i] = Math.round(Math.round(h[i] + (255 * opts.percent)));
+        if(h[i] < 0) h[i] = 0;
+        if(h[i] > 255) h[i] = 255;
+      }
+    }
+    if(typeof opts.alpha !== 'undefined') h.push(opts.alpha);
     return 'rgba('+h.join(',')+')';
   }
   
   return true;
+}
+
+fucss.harvestClassesFromHtml = function(html){
+  var myRegexp = (/class="(.*?)"/gi);
+  var myArray;
+  var allHarvestedClassNames = [];
+  
+  while ((myArray = myRegexp.exec(html)) !== null) {
+    var harvestedClassNames = myArray[0].split('"')[1].split(' ');
+    allHarvestedClassNames = allHarvestedClassNames.concat(harvestedClassNames);
+  }
+  
+  return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+}
+
+fucss.harvestClassesFromJsx = function(jsx){
+  var ptrn = (/(className=\"(.*?)\")|(classNames\(\{([\S\s]*?)\}\))/ig);
+  var arr;
+  var allHarvestedClassNames = [];
+  var cl;
+  while ((arr = ptrn.exec(jsx))) {
+    if(!arr) return;
+    //gets all className class list
+    if(arr[2]){
+      cl = arr[2].split(' ');
+      if(cl){
+        allHarvestedClassNames = allHarvestedClassNames.concat(cl);
+      }
+    }
+    //gets all classNames library class list
+    else if(arr[4]){
+      var classNamesList = arr[4].replace(/\r\n|\n|\r/gm, '').split(',');
+      if(classNamesList && classNamesList.length){
+        classNamesList.forEach(function(cl){
+          if(!cl) return;
+          cl = cl.split(':').shift();
+          if(!cl) return;
+          cl = cl.split("'");
+          if(!cl || cl && cl.length < 2) return;
+          cl = cl[1] && !!cl[1].length && cl[1].split(' ');
+          if(!cl || cl && !cl.length) return;
+          
+          allHarvestedClassNames = allHarvestedClassNames.concat(cl);
+        });
+      }
+    }
+  }
+  
+  return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
 }
 
 // loader prototype
