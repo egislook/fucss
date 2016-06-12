@@ -1,7 +1,7 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.5.6)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.5.6/fucss.js
+Fucss styling generator Hell YEAH!!!! (0.5.8)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.5.8/fucss.js
 
 #0.5.8
 Change log
