@@ -27,6 +27,14 @@ Change log
   <!--now it is possible to use lighten(l25) / darken(d25) / alpha(a25) for colours. Can be used with predifined values eg: (bg:mainl25)-->
   <div class="bg:ffcb05l25">colour #ffcb05 lightened by 25%</div>
 ```
+
+```javascript
+  // colors can be predefined
+  var fucssValues = {
+    main: '#ffcb05',
+    grey: '#dadada',
+  };
+```
 #0.5.6
 Change log
 
