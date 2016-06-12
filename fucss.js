@@ -97,6 +97,10 @@ fucss.properties = {
   bz: 'box-sizing',
   bs: 'box-shadow',
   tl: 'table-layout',
+  
+  //version 0.5.7
+  lis: 'list-style',
+  ls: 'letter-spacing',
 };
 
 fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
@@ -194,10 +198,6 @@ fucss.values = {
   uc: 'uppercase',
   rp: 'no-repeat',
   nrp: 'no-repeat',
-  
-  //version 6
-  lis: 'list-style',
-  ls: 'letter-spacing',
 };
 
 fucss.bodyHide && document.body ? document.body.style.display = 'none' : false;
