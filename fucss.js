@@ -311,15 +311,20 @@ fucss.generateStyling = function(opts){
       
       if(fucss.colorazable.indexOf(prop) !== -1){
         
-        if(new RegExp(/(a\d\d\b)|(l\d\d\b)|(d\d\d\b)/).test(value)){
-          
+        if(new RegExp(/(a\d\d\b)|(a\d\b)|(l\d\d\b)|(d\d\d\b)/).test(value)){
           var length = value.length;
           
+          var modifierPos = 2;
+          if(new RegExp(/(a\d\b)/).test(value)){
+            modifierPos = 1;
+          };
+          
           var clrModifier = {
-            type: value.substring(length-3, length-2),
-            value: value.substr(length-2)
+            type: value.substring(length-modifierPos, length-modifierPos-1),
+            value: value.substr(length-modifierPos)
           }
-          var tempValue = value.substr(0, length-3);
+          var tempValue = value.substr(0, length-modifierPos);
+          
           
           if(fucss.values[tempValue]){
             value = fucss.values[tempValue];
@@ -338,6 +343,8 @@ fucss.generateStyling = function(opts){
               return hex2rgb(value, {alpha: 1, percent: (clrModifier.value * -1) * 0.01});
           }
         }
+        
+        return '#'+value;
       }
       
       var unit = value.replace(/\d/g, '');
