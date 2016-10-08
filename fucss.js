@@ -305,7 +305,7 @@ fucss.generateStyling = function(opts){
   
   function modifyValue(valueList, prop){
     
-    console.log(valueList, prop, valueList.length);
+    //console.log(valueList, prop, valueList.length);
     
     valueList = valueList.map(function(value){
       
@@ -373,7 +373,7 @@ fucss.generateStyling = function(opts){
       return value;
     });
     
-    console.log(valueList.join(' '));
+    //console.log(valueList.join(' '));
     return valueList.join(' ');
   }
   
