@@ -305,11 +305,16 @@ fucss.generateStyling = function(opts){
   
   function modifyValue(valueList, prop){
     
+    console.log(valueList, prop, valueList.length);
+    
     valueList = valueList.map(function(value){
+      
       
       if(fucss.values[value]) return fucss.values[value];
       
       if(fucss.colorazable.indexOf(prop) !== -1){
+      
+        //console.log(prop, value);
         
         if(new RegExp(/(a\d\d\b)|(a\d\b)|(l\d\d\b)|(d\d\d\b)/).test(value)){
           var length = value.length;
@@ -342,9 +347,9 @@ fucss.generateStyling = function(opts){
             case 'd':
               return hex2rgb(value, {alpha: 1, percent: (clrModifier.value * -1) * 0.01});
           }
+        } else if(new RegExp(/(^[0-9A-F]{6}$)|(^[0-9A-F]{3}$)/i).test(value)){
+          return '#' + value;
         }
-        
-        return '#'+value;
       }
       
       var unit = value.replace(/\d/g, '');
@@ -368,7 +373,7 @@ fucss.generateStyling = function(opts){
       return value;
     });
     
-    
+    console.log(valueList.join(' '));
     return valueList.join(' ');
   }
   
