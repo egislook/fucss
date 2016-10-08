@@ -278,9 +278,9 @@ fucss.generateStyling = function(opts){
   if(opts && opts.returnStyle){
     return cssString;
   }else{
+    //console.log(document.querySelector('style'));
     document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
   }
-  
   
   fucss.splash ? document.body.className += (' '+fucss.loader.ready) : false;
   console.timeEnd('Fucss');

@@ -15,6 +15,8 @@
       'fux-grd-blue': 'background: linear-gradient(to right, rgba(25,32,68,0.9) 0%, rgba(25,32,68,0) 100%);'
     };
     
+    var fucssInit = true;
+    
   </script>
   <script src="fucss.js"></script>
   <title>Just fucss testing file</title>
@@ -29,6 +31,7 @@
   
   <main class="dp:bk bg:fc5">
     <h1 class="fw:300 fs:20em pos:abs t,r:300npx l:0 ff:Open+Sans c:main">FUCSS</h1>
+    
     <!--<secion id="top">
   			<nav class="ps:fx w:100pc z:2 bg:000a8 t:0 ps:fx">
   		    <div class="w:100pc p:0-10px md-p:20px md-dp:tb">
@@ -419,6 +422,18 @@
   			</div>
   		</footer>
 	  </main>
+	  
+	  <script src="https://rawgit.com/riot/riot/master/riot.min.js"></script>
+		<script type="riot/tag" src="testpub/app.html"></script>
+		<script src="https://rawgit.com/riot/riot/master/riot+compiler.min.js"></script>
+		
+		<script>
+		  riot.compile('./testpub/app.html', function(js){
+        console.log(js);
+				fucss.generateStyling({html: js, returnStyle: false, mediaQueries: false});
+			});
+		</script>
+	  
 </body>
 
 </html>
