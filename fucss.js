@@ -198,6 +198,10 @@ fucss.values = {
   uc: 'uppercase',
   rp: 'no-repeat',
   nrp: 'no-repeat',
+  
+  //version5
+  ds: 'dashed',
+  dt: 'dotted',
 };
 
 fucss.bodyHide && document.body ? document.body.style.display = 'none' : false;
