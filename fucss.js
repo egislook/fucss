@@ -522,6 +522,9 @@ fucss.loader.generate = function(){
   loader['@keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
   loader['@-webkit-keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
   
+  loader['@keyframes fadeIn'] = 'from {opacity: 0.3;} to {opacity: 1;}';
+  loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
+  
   //body fade in stuff
   loader['body *:not(.'+fucss.loader.spin+')'] = 'opacity: 0;';
   loader['body.'+fucss.loader.ready+' *'] = 'opacity: 1; transition: opacity 0.25s ease-in;';
