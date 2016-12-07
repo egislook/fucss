@@ -1,17 +1,43 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.5.9c)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.5.9c/fucss.js
+Fucss styling generator Hell YEAH!!!! (0.6.0)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.0/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+#0.6.0  
+Minified version now available
+
+```javascript
+  // now riot.js class object can be extracted too and all rules will be generated
+  var _jsStr = "<div class={'op:0.8 hv-op:1': true, 'p:10px': true, 'm:10px': false} />";
+  fucss.generateStyling({riot: _jsStr, returnStyle: false});
+  
+  // if you need to use fucss for riot.js
+  var _tags = document.querySelectorAll('script[type="riot/tag"');
+  var _jsStr = document.body.outerHTML;
+  var _jsLoadedCount = 0;
+  _tags.forEach(function(tag){
+  	riot.compile(tag.src, function(js){
+    	_jsStr += js;
+    	_jsLoadedCount++;
+    	if(_jsLoadedCount === _tags.length){
+    		fucss.generateStyling({riot: _jsStr, returnStyle: false});
+  			
+  			riot.mount('*');
+  			route.start(true);
+    	}
+  	});
+  });
+  
+```
 
 #0.5.9c  
 Fixed fucssValues implementation
 
 ```javascript
-
-// now it assigns before window.onload
+// now it is assigned before window.onload
 Object.assign(fucss.values, window.fucssValues)
 ```
 

@@ -230,9 +230,10 @@ fucss.generateStyling = function(opts){
   
   var classHarvestingMethodName = opts && opts.jsx 
     ? 'harvestClassesFromJsx'
-    : 'harvestClassesFromHtml';
-  
-  fucss[classHarvestingMethodName]((opts && (opts.jsx || opts.html)) || document.body.outerHTML)
+    : opts && opts.riot 
+      ? 'harvestClassesFromRiot'
+      : 'harvestClassesFromHtml';
+  fucss[classHarvestingMethodName]((opts && (opts.jsx || opts.riot || opts.html)) || document.body.outerHTML)
     .forEach(function(className){
       
       var target = className.split(fucss.seps.target);
@@ -466,6 +467,26 @@ fucss.harvestClassesFromHtml = function(html){
   while ((myArray = myRegexp.exec(html)) !== null) {
     var harvestedClassNames = myArray[0].split('"')[1].split(' ');
     allHarvestedClassNames = allHarvestedClassNames.concat(harvestedClassNames);
+  }
+  
+  return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+}
+
+fucss.harvestClassesFromRiot = function(riot){
+  var myRegexp = (/class="(.*?)"/gi);
+  var myRegexp2 = (/\'(.*?)\\'/gi)
+  var myArray, myArray2;
+  var allHarvestedClassNames = [];
+  
+  while ((myArray = myRegexp.exec(riot)) !== null) {
+    if(myArray[0].indexOf("\'") === -1){
+      //myArray[0].split('"')[1].split(' ')
+      allHarvestedClassNames = allHarvestedClassNames.concat(myArray[1].split(' '));
+    } else {
+      while ((myArray2 = myRegexp2.exec(myArray[0])) !== null) {
+        allHarvestedClassNames = allHarvestedClassNames.concat(myArray2[1].split(' '));
+      }
+    }
   }
   
   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
