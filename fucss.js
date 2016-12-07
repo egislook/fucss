@@ -206,11 +206,11 @@ fucss.values = {
 
 fucss.bodyHide && document.body ? document.body.style.display = 'none' : false;
 
+//assigning custom client stuff
+!!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
+!!window.fucssExtras && Object.assign(fucss.extras, window.fucssExtras);
+
 window.onload=function(){
-  
-  //assigning custom client stuff
-  !!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
-  !!window.fucssExtras && Object.assign(fucss.extras, window.fucssExtras);
   
   //initiating the generator
   fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
@@ -310,9 +310,7 @@ fucss.generateStyling = function(opts){
   function modifyValue(valueList, prop){
     
     //console.log(valueList, prop, valueList.length);
-    
     valueList = valueList.map(function(value){
-      
       
       if(fucss.values[value]) return fucss.values[value];
       

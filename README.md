@@ -1,7 +1,22 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.5.8)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.5.8/fucss.js
+Fucss styling generator Hell YEAH!!!! (0.5.9c)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.5.9c/fucss.js
+
+Fuico icon library  
+https://github.com/noneedsystem/fuico
+
+#0.5.9c  
+Fixed fucssValues implementation
+
+```javascript
+
+// now it assigns before window.onload
+Object.assign(fucss.values, window.fucssValues)
+```
+
+#0.5.9  
+Fixed color generator
 
 #0.5.8
 Change log
