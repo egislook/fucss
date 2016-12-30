@@ -1,10 +1,19 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.0)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.0/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.1)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.1/fucss.min.js
 
 Fuico icon library  
-https://github.com/noneedsystem/fuico
+https://github.com/noneedsystem/fuico  
+
+#0.6.1
+Auto riot class generator implemented
+```javascript
+
+//now generates automatically riot tag classes when script[type="riot/tag" and !!window.riot
+fucss.riotExtractNGenerate = function(){}
+
+```
 
 #0.6.0  
 Minified version now available

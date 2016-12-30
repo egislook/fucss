@@ -214,8 +214,22 @@ window.onload=function(){
   
   //initiating the generator
   fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
-  fucss.init && fucss.generateStyling();
+  fucss.init && !window.riot && fucss.generateStyling();
+  fucss.init && !!window.riot && fucss.riotExtractNGenerate();
 };
+
+fucss.riotExtractNGenerate = function(){
+  var _tags = document.querySelectorAll('script[type="riot/tag"');
+  var _jsStr = document.body.outerHTML;
+  var _jsLoadedCount = 0;
+  _tags.forEach(function(tag){
+  	window.riot.compile(tag.src, function(js){
+    	_jsStr += js;
+    	_jsLoadedCount++;
+    	_jsLoadedCount === _tags.length && fucss.generateStyling({riot: _jsStr, returnStyle: false});
+  	});
+  });
+}
 
 fucss.generateStyling = function(opts){
   
@@ -230,10 +244,13 @@ fucss.generateStyling = function(opts){
   
   var classHarvestingMethodName = opts && opts.jsx 
     ? 'harvestClassesFromJsx'
-    : opts && opts.riot 
+    : opts && opts.riot || !!window.riot
       ? 'harvestClassesFromRiot'
       : 'harvestClassesFromHtml';
-  fucss[classHarvestingMethodName]((opts && (opts.jsx || opts.riot || opts.html)) || document.body.outerHTML)
+  
+  var htmlString = (opts && (opts.jsx || opts.riot || opts.html)) || document.body.outerHTML;
+      
+  fucss[classHarvestingMethodName](htmlString)
     .forEach(function(className){
       
       var target = className.split(fucss.seps.target);
@@ -473,6 +490,7 @@ fucss.harvestClassesFromHtml = function(html){
 }
 
 fucss.harvestClassesFromRiot = function(riot){
+  
   var myRegexp = (/class="(.*?)"/gi);
   var myRegexp2 = (/\'(.*?)\\'/gi)
   var myArray, myArray2;
