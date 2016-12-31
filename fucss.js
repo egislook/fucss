@@ -2,7 +2,7 @@ var fucss = {};
 
 fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
 fucss.init = window.fucssInit !== undefined ? window.fucssInit : true;
-fucss.splash = window.fucssSplash !== undefined ? window.fucssSplash : false;
+fucss.anim = window.fucssAnim !== undefined ? window.fucssAnim : true;
 
 fucss.seps = {
   'value': ':',
@@ -17,8 +17,14 @@ fucss.media = {
 };
 
 fucss.extras = {
-  'fux-bb': 'border-sizing: border-box;',
-  'fux-clear': 'overflow: hidden;',
+  'fux-bb':       'border-sizing: border-box;',
+  'fux-clear':    'overflow: hidden;',
+  'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
+                    animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
+  'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
+    			          border-radius: 50%; border-top-color: #DE3E3E; -webkit-animation: spin 0.75s ease-in-out infinite;',
+  'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
+  'fux-trans':    'transition: color 0.1 ease-in; transition-property: color, background-color;',
 }
 
 fucss.states = {
@@ -153,8 +159,6 @@ fucss.addons = {
 
 fucss.values = {
   bb: 'border-box',
-  greyd1: '#ffcb05',
-  blackl3: '#f24543',
   bot: 'bottom',
   c: 'center',
   r: 'right',
@@ -202,9 +206,35 @@ fucss.values = {
   //version5
   ds: 'dashed',
   dt: 'dotted',
+  
+  //version 6 colors
+  prim:     '#DE3E3E',  // red
+  sec:      '#5FBA7D',  // grey dark
+  tert:     '#2F3B50',  // green
+  quat:     '#f6f7f4',  // grey
+  quin:     '#D3D1D1',  // grey light
+  //sext:     '',
+  //sept:     '',
+  //oct:      '',
+  //non:      '',
+  den:      '#F1F1F1', // bg grey very light,
+  navy:     '#001f3f',
+  blue:     '#0074D9',
+  aqua:     '#7FDBFF',
+  teil:     '#39CCCC',
+  olive:    '#3D9970',
+  green:    '#2ECC40',
+  lime:     '#01FF70',
+  yellow:   '#FFDC00',
+  orange:   '#FF851B',
+  red:      '#FF4136',
+  maroon:   '#85144b',
+  fuchsia:  '#F012BE',
+  purple:   '#B10DC9',
+  black:    '#111111',
+  grey:     '#AAAAAA',
+  silver:   '#DDDDDD',
 };
-
-fucss.bodyHide && document.body ? document.body.style.display = 'none' : false;
 
 //assigning custom client stuff
 !!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
@@ -300,11 +330,11 @@ fucss.generateStyling = function(opts){
   if(opts && opts.returnStyle){
     return cssString;
   }else{
+    fucss.anim ? cssString += fucss.aniGenerator() : false;
     //console.log(document.querySelector('style'));
     document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
   }
   
-  fucss.splash ? document.body.className += (' '+fucss.loader.ready) : false;
   console.timeEnd('Fucss');
   
   if(cssMissing.length){console.warn('Used as full prop [ ' + cssMissing + ' ]')}
@@ -546,35 +576,20 @@ fucss.harvestClassesFromJsx = function(jsx){
   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
 }
 
-// loader prototype
-fucss.loader = {
-  'ready': 'fux-ready',
-  'spin': 'fux-spin',
-};
-
-fucss.loader.generate = function(){
+// aninamtion loader
+fucss.aniGenerator = function(){
   var loader = {};
-  loader['.'+fucss.loader.spin] = 'position: absolute; top: calc(50% - 10px); left: calc(50% - 40px);width: 50px;height: 50px;border: 3px solid rgba(0,0,0,.3);\
-    border-radius: 50%;border-top-color: #000;animation: spin 1s ease-in-out infinite;-webkit-animation: spin 0.75s ease-in-out infinite;';
   loader['@keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
   loader['@-webkit-keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
   
   loader['@keyframes fadeIn'] = 'from {opacity: 0.3;} to {opacity: 1;}';
-  loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
+  loader['@-webkit-keyframes fadeIn'] = '@-webkit-keyframes  fadeIn {from {opacity: 0.3;}to {opacity: 1;}}';
   
-  //body fade in stuff
-  loader['body *:not(.'+fucss.loader.spin+')'] = 'opacity: 0;';
-  loader['body.'+fucss.loader.ready+' *'] = 'opacity: 1; transition: opacity 0.25s ease-in;';
-  loader['body.'+fucss.loader.ready+' .'+fucss.loader.spin] = 'opacity:0; transition: opacity 0.1s ease-out;'
+  loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
     
   var loaderStyle = '';
   for(var rule in loader){
     loaderStyle += (rule + '{'+ loader[rule] +'}\n');
   }
   return loaderStyle;
-
 }
-
-fucss.splash 
-  ? document.querySelector('style').innerHTML = document.querySelector('style').innerHTML + fucss.loader.generate()
-  : false;

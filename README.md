@@ -1,10 +1,71 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.1)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.1/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.2)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.2/fucss.min.js
 
 Fuico icon library  
-https://github.com/noneedsystem/fuico  
+https://github.com/noneedsystem/fuico 
+
+#0.6.2
+Predefined colours, animations implemented. Splash screen deprecated.
+```javascript
+  
+  //all values can be overwrited using fucssValues
+  var fucssValues = {
+    //version 6 colors
+    prim:     '#DE3E3E',  // red
+    sec:      '#5FBA7D',  // grey dark
+    tert:     '#2F3B50',  // green
+    quat:     '#f6f7f4',  // grey
+    quin:     '#D3D1D1',  // grey light
+    //sext:     '#D3D1D1',
+    //sept:     '#D3D1D1',
+    //oct:      '#D3D1D1',
+    //non:      '#D3D1D1',
+    //den:      '#F1F1F1', // bg grey very light,
+    navy:     '#001f3f',
+    blue:     '#0074D9',
+    aqua:     '#7FDBFF',
+    teil:     '#39CCCC',
+    olive:    '#3D9970',
+    green:    '#2ECC40',
+    lime:     '#01FF70',
+    yellow:   '#FFDC00',
+    orange:   '#FF851B',
+    red:      '#FF4136',
+    maroon:   '#85144b',
+    fuchsia:  '#F012BE',
+    purple:   '#B10DC9',
+    black:    '#111111',
+    grey:     '#AAAAAA',
+    silver:   '#DDDDDD',
+  }
+  
+  //deprecated splash screen value
+  var fucssSplash = false;
+  
+  //implemented
+  var fucssAnim = false; // default true
+  
+  // animations implemented
+  @keyframes spin
+  @keyframes fadeIn
+  @keyframes fadeOut
+  
+  // new extras added
+  var fucssExtras = {
+    'fux-bb':       'border-sizing: border-box;',
+    'fux-clear':    'overflow: hidden;',
+    'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
+                      animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
+    'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
+      			          border-radius: 50%; border-top-color: #DE3E3E; -webkit-animation: spin 0.75s ease-in-out infinite;',
+    'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
+    'fux-trans':    'transition: color 0.1 ease-in; transition-property: color, background-color;',
+  }
+fucss.riotExtractNGenerate = function(){}
+
+```
 
 #0.6.1
 Auto riot class generator implemented
