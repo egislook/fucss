@@ -3,11 +3,17 @@ var fucss = {};
 fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
 fucss.init = window.fucssInit !== undefined ? window.fucssInit : true;
 fucss.anim = window.fucssAnim !== undefined ? window.fucssAnim : true;
+fucss.glob = window.fucssGlob !== undefined ? window.fucssGlob : true;
+fucss.fux = window.fucssFux !== undefined ? window.fucssFux : true;
 
 fucss.seps = {
   'value': ':',
   'space': '-',
   'target': '_',
+  'comma': '.',
+  'important': '!',
+  'and': '+',
+  
 };
 
 fucss.media = {
@@ -15,17 +21,6 @@ fucss.media = {
   md: 768,
   lg: 1024,
 };
-
-fucss.extras = {
-  'fux-bb':       'border-sizing: border-box;',
-  'fux-clear':    'overflow: hidden;',
-  'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
-                    animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
-  'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
-    			          border-radius: 50%; border-top-color: #DE3E3E; -webkit-animation: spin 0.75s ease-in-out infinite;',
-  'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
-  'fux-trans':    'transition: color 0.1 ease-in; transition-property: color, background-color;',
-}
 
 fucss.states = {
   hov: 'hover',
@@ -35,6 +30,9 @@ fucss.states = {
   hv: 'hover',
   ac: 'active',
   fc: 'focus',
+  //version 0.6.3
+  bf: 'before',
+  af: 'after',
 };
 
 fucss.properties = {
@@ -107,26 +105,20 @@ fucss.properties = {
   //version 0.5.7
   lis: 'list-style',
   ls: 'letter-spacing',
+  
+  //version 0.6.3
+  ww: 'word-wrap',
+  fd: 'flex-direction',
+  od: 'order',
+  flxg: 'flex-grow',
+  flxs: 'flex-shrink',
+  flxb: 'flex-basis',
+  flx: 'flex',
+  as: 'align-self',
+  ai: 'align-items',
+  ac: 'align-content',
+  
 };
-
-fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
-
-//version 4
-fucss.colorazable = [
-  'color', 
-  'background', 
-  'background-color', 
-  'border', 
-  'border-color', 
-  'border-bottom',
-  'border-top',,
-  'border-left',
-  'border-right',
-  'border-right-color',
-  'border-left-color',
-  'border-top-color',
-  'border-bottom-color',
-];
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw']; 
 
@@ -207,38 +199,109 @@ fucss.values = {
   ds: 'dashed',
   dt: 'dotted',
   
+  //version 0.6.3
+  pl: 'pre-line',
+  nm: 'normal',
+  bl: 'baseline',
+  flx: 'flex',
+  if: 'inline-flex',
+  row: 'row',
+  col: 'col',
+  rr: 'row-reverse',
+  cr: 'column-reverse',
+  li: 'list-item',
+  wrap: 'wrap',
+  sb: 'space-between',
+  sa: 'space-around',
+  fs: 'flex-start',
+  fe: 'flex-end',
+  stc: 'stretch',
+  
+};
+
+fucss.ignore = ['fa', 'fix', 'trans', 'cursor', 'wrap', 'owlServices', 'owl', 'gm'];
+
+//version 4
+fucss.colorazable = [
+  'color', 
+  'background', 
+  'background-color', 
+  'border', 
+  'border-color', 
+  'border-bottom',
+  'border-top',,
+  'border-left',
+  'border-right',
+  'border-right-color',
+  'border-left-color',
+  'border-top-color',
+  'border-bottom-color',
+];
+
+fucss.colors = {
   //version 6 colors
   prim:     '#DE3E3E',  // red
-  sec:      '#5FBA7D',  // grey dark
-  tert:     '#2F3B50',  // green
-  quat:     '#f6f7f4',  // grey
-  quin:     '#D3D1D1',  // grey light
-  //sext:     '',
-  //sept:     '',
-  //oct:      '',
-  //non:      '',
-  den:      '#F1F1F1', // bg grey very light,
+  sec:      '#2F3B50',  // grey dark
+  
+  red:      '#F44336',
+  pink:     '#E91E63',
+  purple:   '#9C27B0',
+  dpurple:  '#673AB7',
+  indigo:   '#3F51B5',
+  blue:     '#2196F3',
+  lblue:    '#03A9F4',
+  cyan:     '#00BCD4',
+  teal:     '#009688',
+  green:    '#4CAF50',
+  lgreen:   '#8BC34A',
+  lime:     '#CDDC39',
+  yellow:   '#FFEB3B',
+  amber:    '#FFC107',
+  orange:   '#FF9800',
+  dorange:  '#FF5722',
+  brown:    '#795548',
+  grey:     '#9E9E9E',
+  bgrey:    '#607D8B',
+  
+  black:    '#111',
+  silver:   '#DDD',
+  white:    '#fff',
+  
   navy:     '#001f3f',
-  blue:     '#0074D9',
   aqua:     '#7FDBFF',
   teil:     '#39CCCC',
   olive:    '#3D9970',
-  green:    '#2ECC40',
-  lime:     '#01FF70',
-  yellow:   '#FFDC00',
-  orange:   '#FF851B',
-  red:      '#FF4136',
   maroon:   '#85144b',
   fuchsia:  '#F012BE',
-  purple:   '#B10DC9',
-  black:    '#111111',
-  grey:     '#AAAAAA',
-  silver:   '#DDDDDD',
+  // social
+  twitter:  '#5AACF2',
+  facebook: '#3C599C',
+  google:   '#D8503D',
+};
+
+fucss.colorMods = {
+  //50:   'l52',  // white 'a13'
+  100:  'l37',  // white 'a31'
+  200:  'l26',  // white 'a50'
+  300:  'l12',  // white 'a7'
+  400:  'l6',   // white '185'
+  500:  '',
+  600:  'd6',   // black 'a91'
+  700:  'd12',  // black 'a81'
+  800:  'd18',  // black 'a71'
+  900:  'd24'   // black 'a52'
+};
+
+fucss.config = {
+  'prim': 'colors', 
+  'sec': 'colors',
+  'err': 'colors',
+  'warn': 'colors',
 };
 
 //assigning custom client stuff
 !!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
-!!window.fucssExtras && Object.assign(fucss.extras, window.fucssExtras);
+!!window.fucssColors && Object.assign(fucss.colors, window.fucssColors);
 
 window.onload=function(){
   
@@ -253,7 +316,7 @@ fucss.riotExtractNGenerate = function(){
   var _jsStr = document.body.outerHTML;
   var _jsLoadedCount = 0;
   _tags.forEach(function(tag){
-  	window.riot.compile(tag.src, function(js){
+  	window.riot.compile(tag.src || tag.getAttribute('data-src'), function(js){
     	_jsStr += js;
     	_jsLoadedCount++;
     	_jsLoadedCount === _tags.length && fucss.generateStyling({riot: _jsStr, returnStyle: false});
@@ -282,7 +345,6 @@ fucss.generateStyling = function(opts){
       
   fucss[classHarvestingMethodName](htmlString)
     .forEach(function(className){
-      
       var target = className.split(fucss.seps.target);
       
       var splitedClassName = target.shift().split(fucss.seps.value);
@@ -296,6 +358,12 @@ fucss.generateStyling = function(opts){
       
       var value = splitedClassName.pop();
       var prop = props.shift();
+      
+      if(fucss.config[prop]){
+        value = fucss[fucss.config[prop]][value] || modifyColor(value) || value;
+        fucss[fucss.config[prop]][prop] = value;
+        return;
+      }
       
       //console.log(prop, props, state, value);
       if(Object.keys(fucss.properties).indexOf(prop) === -1 && prop.indexOf(',') === -1) return;
@@ -321,16 +389,14 @@ fucss.generateStyling = function(opts){
     && Object.keys(cssMediaQueries).forEach(function(mediaName){
       cssString += '@media only screen and (min-width: ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
     });
-    
-  for(var fux in fucss.extras){
-    cssString += ('.' + fux + '{' + fucss.extras[fux] + '}\n');
-  }
   
   //console.log(cssString);
   if(opts && opts.returnStyle){
     return cssString;
   }else{
-    fucss.anim ? cssString += fucss.aniGenerator() : false;
+    fucss.fux   ? cssString += fucss.generateExtras()       : false;
+    fucss.glob  ? cssString += fucss.generateGlobalExtras() : false;
+    fucss.anim  ? cssString += fucss.generateAnimations()   : false;
     //console.log(document.querySelector('style'));
     document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
   }
@@ -355,6 +421,34 @@ fucss.generateStyling = function(opts){
     }
   }
   
+  function modifyColor(value){
+    if(fucss.colors[value]) return fucss.colors[value];
+        
+    //checks if there is color and modifier (3 chars length) specified 
+    if(fucss.colors[value.substring(0, value.length-3)]
+      && fucss.colorMods[value.substring(value.length-3)]){
+      
+      return fucss.generateColor(
+        fucss.colors[value.substring(0, value.length-3)], 
+        fucss.colorMods[value.substring(value.length-3)]
+      );
+    }
+    
+    if(new RegExp(/(a\d\d\b)|(a\d\b)|(l\d\d\b)|(d\d\d\b)/).test(value)){
+      var length = value.length;
+      
+      var modifierPos = new RegExp(/(a\d\b)/).test(value) ? length-2 : length-3;
+      var modifier = value.substring(modifierPos);
+      modifier = fucss.colorMods[modifier] || modifier;
+      value = fucss.colors[value.substring(0, modifierPos)] || value.substring(0, modifierPos);
+      
+      return fucss.generateColor(value, modifier);
+      
+    } else if(new RegExp(/(^[0-9A-F]{6}$)|(^[0-9A-F]{3}$)/i).test(value)){
+      return '#' + value;
+    }
+  }
+  
   function modifyValue(valueList, prop){
     
     //console.log(valueList, prop, valueList.length);
@@ -363,43 +457,9 @@ fucss.generateStyling = function(opts){
       if(fucss.values[value]) return fucss.values[value];
       
       if(fucss.colorazable.indexOf(prop) !== -1){
-      
-        //console.log(prop, value);
-        
-        if(new RegExp(/(a\d\d\b)|(a\d\b)|(l\d\d\b)|(d\d\d\b)/).test(value)){
-          var length = value.length;
-          
-          var modifierPos = 2;
-          if(new RegExp(/(a\d\b)/).test(value)){
-            modifierPos = 1;
-          };
-          
-          var clrModifier = {
-            type: value.substring(length-modifierPos, length-modifierPos-1),
-            value: value.substr(length-modifierPos)
-          }
-          var tempValue = value.substr(0, length-modifierPos);
-          
-          
-          if(fucss.values[tempValue]){
-            value = fucss.values[tempValue];
-          } else if(tempValue && tempValue.length !== 6){
-            value = tempValue[0] + tempValue[0] + tempValue[1] + tempValue[1] + tempValue[2] + tempValue[2];
-          } else {
-            value = tempValue;
-          }
-          
-          switch(clrModifier.type){
-            case 'a':
-              return hex2rgb(value, {alpha: '0.' + clrModifier.value});
-            case 'l':
-              return hex2rgb(value, {alpha: 1, percent: clrModifier.value * 0.01});
-            case 'd':
-              return hex2rgb(value, {alpha: 1, percent: (clrModifier.value * -1) * 0.01});
-          }
-        } else if(new RegExp(/(^[0-9A-F]{6}$)|(^[0-9A-F]{3}$)/i).test(value)){
-          return '#' + value;
-        }
+        //console.log(prop, value)
+        var modifiedColor = modifyColor(value);
+        if(modifiedColor) return modifiedColor;
       }
       
       var unit = value.replace(/\d/g, '');
@@ -411,12 +471,12 @@ fucss.generateStyling = function(opts){
         return value + unit.replace('n', '');
       }
       
-      if(value === '!'){
+      if(value === fucss.seps.important){
         return '!important';
       }
       
       if(prop === 'font-family'){
-        value = value.replace('+', ' ');
+        value = value.replace(fucss.seps.and, ' ');
         return '"'+value+'"';
       }
       
@@ -444,10 +504,10 @@ fucss.generateStyling = function(opts){
   
   function generateCssRule(className, prop, props, value, state, target){
     
-    className = className.replace(':', '\\:');
-    className = className.replace('.', '\\.');
-    className = className.replace('!', '\\!');
-    className = className.replace('+', '\\+');
+    className = className.replace(fucss.seps.value, '\\:');
+    className = className.replace(fucss.seps.comma, '\\.');
+    className = className.replace(fucss.seps.important, '\\!');
+    className = className.replace(fucss.seps.and, '\\+');
     
     var firstAddon = props.length && props[0];
     var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
@@ -486,25 +546,58 @@ fucss.generateStyling = function(opts){
     
   }
   
-  function hex2rgb(hex, opts){
-    var h = hex.replace('#', '');
-    
-    h = h.match(new RegExp('(.{'+h.length/3+'})', 'g'));
-  
-    for(var i=0; i<h.length; i++){
-      h[i] = parseInt(h[i], 16);
-      if(opts.percent){
-        h[i] = Math.round(Math.round(h[i] + (255 * opts.percent)));
-        if(h[i] < 0) h[i] = 0;
-        if(h[i] > 255) h[i] = 255;
-      }
-    }
-    if(typeof opts.alpha !== 'undefined') h.push(opts.alpha);
-    return 'rgba('+h.join(',')+')';
-  }
-  
   return true;
 }
+
+//---------- color section Starts
+
+function hex2rgb(hex, opts){
+  var hex = hex.replace('#', '');
+  var rgb = hex.match(new RegExp('(.{' + (hex.length/3) + '})', 'g'));
+
+  for(var i = 0; i < rgb.length; i++){
+    rgb[i] = parseInt(rgb[i], 16);
+    if(opts.percent){
+      rgb[i] = Math.round(Math.round(rgb[i] + (255 * opts.percent)));
+      if(rgb[i] < 0) rgb[i] = 0;
+      if(rgb[i] > 255) rgb[i] = 255;
+    }
+  }
+  
+  if(opts.alpha) return 'rgba(' + rgb.join(',') + ',' + opts.alpha + ')';
+  if(opts.format === 'hex') return "#" +
+    ("0" + parseInt(rgb[0],10).toString(16)).slice(-2) +
+    ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+    ("0" + parseInt(rgb[2],10).toString(16)).slice(-2);
+  return 'rgb(' + rgb.join(',') + ')';
+}
+
+fucss.generateColor = function(hex, modifier){
+  
+  var c = hex.replace('#', '');
+  var mv = modifier.substring(1, modifier.length);
+  if(c && c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+  if(c && c.length === 2) c = c[0] + c[1] + c[0] + c[1] + c[0] + c[1];
+  
+  //console.log('generateColor', c, modifier);
+  
+  switch(modifier[0]){
+    case 'a':
+    case 'alpha':
+      return hex2rgb(c, { alpha: '0.' + mv });
+    case 'l':
+    case 'light':
+      return hex2rgb(c, { percent: mv * 0.01, format: 'hex'});
+    case 'd':
+    case 'dark':
+      return hex2rgb(c, { percent: (mv * -1) * 0.01, format: 'hex' });
+  }
+  
+  return hex;
+}
+
+//---------- color section ENDS
+  
 
 fucss.harvestClassesFromHtml = function(html){
   var myRegexp = (/class="(.*?)"/gi);
@@ -576,14 +669,55 @@ fucss.harvestClassesFromJsx = function(jsx){
   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
 }
 
+fucss.generateGlobalExtras = function(){
+  var globalExtras = {
+    "body": 'margin: 0; text-align: center; font-family: inherit; border-width: 0;',
+    "*": 'margin: 0 auto; outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
+    "a": 'text-decoration: none; color: inherit;',
+    "a, span, img, button, i": 'display: inline-block; vertical-align: middle;',
+    "button, a": 'cursor: pointer',
+    "input, button, select, option, textarea": 'font-size: 100%; font-family: inherit;',
+    
+    "[contenteditable='plaintext-only']": 'cursor: text',
+    "[contenteditable='plaintext-only']:empty:before" : 'content: attr(placeholder); opacity: 0.5; display: block;',
+  }
+  !!window.fucssGlobalExtras && Object.assign(globalExtras, window.fucssGlobalExtras);
+  
+  var cssString = '';
+  for(var key in globalExtras){
+    cssString += (key + '{' + globalExtras[key] + '}\n');
+  }
+  return globalExtras;
+};
+
+fucss.generateExtras = function(){
+  var extras = {
+    'fux-bb':       'box-sizing: border-box;',
+    'fux-clear':    'overflow: hidden;',
+    'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
+                      animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
+    'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
+      			          border-radius: 50%; border-top-color: ' + fucss.colors.sec + '; -webkit-animation: spin 0.75s ease-in-out infinite;',
+    'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
+    'fux-trans':    'transition: color 0.1 ease-in; transition-property: color, background-color, border-color;',
+  }
+  !!window.fucssExtras && Object.assign(extras, window.fucssExtras);
+  
+  var cssString = '';
+  for(var key in extras){
+    cssString += ('.' + key + '{' + extras[key] + '}\n');
+  }
+  return extras;
+};
+
 // aninamtion loader
-fucss.aniGenerator = function(){
+fucss.generateAnimations = function(){
   var loader = {};
   loader['@keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
   loader['@-webkit-keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
   
   loader['@keyframes fadeIn'] = 'from {opacity: 0.3;} to {opacity: 1;}';
-  loader['@-webkit-keyframes fadeIn'] = '@-webkit-keyframes  fadeIn {from {opacity: 0.3;}to {opacity: 1;}}';
+  loader['@-webkit-keyframes fadeIn'] = 'from {opacity: 0.3;}to {opacity: 1;}';
   
   loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
     

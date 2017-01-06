@@ -6,6 +6,135 @@ https://cdn.rawgit.com/noneedsystem/fucss/0.6.2/fucss.min.js
 Fuico icon library  
 https://github.com/noneedsystem/fuico 
 
+#0.6.3
+color modifiers enabled for example default pink = '#E91E63':
+```
+  bg:pinka5   = { background: rgba(233,30,99,0.5); }  
+  bg:pinkl10  = { background: #ff387d; }  
+  bg:pinkd10  = { background: #d0054a; }  
+```
+Flex box support implemented.  
+https://css-tricks.com/snippets/css/a-guide-to-flexbox/  
+default colors modified and implemented color modifier  
+implemented global default rules
+```javascript
+  
+  //css important eg: bg:pink-! = { background: #E91E63 !important; }
+  
+  //colors moved to separate object and redefined
+  fucss.colors = {
+    //version 6 colors
+    prim:     '#DE3E3E',  // red
+    sec:      '#2F3B50',  // grey dark
+    
+    red:      '#F44336',
+    pink:     '#E91E63',
+    purple:   '#9C27B0',
+    dpurple:  '#673AB7',
+    indigo:   '#3F51B5',
+    blue:     '#2196F3',
+    lblue:    '#03A9F4',
+    cyan:     '#00BCD4',
+    teal:     '#009688',
+    green:    '#4CAF50',
+    lgreen:   '#8BC34A',
+    lime:     '#CDDC39',
+    yellow:   '#FFEB3B',
+    amber:    '#FFC107',
+    orange:   '#FF9800',
+    dorange:  '#FF5722',
+    brown:    '#795548',
+    grey:     '#9E9E9E',
+    bgrey:    '#607D8B',
+    
+    black:    '#111',
+    silver:   '#DDD',
+    white:    '#fff',
+    
+    navy:     '#001f3f',
+    aqua:     '#7FDBFF',
+    teil:     '#39CCCC',
+    olive:    '#3D9970',
+    maroon:   '#85144b',
+    fuchsia:  '#F012BE',
+    // social
+    twitter:  '#5AACF2',
+    facebook: '#3C599C',
+    google:   '#D8503D',
+  };
+  
+  // now you can specify color modes for the color eg: pink400 = pinklight6
+  fucss.colorMods = {
+    //50:   'l52',  // white 'a13'
+    100:  'l37',  // white 'a31'
+    200:  'l26',  // white 'a50'
+    300:  'l12',  // white 'a7'
+    400:  'l6',   // white '185'
+    500:  '',
+    600:  'd6',   // black 'a91'
+    700:  'd12',  // black 'a81'
+    800:  'd18',  // black 'a71'
+    900:  'd24'   // black 'a52'
+  };
+  
+  // now you can predefine color configs eg: <body class="prim:indigo sec:pink err:red warn:yellow"> 
+  fucss.config = {
+    'prim': 'colors', 
+    'sec': 'colors',
+    'err': 'colors',
+    'warn': 'colors',
+  };
+  
+  // flex box support
+  var fucssProperties = {
+    //version 0.6.3
+    ww: 'word-wrap',
+    fd: 'flex-direction',
+    od: 'order',
+    flxg: 'flex-grow',
+    flxs: 'flex-shrink',
+    flxb: 'flex-basis',
+    flx: 'flex',
+    as: 'align-self',
+    ai: 'align-items',
+    ac: 'align-content',
+  }
+  
+  var fucssValues = {
+    //version 0.6.3
+    pl: 'pre-line',
+    nm: 'normal',
+    bl: 'baseline',
+    flx: 'flex',
+    if: 'inline-flex',
+    row: 'row',
+    col: 'col',
+    rr: 'row-reverse',
+    cr: 'column-reverse',
+    li: 'list-item',
+    wrap: 'wrap',
+    sb: 'space-between',
+    sa: 'space-around',
+    fs: 'flex-start',
+    fe: 'flex-end',
+    stc: 'stretch',
+  }
+  
+  var fucssGlob = false; // by default it is enabled
+  
+  var fucssGlobalExtras = {
+    "[contenteditable='plaintext-only']":   'cursor: text',
+    "[contenteditable='plaintext-only']:empty:before" : 'content: attr(placeholder); opacity: 0.5; display: block;',
+    "body": 'margin: 0; text-align: center; font-family: inherit; border-width: 0;',
+    "*": 'margin: 0 auto; outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
+    "a": 'text-decoration: none;',
+    "a, span, img, button, i": 'display: inline-block;',
+    "button, a": 'cursor: pointer',
+    "input, button, select, option, textarea": 'font-size: 100%; font-family: inherit;',
+  }
+
+```
+
 #0.6.2
 Predefined colours, animations implemented. Splash screen deprecated.
 ```javascript
