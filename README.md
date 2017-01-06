@@ -1,12 +1,12 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.3x)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.3x/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.4)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.4/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico 
 
-#0.6.3
+#0.6.4
 color modifiers enabled for example default pink = '#E91E63':
 ```
   bg:pinka5   = { background: rgba(233,30,99,0.5); }  
