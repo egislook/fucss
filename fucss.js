@@ -687,7 +687,7 @@ fucss.generateGlobalExtras = function(){
   for(var key in globalExtras){
     cssString += (key + '{' + globalExtras[key] + '}\n');
   }
-  return globalExtras;
+  return cssString;
 };
 
 fucss.generateExtras = function(){
@@ -707,7 +707,7 @@ fucss.generateExtras = function(){
   for(var key in extras){
     cssString += ('.' + key + '{' + extras[key] + '}\n');
   }
-  return extras;
+  return cssString;
 };
 
 // aninamtion loader
@@ -721,9 +721,9 @@ fucss.generateAnimations = function(){
   
   loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
     
-  var loaderStyle = '';
-  for(var rule in loader){
-    loaderStyle += (rule + '{'+ loader[rule] +'}\n');
+  var cssString = '';
+  for(var key in loader){
+    cssString += (key + '{'+ loader[key] +'}\n');
   }
-  return loaderStyle;
+  return cssString;
 }
