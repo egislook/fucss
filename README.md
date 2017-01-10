@@ -6,6 +6,27 @@ https://cdn.rawgit.com/noneedsystem/fucss/0.6.4/fucss.min.js
 Fuico icon library  
 https://github.com/noneedsystem/fuico 
 
+#0.6.5  
+media queries now have max-width
+
+```javascript
+  //smx => @media only screen and max-width 399px ...
+  fucss.media = {
+    smx: 399,
+    mdx: 767,
+    lgx: 1023,
+  };
+  
+```
+
+fucss properties added
+
+```javascript
+  fucss.properties = {
+    flxf: 'flex-flow'
+  }
+```
+
 #0.6.4
 color modifiers enabled for example default pink = '#E91E63':
 ```

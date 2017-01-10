@@ -20,6 +20,9 @@ fucss.media = {
   sm: 400,
   md: 768,
   lg: 1024,
+  smx: 399,
+  mdx: 767,
+  lgx: 1023,
 };
 
 fucss.states = {
@@ -108,8 +111,10 @@ fucss.properties = {
   
   //version 0.6.3
   ww: 'word-wrap',
-  fd: 'flex-direction',
   od: 'order',
+  fd: 'flex-direction',
+  flxd: 'flex-direction',
+  flxw: 'flex-wrap',
   flxg: 'flex-grow',
   flxs: 'flex-shrink',
   flxb: 'flex-basis',
@@ -117,6 +122,7 @@ fucss.properties = {
   as: 'align-self',
   ai: 'align-items',
   ac: 'align-content',
+  flxf: 'flex-flow',
   
 };
 
@@ -206,11 +212,11 @@ fucss.values = {
   flx: 'flex',
   if: 'inline-flex',
   row: 'row',
-  col: 'col',
+  col: 'column',
   rr: 'row-reverse',
   cr: 'column-reverse',
   li: 'list-item',
-  wrap: 'wrap',
+  wrp: 'wrap',
   sb: 'space-between',
   sa: 'space-around',
   fs: 'flex-start',
@@ -387,7 +393,11 @@ fucss.generateStyling = function(opts){
   //sets fucss.media queries at the end
   Object.keys(cssMediaQueries).length 
     && Object.keys(cssMediaQueries).forEach(function(mediaName){
-      cssString += '@media only screen and (min-width: ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
+      var rule = mediaName.indexOf('x') !== -1 ? 'max-width' : 'min-width';
+      
+      if(cssMediaQueries[mediaName].length){
+        cssString += '@media only screen and (' + rule + ': ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
+      }
     });
   
   //console.log(cssString);
