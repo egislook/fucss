@@ -1,7 +1,7 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.4)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.4/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.5)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.5/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico 
