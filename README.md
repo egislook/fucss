@@ -1,10 +1,31 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.5)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.5/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.6)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.6/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico 
+
+#0.6.6  
+fixed multiple target issue  
+fixed fux-trans // now it works for all transitions  
+implemented first, last child
+```javascript
+  
+  //multiple targets now are escaped
+  fs:100pc_a,h1 = 'a, h1 { font-size: 100% }';
+  
+  //fux-trans fixed
+  fucssExtras = {'fux-trans':    'transition: all .3s ease;'}
+  
+  //new state last-child implemented
+  fucss.states = { 
+    lc: 'last-child',
+    last: 'last-child',
+    first: 'frist-child'
+  }
+  
+```
 
 #0.6.5  
 media queries now have max-width

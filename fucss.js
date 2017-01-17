@@ -36,6 +36,10 @@ fucss.states = {
   //version 0.6.3
   bf: 'before',
   af: 'after',
+  //version 0.6.6
+  lc: 'last-child',
+  last: 'last-child',
+  first: 'first-child',
 };
 
 fucss.properties = {
@@ -123,6 +127,9 @@ fucss.properties = {
   ai: 'align-items',
   ac: 'align-content',
   flxf: 'flex-flow',
+  //version 0.6.6
+  jc: 'justify-content',
+  cont: 'content',
   
 };
 
@@ -546,13 +553,14 @@ fucss.generateStyling = function(opts){
       }
     }
     
-    if(target){
+    if(target && target.length){
       var allIndex = target.indexOf('all');
-      if(allIndex !== -1) {target[allIndex] = '*'};
+      if(allIndex !== -1) { target[allIndex] = '*' };
+      className = className.split(',').join('\\,');
       className = className + ' ' + target.join(' ');
     }
     
-    return '.' + className+ '{' + rules + '}\n';
+    return '.' + className + '{' + rules + '}\n';
     
   }
   
@@ -703,13 +711,14 @@ fucss.generateGlobalExtras = function(){
 fucss.generateExtras = function(){
   var extras = {
     'fux-bb':       'box-sizing: border-box;',
+    'fux-grd':      'background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) )',
     'fux-clear':    'overflow: hidden;',
     'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
                       animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
     'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
       			          border-radius: 50%; border-top-color: ' + fucss.colors.sec + '; -webkit-animation: spin 0.75s ease-in-out infinite;',
     'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
-    'fux-trans':    'transition: color 0.1 ease-in; transition-property: color, background-color, border-color;',
+    'fux-trans':    'transition: all .3s ease;',
   }
   !!window.fucssExtras && Object.assign(extras, window.fucssExtras);
   
