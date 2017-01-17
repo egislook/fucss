@@ -25,6 +25,12 @@ implemented first, last child
     first: 'frist-child'
   }
   
+  //new props
+  fucss.properties = {
+    jc: 'justify-content',
+    cont: 'content',
+  }
+  
 ```
 
 #0.6.5  
