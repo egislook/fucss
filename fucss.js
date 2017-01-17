@@ -532,6 +532,8 @@ fucss.generateStyling = function(opts){
     state ? className += (':' + state) : false;
     var rules = '';
     
+    className = className.split(',').join('\\,');
+    
     //grouped props by comma
     var groupedProps = prop.split(',');
     
@@ -539,7 +541,6 @@ fucss.generateStyling = function(opts){
       groupedProps.forEach(function(char){
         rules += (fucss.properties[char] || char) + ':' + value + ';';
       });
-      className = className.split(',').join('\\,');
     } else {
       
       //grouped fucss.addons
@@ -556,7 +557,7 @@ fucss.generateStyling = function(opts){
     if(target && target.length){
       var allIndex = target.indexOf('all');
       if(allIndex !== -1) { target[allIndex] = '*' };
-      className = className.split(',').join('\\,');
+      //className = className.split(',').join('\\,');
       className = className + ' ' + target.join(' ');
     }
     
