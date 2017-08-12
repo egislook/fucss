@@ -415,7 +415,15 @@ fucss.generateStyling = function(opts){
     fucss.glob  ? cssString += fucss.generateGlobalExtras() : false;
     fucss.anim  ? cssString += fucss.generateAnimations()   : false;
     //console.log(document.querySelector('style'));
-    document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
+    if(!document.querySelector('style')){
+      var css = document.createElement('style');
+      css.type = 'text/css';
+      css.appendChild(document.createTextNode(cssString));
+      document.getElementsByTagName("head")[0].appendChild(css);
+    }else{
+      document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML; 
+    }
+    
   }
   
   console.timeEnd('Fucss');

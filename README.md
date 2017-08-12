@@ -1,10 +1,13 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.6a)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.6a/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.7)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.7/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico 
+
+#0.6.7
+style in header now is created dynamically
 
 #0.6.6a  
 multiple target escape fix
