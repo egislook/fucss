@@ -1,10 +1,84 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.7)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.7/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.8)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.8/fucss.min.js
 
 Fuico icon library  
-https://github.com/noneedsystem/fuico 
+https://github.com/noneedsystem/fuico
+
+#0.6.8  
+No need for fux-trans & fux-boxsh
+Features: transitions, transform, functional values, sibling selector support, boxshadow
+```javascript
+
+  //box shadow now is auto generated
+  bs:1
+  
+  //transition all .45s cubic-bezier(0.23, 1, 0.32, 1)
+  ts:all
+  
+  //transform
+  scl:1.1
+  /**
+    scl: 'scale',
+    trl: 'translate',
+    rot: 'rotate',
+    skw: 'skew',
+    mtx: 'matrix',
+    prp: 'perspective',
+    trx: 'translateX',
+    try: 'translateY',
+    trz: 'translateZ',
+  */
+  
+  
+  //version 0.6.8
+  fucss.functions = {
+    //background
+    lg: 'linear-gradient',
+    rg: 'radial-gradient',
+  
+    //color
+    rgb: 'rgb',
+    rgba: 'rgba',
+    //transition
+    cb: 'cubic-bezier',
+  }
+  
+  fucss.transforms = {
+    scl: 'scale',
+    trl: 'translate',
+    rot: 'rotate',
+    skw: 'skew',
+    mtx: 'matrix',
+    prp: 'perspective',
+    trx: 'translateX',
+    try: 'translateY',
+    trz: 'translateZ',
+  }
+  
+  fucss.filters = {
+    bl: 'blur',
+    bh: 'brightness',
+    cn: 'contrast',
+    ds: 'drop-shadow',
+    gs: 'greyscale',
+    hr: 'hue-rotate',
+    iv: 'invert',
+    op: 'opacity',
+    st: 'saturate',
+    sp: 'sepia',
+  }
+  
+  fucss['shape-outside'] = {
+    crc: 'circle',
+    rec: 'rect',
+    els: 'ellipse',
+    ins: 'inset',
+    poly: 'polygon',
+  }
+  
+```
 
 #0.6.7
 style in header now is created dynamically
