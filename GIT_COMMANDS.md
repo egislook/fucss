@@ -12,4 +12,6 @@ $ git push origin master
 // releasing
 $ git tag 0.5.3
 $ git push origin --tags
+
+$uglifyjs fucss.js > fucss.min.js
 ```

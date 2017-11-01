@@ -1,34 +1,31 @@
-#FUCSS client side styling generator  
+# FUCSS client side styling generator  
+#### it can be used on server side too
 
-Fucss styling generator Hell YEAH!!!! (0.6.9)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.9/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.9a)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.9a/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
 
-#0.6.9 
-deprecated: txt property   
-feature: txt set as config
-bug: sticky values "1s,tf" fixed
-bug: ac - align-content now is not treated as state active
+## #0.6.9a 
+-------
+`changed` global values moved to top of the generated code  
+`removed` **moz**, **webkit** prefexis  
+`changed` smx: **401**, mdx: **769**, lgx: **1025**
+
+## #0.6.9
+-------
+`refactored` *txt* property is now config instead of property (use in body) **`txt:black100`**  
+`fixed` values *1s,tf* ar now not sticky (multiple transition support added) **`ts:op-1s,tf-500ms-eio-1s`** ` { transition: opacity 1s, transform 500ms easy-in-out 1s; }`   
+`fixed` *ac* - align-content now is not treated as state active **`ac-ac:c`** `:active { align-content: center }`
+`changed` *bl* -> *blr* filter function value **`blr:1px`** `{ filter:blur(1px) }`  
+`changed` op - opacity filter removed **`op:0.1`** `{ opacity:0.1 }`
 ```javascript
-  //op removed from filters now opacity works as it worked before
-  op:0.1 => opacity:0.1
-  //multiple transition support added
-  ts:op-1s,tf-500ms-eio-1s => transition: opacity 1s, transform 500ms easy-in-out 1s;
-  
-  // filter blur function value changed from bl => blr
-  blr:1px
-  
-  // new class set in body to have txt color value
-  txt:black100
-  
-  //new props
   fucss.properties = {
     mbm: 'mix-blend-mode'
   }
-  
-  //new values
+```
+```javascript
   fucss.values = {
     dif: 'difference',
     light: 'lighten',
@@ -36,7 +33,7 @@ bug: ac - align-content now is not treated as state active
   }
 ```
 
-#0.6.8  
+## #0.6.8  
 No need for fux-trans & fux-boxsh
 Features: transitions, transform, functional values, sibling selector support, boxshadow
 ```javascript
@@ -110,13 +107,13 @@ Features: transitions, transform, functional values, sibling selector support, b
   
 ```
 
-#0.6.7
+## #0.6.7
 style in header now is created dynamically
 
-#0.6.6a  
+## #0.6.6a  
 multiple target escape fix
 
-#0.6.6  
+## #0.6.6  
 fixed multiple target issue  
 fixed fux-trans // now it works for all transitions  
 implemented first, last child
@@ -143,7 +140,7 @@ implemented first, last child
   
 ```
 
-#0.6.5  
+## #0.6.5  
 media queries now have max-width
 
 ```javascript
@@ -164,7 +161,7 @@ fucss properties added
   }
 ```
 
-#0.6.4
+## #0.6.4
 color modifiers enabled for example default pink = '#E91E63':
 ```
   bg:pinka5   = { background: rgba(233,30,99,0.5); }  
@@ -177,7 +174,7 @@ default colors modified and implemented color modifier
 implemented global default rules
 ```javascript
   
-  //css important eg: bg:pink-! = { background: #E91E63 !important; }
+  //css important eg: bg:pink-! = { background: ## #E91E63 !important; }
   
   //colors moved to separate object and redefined
   fucss.colors = {
@@ -293,7 +290,7 @@ implemented global default rules
 
 ```
 
-#0.6.2
+## #0.6.2
 Predefined colours, animations implemented. Splash screen deprecated.
 ```javascript
   
@@ -345,8 +342,8 @@ Predefined colours, animations implemented. Splash screen deprecated.
     'fux-clear':    'overflow: hidden;',
     'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
                       animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
-    'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
-      			          border-radius: 50%; border-top-color: #DE3E3E; -webkit-animation: spin 0.75s ease-in-out infinite;',
+    'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid ## #fff;\
+      			          border-radius: 50%; border-top-color: ## #DE3E3E; -webkit-animation: spin 0.75s ease-in-out infinite;',
     'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
     'fux-trans':    'transition: color 0.1 ease-in; transition-property: color, background-color;',
   }
@@ -354,7 +351,7 @@ fucss.riotExtractNGenerate = function(){}
 
 ```
 
-#0.6.1
+## #0.6.1
 Auto riot class generator implemented
 ```javascript
 
@@ -363,7 +360,7 @@ fucss.riotExtractNGenerate = function(){}
 
 ```
 
-#0.6.0  
+## #0.6.0  
 Minified version now available
 
 ```javascript
@@ -390,7 +387,7 @@ Minified version now available
   
 ```
 
-#0.5.9c  
+## #0.5.9c  
 Fixed fucssValues implementation
 
 ```javascript
@@ -398,10 +395,10 @@ Fixed fucssValues implementation
 Object.assign(fucss.values, window.fucssValues)
 ```
 
-#0.5.9  
+## #0.5.9  
 Fixed color generator
 
-#0.5.8
+## #0.5.8
 Change log
 ```javascript
   //default splash value now is set to false
@@ -432,10 +429,10 @@ Change log
     now it is possible to use lighten(l25) / darken(d25) / alpha(a25) for colours. 
     Can be used with predifined values eg: (bg:mainl25)
   -->
-  <div class="bg:ffcb05l25">colour #ffcb05 lightened by 25%</div>
+  <div class="bg:ffcb05l25">colour ## #ffcb05 lightened by 25%</div>
 ```
 
-#0.5.6
+## #0.5.6
 Change log
 
 Media queries changed
@@ -447,7 +444,7 @@ Media queries changed
   };
 ```
 
-#0.5.5
+## #0.5.5
 Change log
 
 Splash screen implemented
@@ -495,7 +492,7 @@ Now fucss is a bit more customizable. AT LAST WE CAN PREDEFINE COLORS and create
 </script>
 ```
 
-#0.5.4  
+## #0.5.4  
 Change log
 ```html
   <!-- Atlast we have two "font-family" word support -->
@@ -508,10 +505,10 @@ Change log
   ls                        // letter-spacing
   
   <!-- Added Important functionality -->
-  c:fff-!                   // color:#fff !important;
+  c:fff-!                   // color:## #fff !important;
 ```
 
-#0.5.2  
+## #0.5.2  
 Stuff
 ```javascript
 

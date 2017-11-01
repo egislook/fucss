@@ -23,9 +23,9 @@ fucss.media = {
   sm: 400,
   md: 768,
   lg: 1024,
-  smx: 399,
-  mdx: 767,
-  lgx: 1023,
+  smx: 401,
+  mdx: 769,
+  lgx: 1025,
 };
 
 fucss.states = {
@@ -528,8 +528,8 @@ fucss.generateStyling = function(opts){
   if(opts && opts.returnStyle){
     return cssString;
   }else{
+    fucss.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
     fucss.fux   ? cssString += fucss.generateExtras()       : false;
-    fucss.glob  ? cssString += fucss.generateGlobalExtras() : false;
     fucss.anim  ? cssString += fucss.generateAnimations()   : false;
     //console.log(document.querySelector('style'));
     if(!document.querySelector('style')){
@@ -906,15 +906,13 @@ fucss.generateGlobalExtras = function(){
   var globalExtras = {
     "html, body": 'min-height: 100%; height: 100%;',
     "body": 'margin: 0; text-align: center; border-width: 0;\
-              font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;\
-              -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;letter-spacing: 0.02em;',
+              font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;letter-spacing: 0.02em;',
     "*":    'margin: 0 auto; outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
     // ".dp\\:flx > *": 'margin: 0;',
     "a":    'text-decoration: none; color: inherit;',
     "a, span, img, button, i, label": 'display: inline-block; vertical-align: middle;',
     "button, a, i, label, img": 'cursor: pointer; font-style: normal;',
     "input, button, select, option, textarea": 'font-size: 100%; font-family: inherit;',
-    "::-moz-selection": 'background: ' + fucss.colors.prim + '; color: ' + fucss.colors.white + ';',
     "::selection": 'background: ' + fucss.colors.prim + '; color: ' + fucss.colors.white + ';',
 
     "[contenteditable]": 'cursor: text',
@@ -937,7 +935,7 @@ fucss.generateExtras = function(){
     'fux-fadeIn':   'animation-name: fadeIn;animation-iteration-count: 1;\
                       animation-timing-function: ease-in;animation-duration: 0.2s;opacity: 1;',
     'fux-spinner':  'position: absolute; top: calc(50% - 25px); left: calc(50% - 25px); width: 50px; height: 50px; border: 3px solid #fff;\
-      			          border-radius: 50%; border-top-color: ' + fucss.colors.sec + '; -webkit-animation: spin 0.75s ease-in-out infinite;',
+      			          border-radius: 50%; border-top-color: ' + fucss.colors.sec + ';',
     'fux-boxsh':    'box-shadow: 0 1px 2px rgba(0,0,0,.1)',
     'fux-trans':    'transition: all .3s ease;',
     'fux-scale':    'transform: scale(1.05);',
@@ -954,12 +952,8 @@ fucss.generateExtras = function(){
 // aninamtion loader
 fucss.generateAnimations = function(){
   var loader = {};
-  loader['@keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
-  loader['@-webkit-keyframes spin'] = 'to { -webkit-transform: rotate(360deg); }';
-
+  loader['@keyframes spin'] = 'to { transform: rotate(360deg); }';
   loader['@keyframes fadeIn'] = 'from {opacity: 0.3;} to {opacity: 1;}';
-  loader['@-webkit-keyframes fadeIn'] = 'from {opacity: 0.3;}to {opacity: 1;}';
-
   loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
 
   var cssString = '';
