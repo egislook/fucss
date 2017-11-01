@@ -1,10 +1,10 @@
 var fucss = {};
 
 fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
-fucss.init = window.fucssInit !== undefined ? window.fucssInit : true;
-fucss.anim = window.fucssAnim !== undefined ? window.fucssAnim : true;
-fucss.glob = window.fucssGlob !== undefined ? window.fucssGlob : true;
-fucss.fux = window.fucssFux !== undefined ? window.fucssFux : true;
+fucss.init  = window.fucssInit !== undefined  ? window.fucssInit  : true;
+fucss.anim  = window.fucssAnim !== undefined  ? window.fucssAnim  : true;
+fucss.glob  = window.fucssGlob !== undefined  ? window.fucssGlob  : true;
+fucss.fux   = window.fucssFux !== undefined   ? window.fucssFux   : true;
 fucss.debug = window.fucssDebug !== undefined ? window.fucssDebug : false;
 
 fucss.seps = {
@@ -53,7 +53,7 @@ fucss.properties = {
   mrg: 'margin',
   clr: 'color',
   bg: 'background',
-  txt: 'text-align',
+  //txt: 'text-align',
   brd: 'border',
   dsp: 'display',
   pos: 'position',
@@ -146,11 +146,15 @@ fucss.properties = {
   tf: 'transform',
   sp: 'shape-outside',
   wc: 'will-change',
+  
+  //version 0.6.9
+  mbm: 'mix-blend-mode',
+  tsd: 'transition-delay',
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];
 
-fucss.groups = ['tb', 'rl'];
+fucss.groups = ['tb', 'rl', 'tr', 'rb', 'bl', 'tl'];
 
 fucss.addons = {
   t: 'top',
@@ -178,6 +182,8 @@ fucss.addons = {
   x: 'X',
   y: 'Y',
   z: 'z',
+  //version 0.6.9
+  dl: 'delay'
 };
 
 fucss.values = {
@@ -255,6 +261,13 @@ fucss.values = {
   ul: 'underline',
   lc: 'lowercase',
   cap: 'capitalize',
+  
+  //version 0.6.9
+  dif: 'difference',
+  light: 'lighten',
+  dark: 'darken',
+  eio: 'ease-in-out',
+  pw: 'pre-wrap'
 };
 
 //version 0.6.8
@@ -289,14 +302,14 @@ fucss.transforms = {
 }
 
 fucss.filters = {
-  bl: 'blur',
+  blr: 'blur',
   bh: 'brightness',
   cn: 'contrast',
   ds: 'drop-shadow',
   gs: 'greyscale',
   hr: 'hue-rotate',
   iv: 'invert',
-  op: 'opacity',
+  //op: 'opacity',
   st: 'saturate',
   sp: 'sepia',
 }
@@ -392,11 +405,11 @@ fucss.colorMods = {
 
 fucss.config = {
   'prim': 'colors',
-  'sec': 'colors',
-  'txt': 'colors',
-  'err': 'colors',
+  'sec':  'colors',
+  'txt':  'colors',
+  'err':  'colors',
   'warn': 'colors',
-  'ok': 'colors',
+  'ok':   'colors',
 };
 
 //assigning custom client stuff
@@ -466,7 +479,7 @@ fucss.generateStyling = function(opts){
       var value = splitedClassName.pop();
       if(!value)
         return fucss.debug && console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"');
-
+      
       var values = value && value.split(fucss.seps.space);
 
       if(fucss.config[prop]){
@@ -546,7 +559,7 @@ fucss.generateStyling = function(opts){
   }
 
   function extractState(props){
-    var stateValue = props.length && props[0];
+    var stateValue = props.length > 1 && props[0];
     if(Object.keys(fucss.states).indexOf(stateValue) !== -1){
       return fucss.states[props.shift()];
     }
@@ -581,18 +594,23 @@ fucss.generateStyling = function(opts){
   }
 
   function modifyValue(valueList, prop){
-
     //console.log(valueList, prop, valueList.length);
     var functions = [];
-    valueList = valueList.map(function(value){
+    valueList = valueList.map(modeValue);
+    if(functions.length)
+      return generateFunctionValue(functions, valueList);
 
+    return valueList.join(' ');
+    
+    function modeValue(value){
+      
       if(fucss.values[value])
         return fucss.values[value];
 
-      let func = fucss.functions[value];
-      if(func){
-        functions.push(func);
-        return func;
+      var fn = fucss.functions[value];
+      if(fn){
+        functions.push(fn);
+        return fn;
       }
 
       if(fucss.propertable.indexOf(prop) !== -1 && fucss.properties[value])
@@ -613,6 +631,10 @@ fucss.generateStyling = function(opts){
         if(unit.indexOf('dg') !== -1 ) return value + 'deg';
         return value + unit.replace('n', '');
       }
+      
+      //get only sticky values exclude function values
+      if(value.indexOf(',') > 0 && value.indexOf('(') === -1)
+        return value.split(',').map(modeValue).join(',');
 
       if(value === fucss.seps.important)
         return '!important';
@@ -623,11 +645,7 @@ fucss.generateStyling = function(opts){
       }
 
       return value;
-    });
-    if(functions.length)
-      return generateFunctionValue(functions, valueList);
-
-    return valueList.join(' ');
+    }
   }
 
   function generateFunctionValue(functions, valueList){
@@ -653,7 +671,7 @@ fucss.generateStyling = function(opts){
       values.unshift(prop);
       return 'tf';
     }
-
+    
     if(fucss.filters[prop]){
       values.unshift(prop);
       return 'ft';
@@ -886,6 +904,7 @@ fucss.harvestClassesFromJsx = function(jsx){
 
 fucss.generateGlobalExtras = function(){
   var globalExtras = {
+    "html, body": 'min-height: 100%; height: 100%;',
     "body": 'margin: 0; text-align: center; border-width: 0;\
               font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;\
               -webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;letter-spacing: 0.02em;',
@@ -893,7 +912,7 @@ fucss.generateGlobalExtras = function(){
     // ".dp\\:flx > *": 'margin: 0;',
     "a":    'text-decoration: none; color: inherit;',
     "a, span, img, button, i, label": 'display: inline-block; vertical-align: middle;',
-    "button, a, i, label": 'cursor: pointer; font-style: normal;',
+    "button, a, i, label, img": 'cursor: pointer; font-style: normal;',
     "input, button, select, option, textarea": 'font-size: 100%; font-family: inherit;',
     "::-moz-selection": 'background: ' + fucss.colors.prim + '; color: ' + fucss.colors.white + ';',
     "::selection": 'background: ' + fucss.colors.prim + '; color: ' + fucss.colors.white + ';',

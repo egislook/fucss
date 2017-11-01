@@ -1,10 +1,40 @@
 #FUCSS client side styling generator  
 
-Fucss styling generator Hell YEAH!!!! (0.6.8)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.8/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.9)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.9/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+#0.6.9 
+deprecated: txt property   
+feature: txt set as config
+bug: sticky values "1s,tf" fixed
+bug: ac - align-content now is not treated as state active
+```javascript
+  //op removed from filters now opacity works as it worked before
+  op:0.1 => opacity:0.1
+  //multiple transition support added
+  ts:op-1s,tf-500ms-eio-1s => transition: opacity 1s, transform 500ms easy-in-out 1s;
+  
+  // filter blur function value changed from bl => blr
+  blr:1px
+  
+  // new class set in body to have txt color value
+  txt:black100
+  
+  //new props
+  fucss.properties = {
+    mbm: 'mix-blend-mode'
+  }
+  
+  //new values
+  fucss.values = {
+    dif: 'difference',
+    light: 'lighten',
+    dark: 'darken',
+  }
+```
 
 #0.6.8  
 No need for fux-trans & fux-boxsh
