@@ -421,7 +421,8 @@ window.onload=function(){
   //initiating the generator
   fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
   fucss.init && !window.riot && fucss.generateStyling();
-  fucss.init && !!window.riot && fucss.riotExtractNGenerate();
+  //fucss.init && !!window.riot && fucss.riotExtractNGenerate();
+  fucss.init && !!window.riot && fucss.riotUseXhrRes();
 };
 
 fucss.riotExtractNGenerate = function(){
@@ -435,6 +436,26 @@ fucss.riotExtractNGenerate = function(){
     	_jsLoadedCount === _tags.length && fucss.generateStyling({riot: _jsStr, returnStyle: false});
   	});
   });
+}
+
+fucss.riotUseXhrRes = function(){
+  var _html = document.body.outerHTML;
+  var _srcs = [];
+  document.querySelectorAll('script[type="riot/tag"')
+    .forEach(tag => _srcs.push(tag.src || tag.getAttribute('data-src')));
+  
+  var _timer;
+  _timer = setInterval(function(){
+    fucss.xhrRes.forEach(res => {
+      var i = _srcs.indexOf(res.url);
+    });
+    console.log(_srcs, fucss.xhrRes);
+    
+    if(!_srcs.length){
+      
+      clearInterval(_timer);
+    }
+  }, 500);
 }
 
 fucss.generateStyling = function(opts){
@@ -962,3 +983,27 @@ fucss.generateAnimations = function(){
   }
   return cssString;
 }
+
+// middleware to detect xhr requests and return the request
+fucss.xhrMiddle = function(fn){
+  var oldXHR = window.XMLHttpRequest;
+
+  function newXHR() {
+    var realXHR = new oldXHR();
+    realXHR.addEventListener('readystatechange', function() {
+      if(realXHR.readyState==4 && realXHR.status==200){
+        fn && fn({
+          text: realXHR.responseText,
+          url:  realXHR.responseURL,
+        }, realXHR)
+      }
+    }, false);
+    return realXHR;
+  }
+  window.XMLHttpRequest = newXHR; 
+}
+
+fucss.xhrRes = [];
+fucss.xhrMiddle(function(res){
+  fucss.xhrRes.push(res);
+});
