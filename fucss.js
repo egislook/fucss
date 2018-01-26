@@ -146,7 +146,7 @@ fucss.properties = {
   tf: 'transform',
   sp: 'shape-outside',
   wc: 'will-change',
-  
+
   //version 0.6.9
   mbm: 'mix-blend-mode',
   tsd: 'transition-delay',
@@ -261,7 +261,7 @@ fucss.values = {
   ul: 'underline',
   lc: 'lowercase',
   cap: 'capitalize',
-  
+
   //version 0.6.9
   dif: 'difference',
   light: 'lighten',
@@ -442,20 +442,21 @@ fucss.riotUseXhrRes = function(){
   var _html = document.body.outerHTML;
   var _srcs = [];
   document.querySelectorAll('script[type="riot/tag"')
-    .forEach(tag => _srcs.push(tag.src || tag.getAttribute('data-src')));
-  
-  var _timer;
-  _timer = setInterval(function(){
-    fucss.xhrRes.forEach(res => {
+    .forEach(function(tag){ _srcs.push(tag.src || tag.getAttribute('data-src')) });
+
+  var _timer = setInterval(function(){
+    fucss.xhrRes.forEach(function(res){
       var i = _srcs.indexOf(res.url);
+      if(i === -1) return;
+      _srcs.splice(i, 1);
+      _html += res.text;
     });
-    console.log(_srcs, fucss.xhrRes);
-    
+
     if(!_srcs.length){
-      
       clearInterval(_timer);
+      fucss.generateStyling({riot: _html, returnStyle: false});
     }
-  }, 500);
+  }, 50);
 }
 
 fucss.generateStyling = function(opts){
@@ -500,7 +501,7 @@ fucss.generateStyling = function(opts){
       var value = splitedClassName.pop();
       if(!value)
         return fucss.debug && console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"');
-      
+
       var values = value && value.split(fucss.seps.space);
 
       if(fucss.config[prop]){
@@ -622,9 +623,9 @@ fucss.generateStyling = function(opts){
       return generateFunctionValue(functions, valueList);
 
     return valueList.join(' ');
-    
+
     function modeValue(value){
-      
+
       if(fucss.values[value])
         return fucss.values[value];
 
@@ -652,7 +653,7 @@ fucss.generateStyling = function(opts){
         if(unit.indexOf('dg') !== -1 ) return value + 'deg';
         return value + unit.replace('n', '');
       }
-      
+
       //get only sticky values exclude function values
       if(value.indexOf(',') > 0 && value.indexOf('(') === -1)
         return value.split(',').map(modeValue).join(',');
@@ -692,7 +693,7 @@ fucss.generateStyling = function(opts){
       values.unshift(prop);
       return 'tf';
     }
-    
+
     if(fucss.filters[prop]){
       values.unshift(prop);
       return 'ft';
@@ -1000,7 +1001,7 @@ fucss.xhrMiddle = function(fn){
     }, false);
     return realXHR;
   }
-  window.XMLHttpRequest = newXHR; 
+  window.XMLHttpRequest = newXHR;
 }
 
 fucss.xhrRes = [];

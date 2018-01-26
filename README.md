@@ -1,13 +1,17 @@
 # FUCSS client side styling generator  
 #### it can be used on server side too
 
-Fucss styling generator Hell YEAH!!!! (0.6.9a)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.9a/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.9b)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.9b/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
 
-## #0.6.9a 
+## #0.6.9b
+-------
+`refactored` riot tags are now collected through xhr response
+
+## #0.6.9a
 -------
 `changed` global values moved to top of the generated code  
 `removed` **moz**, **webkit** prefexis  
@@ -40,10 +44,10 @@ Features: transitions, transform, functional values, sibling selector support, b
 
   //box shadow now is auto generated
   bs:1
-  
+
   //transition all .45s cubic-bezier(0.23, 1, 0.32, 1)
   ts:all
-  
+
   //transform
   scl:1.1
   /**
@@ -57,21 +61,21 @@ Features: transitions, transform, functional values, sibling selector support, b
     try: 'translateY',
     trz: 'translateZ',
   */
-  
-  
+
+
   //version 0.6.8
   fucss.functions = {
     //background
     lg: 'linear-gradient',
     rg: 'radial-gradient',
-  
+
     //color
     rgb: 'rgb',
     rgba: 'rgba',
     //transition
     cb: 'cubic-bezier',
   }
-  
+
   fucss.transforms = {
     scl: 'scale',
     trl: 'translate',
@@ -83,7 +87,7 @@ Features: transitions, transform, functional values, sibling selector support, b
     try: 'translateY',
     trz: 'translateZ',
   }
-  
+
   fucss.filters = {
     bl: 'blur',
     bh: 'brightness',
@@ -96,7 +100,7 @@ Features: transitions, transform, functional values, sibling selector support, b
     st: 'saturate',
     sp: 'sepia',
   }
-  
+
   fucss['shape-outside'] = {
     crc: 'circle',
     rec: 'rect',
@@ -104,7 +108,7 @@ Features: transitions, transform, functional values, sibling selector support, b
     ins: 'inset',
     poly: 'polygon',
   }
-  
+
 ```
 
 ## #0.6.7
@@ -118,26 +122,26 @@ fixed multiple target issue
 fixed fux-trans // now it works for all transitions  
 implemented first, last child
 ```javascript
-  
+
   //multiple targets now are escaped
   fs:100pc_a,h1 = 'a, h1 { font-size: 100% }';
-  
+
   //fux-trans fixed
   fucssExtras = {'fux-trans':    'transition: all .3s ease;'}
-  
+
   //new state last-child implemented
-  fucss.states = { 
+  fucss.states = {
     lc: 'last-child',
     last: 'last-child',
     first: 'frist-child'
   }
-  
+
   //new props
   fucss.properties = {
     jc: 'justify-content',
     cont: 'content',
   }
-  
+
 ```
 
 ## #0.6.5  
@@ -150,7 +154,7 @@ media queries now have max-width
     mdx: 767,
     lgx: 1023,
   };
-  
+
 ```
 
 fucss properties added
@@ -173,15 +177,15 @@ https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 default colors modified and implemented color modifier  
 implemented global default rules
 ```javascript
-  
+
   //css important eg: bg:pink-! = { background: ## #E91E63 !important; }
-  
+
   //colors moved to separate object and redefined
   fucss.colors = {
     //version 6 colors
     prim:     '#DE3E3E',  // red
     sec:      '#2F3B50',  // grey dark
-    
+
     red:      '#F44336',
     pink:     '#E91E63',
     purple:   '#9C27B0',
@@ -201,11 +205,11 @@ implemented global default rules
     brown:    '#795548',
     grey:     '#9E9E9E',
     bgrey:    '#607D8B',
-    
+
     black:    '#111',
     silver:   '#DDD',
     white:    '#fff',
-    
+
     navy:     '#001f3f',
     aqua:     '#7FDBFF',
     teil:     '#39CCCC',
@@ -217,7 +221,7 @@ implemented global default rules
     facebook: '#3C599C',
     google:   '#D8503D',
   };
-  
+
   // now you can specify color modes for the color eg: pink400 = pinklight6
   fucss.colorMods = {
     //50:   'l52',  // white 'a13'
@@ -231,15 +235,15 @@ implemented global default rules
     800:  'd18',  // black 'a71'
     900:  'd24'   // black 'a52'
   };
-  
-  // now you can predefine color configs eg: <body class="prim:indigo sec:pink err:red warn:yellow"> 
+
+  // now you can predefine color configs eg: <body class="prim:indigo sec:pink err:red warn:yellow">
   fucss.config = {
-    'prim': 'colors', 
+    'prim': 'colors',
     'sec': 'colors',
     'err': 'colors',
     'warn': 'colors',
   };
-  
+
   // flex box support
   var fucssProperties = {
     //version 0.6.3
@@ -254,7 +258,7 @@ implemented global default rules
     ai: 'align-items',
     ac: 'align-content',
   }
-  
+
   var fucssValues = {
     //version 0.6.3
     pl: 'pre-line',
@@ -274,9 +278,9 @@ implemented global default rules
     fe: 'flex-end',
     stc: 'stretch',
   }
-  
+
   var fucssGlob = false; // by default it is enabled
-  
+
   var fucssGlobalExtras = {
     "[contenteditable='plaintext-only']":   'cursor: text',
     "[contenteditable='plaintext-only']:empty:before" : 'content: attr(placeholder); opacity: 0.5; display: block;',
@@ -293,7 +297,7 @@ implemented global default rules
 ## #0.6.2
 Predefined colours, animations implemented. Splash screen deprecated.
 ```javascript
-  
+
   //all values can be overwrited using fucssValues
   var fucssValues = {
     //version 6 colors
@@ -324,18 +328,18 @@ Predefined colours, animations implemented. Splash screen deprecated.
     grey:     '#AAAAAA',
     silver:   '#DDDDDD',
   }
-  
+
   //deprecated splash screen value
   var fucssSplash = false;
-  
+
   //implemented
   var fucssAnim = false; // default true
-  
+
   // animations implemented
   @keyframes spin
   @keyframes fadeIn
   @keyframes fadeOut
-  
+
   // new extras added
   var fucssExtras = {
     'fux-bb':       'border-sizing: border-box;',
@@ -367,7 +371,7 @@ Minified version now available
   // now riot.js class object can be extracted too and all rules will be generated
   var _jsStr = "<div class={'op:0.8 hv-op:1': true, 'p:10px': true, 'm:10px': false} />";
   fucss.generateStyling({riot: _jsStr, returnStyle: false});
-  
+
   // if you need to use fucss for riot.js
   var _tags = document.querySelectorAll('script[type="riot/tag"');
   var _jsStr = document.body.outerHTML;
@@ -378,13 +382,13 @@ Minified version now available
     	_jsLoadedCount++;
     	if(_jsLoadedCount === _tags.length){
     		fucss.generateStyling({riot: _jsStr, returnStyle: false});
-  			
+
   			riot.mount('*');
   			route.start(true);
     	}
   	});
   });
-  
+
 ```
 
 ## #0.5.9c  
@@ -403,30 +407,30 @@ Change log
 ```javascript
   //default splash value now is set to false
   fucss.splash = false;
-  
+
   //colors can be predefined
   var fucssValues = {
     main: '#ffcb05',
     grey: '#dadada',
   };
-  
+
   /** new function for react.js and classNames library implemented
-    
+
     <div className="bg:000"/>
-    
+
     or
-    
+
     var getDivClassNames = classNames({
       'bg:000': true,
     });
-    
+
   **/
   fucss.generateStyling({jsx: _scriptString});
 ```
 
 ```html
   <!--
-    now it is possible to use lighten(l25) / darken(d25) / alpha(a25) for colours. 
+    now it is possible to use lighten(l25) / darken(d25) / alpha(a25) for colours.
     Can be used with predifined values eg: (bg:mainl25)
   -->
   <div class="bg:ffcb05l25">colour ## #ffcb05 lightened by 25%</div>
@@ -470,23 +474,23 @@ tl                        //table-layout
 Now fucss is a bit more customizable. AT LAST WE CAN PREDEFINE COLORS and create custom rules
 ```html
 <script>
-  
+
   // Your custom values
   var fucssValues = {
     main: '#ffcb05'
   };
-  
+
   // Your custom extra classess (fux)
   var fucssExtras = {
     'fux-grd-blue': 'background: linear-gradient(to right, rgba(25,32,68,0.9) 0%, rgba(25,32,68,0) 100%);'
   };
-  
+
   // Starts fucss checking function every 5s
   var fucssWatch = 5000;
-  
+
   // Stops fucss init function
-  var fucssInit = false; 
-  
+  var fucssInit = false;
+
   // Disables fucss splash screen
   var fucssSplash = false;
 </script>
@@ -497,13 +501,13 @@ Change log
 ```html
   <!-- Atlast we have two "font-family" word support -->
   ff:Open+Sans              // font-family:"Open+Sans";
-  
+
   <!-- ls changed to lis "list-style"-->
   ls => lis                 // list-style
-  
+
   <!-- We need ls for "letter-spacing" more then "list-style" -->
   ls                        // letter-spacing
-  
+
   <!-- Added Important functionality -->
   c:fff-!                   // color:## #fff !important;
 ```
@@ -538,7 +542,7 @@ fucss.states = {
   hov: 'hover',
   act: 'active',
   foc: 'focus',
-  
+
   hv: 'hover',
   ac: 'active',
   fc: 'focus',
@@ -574,11 +578,11 @@ fucss.properties = {
   mxh: 'max-height',
   mnw: 'min-width',
   mnh: 'min-height',
-  
+
   ls: 'list-style',
   ltrs: 'letter-spacing',
   ws: 'white-space',
-  
+
   //version 4
   ff: 'font-family',
   ta: 'text-align',
@@ -609,11 +613,11 @@ fucss.properties = {
 
 //version 4
 fucss.colorazable = [
-  'color', 
-  'background', 
-  'background-color', 
-  'border', 
-  'border-color', 
+  'color',
+  'background',
+  'background-color',
+  'border',
+  'border-color',
   'border-bottom',
   'border-top',,
   'border-left',
@@ -624,7 +628,7 @@ fucss.colorazable = [
   'border-bottom-color',
 ];
 
-fucss.units = ['px', 'em', 'pc', 'vh', 'vw']; 
+fucss.units = ['px', 'em', 'pc', 'vh', 'vw'];
 
 fucss.groups = ['tb', 'rl'];
 
@@ -683,7 +687,7 @@ fucss.values = {
   ib: 'inline-block',
   blk: 'block',
   cl: 'clear',
-  
+
   //version 4
   hd: 'hidden',
   vs: 'visible',
