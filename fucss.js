@@ -150,6 +150,9 @@ fucss.properties = {
   //version 0.6.9
   mbm: 'mix-blend-mode',
   tsd: 'transition-delay',
+  
+  //version 0.7.0
+  vsb: 'visibility',
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];

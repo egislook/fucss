@@ -1,11 +1,15 @@
 # FUCSS client side styling generator  
 #### it can be used on server side too
 
-Fucss styling generator Hell YEAH!!!! (0.6.9b)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.6.9b/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.6.7)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.6.7/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+## #0.7.0
+-------
+`add` property **visability** added *vsb:vs* || *vsb:hd*
 
 ## #0.6.9b
 -------
