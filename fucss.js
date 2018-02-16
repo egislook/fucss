@@ -302,6 +302,10 @@ fucss.transforms = {
   trx: 'translateX',
   try: 'translateY',
   trz: 'translateZ',
+  //version 0.7.1
+  scx: 'scaleX',
+  scy: 'scaleY',
+  scz: 'scaleZ',
 }
 
 fucss.filters = {
@@ -619,58 +623,56 @@ fucss.generateStyling = function(opts){
   }
 
   function modifyValue(valueList, prop){
-    //console.log(valueList, prop, valueList.length);
     var functions = [];
-    valueList = valueList.map(modeValue);
+    valueList = valueList.map(function(v){return modifySingleValue(v, prop, functions)});
     if(functions.length)
       return generateFunctionValue(functions, valueList);
 
     return valueList.join(' ');
+  }
+  
+  function modifySingleValue(value, prop, functions){
 
-    function modeValue(value){
+    if(fucss.values[value])
+      return fucss.values[value];
 
-      if(fucss.values[value])
-        return fucss.values[value];
-
-      var fn = fucss.functions[value];
-      if(fn){
-        functions.push(fn);
-        return fn;
-      }
-
-      if(fucss.propertable.indexOf(prop) !== -1 && fucss.properties[value])
-        return fucss.properties[value];
-
-      if(fucss.colorazable.indexOf(prop) !== -1){
-        //console.log(prop, value)
-        var modifiedColor = modifyColor(value);
-        if(modifiedColor) return modifiedColor;
-      }
-
-      var unit = value.replace(/\d*\.?\d*/g, '');
-      if(unit && (unit.length === 3 || unit.length === 2)){
-        value = value.replace(unit, '');
-
-        if(unit.indexOf('n') !== -1) value = -value;
-        if(unit.indexOf('pc') !== -1 ) return value + '%';
-        if(unit.indexOf('dg') !== -1 ) return value + 'deg';
-        return value + unit.replace('n', '');
-      }
-
-      //get only sticky values exclude function values
-      if(value.indexOf(',') > 0 && value.indexOf('(') === -1)
-        return value.split(',').map(modeValue).join(',');
-
-      if(value === fucss.seps.important)
-        return '!important';
-
-      if(prop === 'font-family'){
-        value = value.replace(fucss.seps.and, ' ');
-        return '"'+value+'"';
-      }
-
-      return value;
+    var fn = fucss.functions[value];
+    if(fn){
+      functions.push(fn);
+      return fn;
     }
+
+    if(fucss.propertable.indexOf(prop) !== -1 && fucss.properties[value])
+      return fucss.properties[value];
+    
+    if(fucss.colorazable.indexOf(prop) !== -1){
+      //console.log(prop, value)
+      var modifiedColor = modifyColor(value);
+      if(modifiedColor) return modifiedColor;
+    }
+
+    var unit = value.replace(/\d*\.?\d*/g, '');
+    if(unit && (unit.length === 3 || unit.length === 2 || unit === 'n')){
+      value = value.replace(unit, '');
+      if(unit.indexOf('n') !== -1) value = -value;
+      if(unit.indexOf('pc') !== -1 ) return value + '%';
+      if(unit.indexOf('dg') !== -1 ) return value + 'deg';
+      return value + unit.replace('n', '');
+    }
+
+    //get only sticky values exclude function values
+    if(value.indexOf(',') > 0 && value.indexOf('(') === -1)
+      return value.split(',').map(modifySingleValue).join(',');
+
+    if(value === fucss.seps.important)
+      return '!important';
+
+    if(prop === 'font-family'){
+      value = value.replace(fucss.seps.and, ' ');
+      return '"'+value+'"';
+    }
+
+    return value;
   }
 
   function generateFunctionValue(functions, valueList){
