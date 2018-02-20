@@ -1,11 +1,31 @@
-# FUCSS client side styling generator  
-#### it can be used on server side too
+# FUCSS client & server styling generator  
+#### Fucss is fastest tool and method to write custom styling generator for riot, react and html.
 
-Fucss styling generator Hell YEAH!!!! (0.7.2)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.7.2/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.7.3)  
+client: https://cdn.rawgit.com/egislook/fucss/0.7.3/fucss.min.js  
+server: `npm install --save fucss`
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+## #0.7.3
+-------
+`added` node server support `require('fucss')`  
+`added` fucss.storeHTML function that stores array of html strings in fucss.HTML array
+`added` props to fucss.generateStyling function
+```javascript
+  // Returns css rules on the server side
+  fucss.generateStyling({
+    riot: html || fucss.HTML.join(''),
+    returnStyle: true,
+    glob: true,
+    anim: true
+  })
+
+  // Now returnStyle option executes \' replacer
+  if(opts.riot && opts.returnStyle)
+    htmlString = htmlString.replace(/\\'/g, "'");
+```
 
 ## #0.7.2
 -------
@@ -14,7 +34,7 @@ https://github.com/noneedsystem/fuico
 ## #0.7.1
 -------
 `fixed` negative values **`z:20n`** `{ z-index: -20 }`  
-`add` properties **scaleX** **scaleY** **scaleZ** added **`scx:1n`** `{ transform: scaleX(-1) }`  
+`added` properties **scaleX** **scaleY** **scaleZ** added **`scx:1n`** `{ transform: scaleX(-1) }`  
 ```javascript
   fucss.properties = {
     scx: 'scaleX',

@@ -1,11 +1,12 @@
 var fucss = {};
-
-fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
-fucss.init  = window.fucssInit !== undefined  ? window.fucssInit  : true;
-fucss.anim  = window.fucssAnim !== undefined  ? window.fucssAnim  : true;
-fucss.glob  = window.fucssGlob !== undefined  ? window.fucssGlob  : true;
-fucss.fux   = window.fucssFux !== undefined   ? window.fucssFux   : true;
-fucss.debug = window.fucssDebug !== undefined ? window.fucssDebug : false;
+if(typeof window === 'object'){
+  fucss.watch = window.fucssWatch !== undefined ? window.fucssWatch : 0;
+  fucss.init  = window.fucssInit  !== undefined ? window.fucssInit  : true;
+  fucss.anim  = window.fucssAnim  !== undefined ? window.fucssAnim  : true;
+  fucss.glob  = window.fucssGlob  !== undefined ? window.fucssGlob  : true;
+  fucss.fux   = window.fucssFux   !== undefined ? window.fucssFux   : true;
+  fucss.debug = window.fucssDebug !== undefined ? window.fucssDebug : false;
+}
 
 fucss.seps = {
   'value': ':',
@@ -150,7 +151,7 @@ fucss.properties = {
   //version 0.6.9
   mbm: 'mix-blend-mode',
   tsd: 'transition-delay',
-  
+
   //version 0.7.0
   vsb: 'visibility',
 };
@@ -420,17 +421,21 @@ fucss.config = {
 };
 
 //assigning custom client stuff
-!!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
-!!window.fucssColors && Object.assign(fucss.colors, window.fucssColors);
+if(typeof window === 'object'){
+  !!window.fucssValues && Object.assign(fucss.values, window.fucssValues);
+  !!window.fucssColors && Object.assign(fucss.colors, window.fucssColors);
+}
 
-window.onload=function(){
+if(typeof window === 'object'){
+  window.onload=function(){
 
-  //initiating the generator
-  fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
-  fucss.init && !window.riot && fucss.generateStyling();
-  //fucss.init && !!window.riot && fucss.riotExtractNGenerate();
-  fucss.init && !!window.riot && fucss.riotUseXhrRes();
-};
+    //initiating the generator
+    fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
+    fucss.init && !window.riot && fucss.generateStyling();
+    //fucss.init && !!window.riot && fucss.riotExtractNGenerate();
+    fucss.init && !!window.riot && fucss.riotUseXhrRes();
+  };
+}
 
 fucss.riotExtractNGenerate = function(){
   var _tags = document.querySelectorAll('script[type="riot/tag"');
@@ -485,6 +490,8 @@ fucss.generateStyling = function(opts){
       : 'harvestClassesFromHtml';
 
   var htmlString = (opts && (opts.jsx || opts.riot || opts.html)) || document.body.outerHTML;
+  if(opts.riot && opts.returnStyle)
+    htmlString = htmlString.replace(/\\'/g, "'");
   fucss[classHarvestingMethodName](htmlString)
     .forEach(function(className){
       classNumber++;
@@ -527,7 +534,7 @@ fucss.generateStyling = function(opts){
       if(!fucss.properties[prop] && prop.indexOf(',') < 0)
         cssMissing = cssMissing.concat([prop]);
 
-      prop = combineProps(prop, props);
+      prop  = combineProps(prop, props);
       props = modifyProps(props);
       value = modifyValue(values, prop);
       //if(prop.indexOf('transform') !== -1) console.log(prop, props, value);
@@ -554,6 +561,8 @@ fucss.generateStyling = function(opts){
 
   //console.log(cssString);
   if(opts && opts.returnStyle){
+    opts.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
+    opts.anim  ? cssString += fucss.generateAnimations()   : false;
     return cssString;
   }else{
     fucss.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
@@ -629,7 +638,7 @@ fucss.generateStyling = function(opts){
 
     return valueList.join(' ');
   }
-  
+
   function modifySingleValue(value, prop, functions){
 
     if(fucss.values[value])
@@ -643,7 +652,7 @@ fucss.generateStyling = function(opts){
 
     if(fucss.propertable.indexOf(prop) !== -1 && fucss.properties[value])
       return fucss.properties[value];
-    
+
     if(fucss.colorazable.indexOf(prop) !== -1){
       //console.log(prop, value)
       var modifiedColor = modifyColor(value);
@@ -878,7 +887,7 @@ fucss.harvestClassesFromRiot = function(riot){
   var myRegexp3 = (/'(.*?)'/g);
   var myArray, myArray2, myArray3;
   var allHarvestedClassNames = [];
-  
+
   while((myArray = myRegexp.exec(riot.replace(/(\r\n|\n|\r)/gm, ''))) !== null) {
     if(myArray[0].indexOf("'") >= 0){
       while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
@@ -947,7 +956,7 @@ fucss.generateGlobalExtras = function(){
     "[contenteditable]": 'cursor: text',
     "[contenteditable]:empty:before" : 'content: attr(placeholder); opacity: 0.5; display: block;',
   }
-  !!window.fucssGlobalExtras && Object.assign(globalExtras, window.fucssGlobalExtras);
+  typeof window === 'object' && !!window.fucssGlobalExtras && Object.assign(globalExtras, window.fucssGlobalExtras);
 
   var cssString = '';
   for(var key in globalExtras){
@@ -969,7 +978,7 @@ fucss.generateExtras = function(){
     'fux-trans':    'transition: all .3s ease;',
     'fux-scale':    'transform: scale(1.05);',
   }
-  !!window.fucssExtras && Object.assign(extras, window.fucssExtras);
+  typeof window === 'object' && !!window.fucssExtras && Object.assign(extras, window.fucssExtras);
 
   var cssString = '';
   for(var key in extras){
@@ -1012,6 +1021,15 @@ fucss.xhrMiddle = function(fn){
 }
 
 fucss.xhrRes = [];
-fucss.xhrMiddle(function(res){
-  fucss.xhrRes.push(res);
-});
+if(typeof window === 'object')
+  fucss.xhrMiddle(function(res){
+    fucss.xhrRes.push(res);
+  });
+
+fucss.storeHTML = function(str){
+  fucss.HTML = fucss.HTML || [];
+  fucss.HTML.unshift(str);
+}
+
+if(typeof module === 'object')
+  module.exports = fucss;

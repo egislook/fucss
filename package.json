@@ -1,0 +1,30 @@
+{
+  "name": "fucss",
+  "version": "0.7.2",
+  "description": "Fucss is fastest tool and method to write custom styling generator for riot, react and html.",
+  "main": "fucss.js",
+  "scripts": {
+    "build": "uglifyjs fucss.js > fucss.min.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egislook/fucss.git"
+  },
+  "keywords": [
+    "fucss",
+    "riot",
+    "html",
+    "react",
+    "jsx",
+    "server",
+    "client",
+    "riothing"
+  ],
+  "author": "egislook",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/egislook/fucss/issues"
+  },
+  "homepage": "https://github.com/egislook/fucss#readme"
+}
