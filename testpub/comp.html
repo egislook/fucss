@@ -1,0 +1,206 @@
+<comp-coins>
+  <div class="of:hd">
+    <div class="{'trx:200px': showLimiters, 'trx:0': !showLimiters, 'ts:tf': true}">
+      <div class="md-dp:flx ai:c mdx-p-t:20px">
+        <div class="p:10px c:black200 md-m-l:30px ps:rl mdx-ta:r">
+          <h1 class="p:0 fs:200pc ls:2px fw:300 lh:0.8">coinmarks</h1><small class="fs:60pc c:black200 ps:ab r,t:0 m:2px">v {opts.version}</small>
+          <p class="fs:90pc fw:600 c:prim">what can be built in 24h</p>
+        </div>
+    
+        <div class="md-p-t:40px p-b:10px m-r:0">
+    
+          <div class="p:7px-15px_span m:2px_span c:white ta:r fs:90pc crs:pt_span ts:bg_span">
+            
+            <span each={matcher in matchers} onclick={handleMatcherRemove} class="bg:black c:white">{matcher.name}</span>
+            <span class="bg:white p:10px mnw:150px c:black" contenteditable="true" onkeydown={handeMatcherAdd} placeholder="search eg:bittrex"></span>
+          </div>
+          <div class="ta:r fs:80pc p:5px-10px c:grey">
+            visible {coins.length} / {opts.coins.length} coins
+          </div>
+    
+          <div class="fs:90pc m-tr:5px m:2px_a ta:r">
+            <a onclick={handleSorterClick(sorter, index)} each={sorter, index in sorters} class="p:7px-15px-7px-10px ts:bg {
+              'bg:black c:white':   sorter.active,
+              'bg:silver c:black':  !sorter.active
+            }">
+              <i class="fu-sort ts:tf {'scy:1n': sorter.active > 0}" />
+              {sorter.name}
+            </a>
+            
+          </div>
+    
+        </div>
+      </div>
+    
+      <div class="p-b:20px">
+        <a href="/{coin.symbol}" each={coin, i in coins}
+          if={i < showMax}
+          key="symbol"
+          class="dp:ib p:20px bs:1 m:5px bg:white mnw:200px smx-mnw:46pc hv-bs:2 ts:bs fs:80pc ps:rl ts:all">
+          <img class="dp:ib w:25px m-b:5px" src="{coin.logo}" /><br/>
+          { coin.name.substring( 0, maxLength ) }
+          <span class="r,t:0 p:5px ps:ab fs:80pc">
+            <strong class="bd-c:silver800 bd-w:1px p:1px-3px br:2px" title={opts.ago(coin.listed)}>{coin.stage}</strong>
+            {coin.symbol}
+          </span>
+          <span if={coin.stats} class="l,t:0 p:5px ps:ab fs:80pc fw:600">
+            {btc && coin.stats.price.btc != 1 ? coin.stats.price.sat : coin.stats.price.usd}
+            <strong class="{'c:green': coin.stats.up, 'c:red': !coin.stats.up}">{coin.stats.change.day}%</strong>
+          </span>
+          <span class="l,b:0 p:5px ps:ab fs:80pc" title="volume">{coin.stats.shortVolume}</span>
+          <span class="r,b:0 p:5px ps:ab fs:80pc" title="supply">{coin.stats.shortSupply} ({coin.stats.estimated})</span>
+    
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <a if={showMax < coins.length} class="fu-plus p:20px bg:prim c:white br:50pc-50pc-0-50pc ps:fx r,b:0 bs:2 m:10px" onclick={handleShowMore}>
+    <span class="ps:ab b,r:0 p:4px bg:white c:black mnw,mnh:15px fw:600 fs:60pc br:7px-0-0 ff:Questrial">
+      {coins.length - showMax}
+    </span>
+  </a>
+
+  <a onclick={handleClickCurrencer} class="c:white p:10px-15px br:0-50pc-50pc-0 ps:fx l,t:0 m-t:50px hv-p-l:20px ts:all bs:2 {
+    'bg:orange':  btc,
+    'bg:prim scy:1n':   !btc
+  }">{btc ? '฿': '$'}</a>
+  
+  <a onclick={handleToggleShowLimiters} 
+    class="c:white p:15px-15px br:0-50pc-50pc-0 ps:fx l,t:0 m-t:100px hv-p-l:20px ts:all bs:2 bg:black ac-scy:1n fs:80pc">
+    {calcActiveLimiters()}
+    <i class="fu-funnel" />
+  </a>
+    
+  <div class="ps:fx bg:black l,t:0 m-t:150px c:white ts:tf ta:l br:5px {'trl:0': showLimiters, 'trl:100npc-0': !showLimiters}">
+    <a each={limiter in limiters} onclick={handleLimiterClick(limiter, index)} class="dp:bk p:10px bd-b-w:1px {
+      'bg:black c:white':  !limiter.active,
+      'bg:white c:black':  limiter.active
+    }">
+      <i class="fu-funnel ts:tf fs:80pc p-r:5px {'scy:1n': !limiter.active}" />
+      {limiter.name}
+    </a>
+  </div>
+
+  <script>
+    this.maxLength      = 15;
+    this.showMax        = opts.showMax || 36;
+    this.showMaxMarkets = opts.showMaxMarkets || 3;
+    this.btc            = true;
+    this.showLimiters   = false;
+    this.matchers       = [];
+    
+    this.limiters   = [
+      { name: 'price 0 - 10000',  key: 'stats.price.sat', min: 1, max: 10000, active: 0 },
+      { name: 'vol 200k min',     key: 'stats.volume', min: 200000, active: 1 },
+      { name: 'supply 1kk max',   key: 'stats.supply', max: 1000000, active: 0 }
+    ];
+    
+    this.sorters    = [
+      { name: 'cap',    key: 'stats.cap', active: 1 },
+      { name: 'volume', key: 'stats.volume', active: 0 },
+      { name: 'change', key: 'stats.change.day', active: 0 },
+      { name: 'price',  key: 'stats.price.sat', active: 0 },
+      { name: 'supply', key: 'stats.supply', active: 0 },
+      { name: 'listed', key: 'listed', active: 0 },
+      { name: 'symbol', key: 'symbol', active: 0 },
+      { name: 'name',   key: 'name', active: 0 },
+    ];
+    
+    this.coins = sortCoins.bind(this)(opts.coins, this.sorters);
+    
+    // this.on('update', () => {
+    //   console.log('update');
+    //   requestAnimationFrame( () => {
+    //     console.log('before animation');
+    //   });
+    // })
+    
+    this.calcActiveLimiters = () => (this.limiters.filter(l => l.active).length)
+
+    this.handleClickCurrencer = (e) => (this.btc = !this.btc);
+    this.handleToggleShowLimiters = (e) => (this.showLimiters = !this.showLimiters);
+
+    this.handleSorterClick = (sorter, index) => (e) => {
+      e.preventUpdate = true;
+      this.sorters.map( (s, i) => index !== i && (s.active = 0) || s);
+      sorter.active = sorter.active > 0 ? -1 : 1;
+      this.update({ coins: sortCoins.bind(this)(opts.coins, this.sorters, true) });
+    }
+    
+    this.handleLimiterClick = (limiter, index) => (e) => {
+      e.preventUpdate = true;
+      limiter.active = limiter.active > 0 ? 0 : 1;
+      this.update({ coins: sortCoins.bind(this)(opts.coins, this.sorters) });
+    }
+
+    this.handeMatcherAdd = (e) => {
+      let val = e.target.textContent;
+      if(e.keyCode === 13 && val && val.length > 1){
+        this.matchers.push({ name: val.toLowerCase(), active: 1 });
+        e.target.textContent = '';
+        this.update({ coins: matchCoins(this.coins, this.matchers) });
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    }
+
+    this.handleMatcherRemove = (e) => {
+      e.preventUpdate = true;
+      let val = e.target.textContent;
+      this.matchers = this.matchers.filter(matcher => matcher.name !== val);
+      this.update({ coins: sortCoins.bind(this)(opts.coins, this.sorters) })
+    }
+
+    this.handleShowMore = (e) => {
+      this.showMax = this.showMax * 2;
+    }
+
+    function sortCoins(coins, sorters, onlySort){
+      coins = !!onlySort && this.coins || coins;
+      
+      if(!onlySort && this.matchers.length)
+        coins = matchCoins(coins, this.matchers);
+      
+      if(!onlySort && this.limiters.filter(limiter => limiter.active).length)
+        coins = limitCoins(coins, this.limiters);
+        
+      return coins.sort( (a, b) => {
+        return sorters.filter(sorter => sorter.active)
+          .map(sorter => {
+            let first   = sorter.key.split('.').reduce( (o, i) => o[i], a);
+            let second  = sorter.key.split('.').reduce( (o, i) => o[i], b);
+            return sorter.active < 0
+              ? typeof first === 'string'  ? first.localeCompare(second) : first - second
+              : typeof second === 'string' ? second.localeCompare(first) : second - first
+          }).find(val => val !== 0);
+      })
+    }
+    
+    function limitCoins(coins, limiters){
+      return coins.filter( coin => 
+        limiters.filter( f => 
+          f.active ? isInRange(f, f.key.split('.').reduce((o, i) => o[i], coin)) : true
+        ).length === limiters.length
+      );
+      
+      function isInRange({ max, min }, value){
+        min = min || 0;
+        if(max) 
+          return max >= value && min <= value ? 1 : 0;
+        if(min)
+          return min <= value ? 1 : 0;
+        
+        return true;
+      }
+    }
+
+    function matchCoins(coins, matchers, key = 'tags'){
+      return coins.filter( coin => 
+        matchers.filter( matcher => coin[key].join('').includes(matcher.name) ).length === matchers.length
+      )
+    }
+
+  </script>
+</comp-coins>

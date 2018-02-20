@@ -1,13 +1,15 @@
 # FUCSS client side styling generator  
 #### it can be used on server side too
 
-Fucss styling generator Hell YEAH!!!! (0.7.1)  
-https://cdn.rawgit.com/noneedsystem/fucss/0.7.1/fucss.min.js
+Fucss styling generator Hell YEAH!!!! (0.7.2)  
+https://cdn.rawgit.com/noneedsystem/fucss/0.7.2/fucss.min.js
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
 
-
+## #0.7.2
+-------
+`fixed` now all riot component classes are generated **EG** `class="ts:tf { 'trx:30pc': modify }"`
 
 ## #0.7.1
 -------

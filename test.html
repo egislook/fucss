@@ -18,7 +18,7 @@
     var fucssInit = true;
     
   </script>
-  <script src="fucss.min.js"></script>
+  <script src="fucss.js"></script>
   <!--<script src="fucss.js"></script>-->
   <title>Just fucss testing file</title>
   <style>
@@ -429,10 +429,11 @@
 		<script src="https://rawgit.com/riot/riot/master/riot+compiler.min.js"></script>
 
 		<script>
-		  riot.compile('./testpub/app.html', function(js){
-        console.log(js);
-				fucss.generateStyling({html: js, returnStyle: false, mediaQueries: false});
-			});
+		//   riot.compile('./testpub/comp.html', function(js){
+		// 		let style = fucss.generateStyling({html: js, returnStyle: true, mediaQueries: false});
+		// 		console.log(js);
+		// 		console.log(style);
+		// 	});
 		</script>
 
 </body>

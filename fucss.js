@@ -446,7 +446,7 @@ fucss.riotExtractNGenerate = function(){
 }
 
 fucss.riotUseXhrRes = function(){
-  var _html = document.body.outerHTML;
+  var _html = '<body class="' + document.body.getAttribute("class") + '"/>';
   var _srcs = [];
   document.querySelectorAll('script[type="riot/tag"')
     .forEach(function(tag){ _srcs.push(tag.src || tag.getAttribute('data-src')) });
@@ -485,7 +485,6 @@ fucss.generateStyling = function(opts){
       : 'harvestClassesFromHtml';
 
   var htmlString = (opts && (opts.jsx || opts.riot || opts.html)) || document.body.outerHTML;
-
   fucss[classHarvestingMethodName](htmlString)
     .forEach(function(className){
       classNumber++;
@@ -875,22 +874,25 @@ fucss.harvestClassesFromHtml = function(html){
 fucss.harvestClassesFromRiot = function(riot){
 
   var myRegexp = (/class="(.*?)"/gi);
-  var myRegexp2 = (/\'(.*?)\\'/gi)
-  var myArray, myArray2;
+  var myRegexp2 = (/{(.*?)}/gi);
+  var myRegexp3 = (/'(.*?)'/g);
+  var myArray, myArray2, myArray3;
   var allHarvestedClassNames = [];
-
-  while ((myArray = myRegexp.exec(riot)) !== null) {
-    if(myArray[0].indexOf("\'") === -1){
-      //myArray[0].split('"')[1].split(' ')
-      allHarvestedClassNames = allHarvestedClassNames.concat(myArray[1].split(' '));
-    } else {
-      while ((myArray2 = myRegexp2.exec(myArray[0])) !== null) {
-        allHarvestedClassNames = allHarvestedClassNames.concat(myArray2[1].split(' '));
+  
+  while((myArray = myRegexp.exec(riot.replace(/(\r\n|\n|\r)/gm, ''))) !== null) {
+    if(myArray[0].indexOf("'") >= 0){
+      while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
+        strMerge(myArray[1].replace(myArray2[0], ''));
+        while( (myArray3 = myRegexp3.exec(myArray2[1])) !== null ){
+          strMerge(myArray3[1]);
+        }
       }
-    }
+    } else
+      strMerge(myArray[1]);
   }
 
-  return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
+  function strMerge(str){ allHarvestedClassNames = allHarvestedClassNames.concat(str.split(' ')) }
 }
 
 fucss.harvestClassesFromJsx = function(jsx){
