@@ -1,12 +1,16 @@
 # FUCSS client & server styling generator  
 #### Fucss is fastest tool and method to write custom styling generator for riot, react and html.
 
-Fucss styling generator Hell YEAH!!!! (v0.7.3)  
-client: https://cdn.rawgit.com/egislook/fucss/v0.7.3/fucss.min.js  
+Fucss styling generator Hell YEAH!!!! (v0.7.4)  
+client: https://cdn.rawgit.com/egislook/fucss/v0.7.4/fucss.min.js  
 server: `npm install --save fucss`
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+## #0.7.4
+-------
+`fixed` grayscale typo
 
 ## #0.7.3
 -------

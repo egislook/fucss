@@ -314,7 +314,7 @@ fucss.filters = {
   bh: 'brightness',
   cn: 'contrast',
   ds: 'drop-shadow',
-  gs: 'greyscale',
+  gs: 'grayscale',
   hr: 'hue-rotate',
   iv: 'invert',
   //op: 'opacity',
