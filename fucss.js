@@ -271,7 +271,10 @@ fucss.values = {
   light: 'lighten',
   dark: 'darken',
   eio: 'ease-in-out',
-  pw: 'pre-wrap'
+  pw: 'pre-wrap',
+  //version 0.7.5
+  ini: 'initial',
+  st: 'static',
 };
 
 //version 0.6.8
@@ -288,7 +291,7 @@ fucss.functions = {
   // url: 'url',
   // img: 'img',
   //util
-  //clc: 'calc',
+  clc: 'calc',
   //el: 'element',
   //atr: 'attr',
 }
@@ -514,8 +517,8 @@ fucss.generateStyling = function(opts){
       var value = splitedClassName.pop();
       if(!value)
         return fucss.debug && console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"');
-
-      var values = value && value.split(fucss.seps.space);
+      
+      var values = value && splitValue(value);
 
       if(fucss.config[prop]){
         value = fucss[fucss.config[prop]][value] || modifyColor(value) || value;
@@ -585,6 +588,44 @@ fucss.generateStyling = function(opts){
 
   if(cssMissing.length)
     console.warn('Used as full prop [ ' + cssMissing + ' ]');
+    
+  // value
+  
+  function splitValue(value){
+    if(!~value.indexOf(fucss.seps.fEnd))
+      return value.split(fucss.seps.space);
+    
+    var values = [];
+    splitFuncts(value, values);
+    //console.log('values', value, values);
+    return values;
+    
+    function splitFuncts(val, fns){
+      if(!val.length)
+        return;
+      var fEndIndex   = val.indexOf(fucss.seps.fEnd);
+      var fStartIndex = val.indexOf(fucss.seps.fStart);
+      var fSpaceIndex = val.indexOf(fucss.seps.space);
+      
+      if(fSpaceIndex == -1)
+        return fns.push(val);
+      
+      if(fSpaceIndex === 0)
+        return splitFuncts(val.substr(1, val.length), fns);
+      
+      if(fSpaceIndex > 0 && fStartIndex > fSpaceIndex){
+        fns.push(val.substring(0, fSpaceIndex));
+        return splitFuncts(val.substr(fSpaceIndex + 1, val.length), fns)
+      }
+      if(fSpaceIndex < fEndIndex && fSpaceIndex > fStartIndex){
+        fns.push(val.substring(0, fEndIndex + 1).split('-').join(' - '));
+        return splitFuncts(val.substr(fEndIndex + 1, val.length), fns);
+      }
+      if(fEndIndex + 1 === val.length)
+        fns.push(val);
+    }
+    
+  }
 
   // from class to css rule
 
@@ -658,6 +699,9 @@ fucss.generateStyling = function(opts){
       var modifiedColor = modifyColor(value);
       if(modifiedColor) return modifiedColor;
     }
+    
+    if(~value.indexOf(fucss.seps.fStart))
+      return value.replace(/pc/g, '%');
 
     var unit = value.replace(/\d*\.?\d*/g, '');
     if(unit && (unit.length === 3 || unit.length === 2 || unit === 'n')){
@@ -945,7 +989,8 @@ fucss.generateGlobalExtras = function(){
     "html, body": 'min-height: 100%; height: 100%;',
     "body": 'margin: 0; text-align: center; border-width: 0;\
               font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;letter-spacing: 0.02em;',
-    "*":    'margin: 0 auto; outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
+    "*":    'outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
+    '*:not([display="flex"]) > *': 'margin: 0 auto;',
     // ".dp\\:flx > *": 'margin: 0;',
     "a":    'text-decoration: none; color: inherit;',
     "a, span, img, button, i, label": 'display: inline-block; vertical-align: middle;',

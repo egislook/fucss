@@ -18,7 +18,7 @@
     var fucssInit = true;
     
   </script>
-  <script src="fucss.js"></script>
+  <script src="./fucss.js"></script>
   <!--<script src="fucss.js"></script>-->
   <title>Just fucss testing file</title>
   <style>
@@ -27,6 +27,9 @@
 </head>
 
 <body class="pdg,mrg:0 ta:c lh:1.5 bg:greyl10 fux-fadeIn">
+  <div>
+    tadam
+  </div>
   <div class="fux-spinner"></div>
   <div class="bg:000a2 fux-grd-blue pdg:30px md-w:100pc w:10pc"></div>
 
@@ -429,11 +432,11 @@
 		<script src="https://rawgit.com/riot/riot/master/riot+compiler.min.js"></script>
 
 		<script>
-		//   riot.compile('./testpub/comp.html', function(js){
-		// 		let style = fucss.generateStyling({html: js, returnStyle: true, mediaQueries: false});
-		// 		console.log(js);
-		// 		console.log(style);
-		// 	});
+		  riot.compile('./testpub/comp.html', function(js){
+				let style = fucss.generateStyling({html: js, returnStyle: true, glob: true, mediaQueries: false});
+				// console.log(js);
+				console.log(style);
+			});
 		</script>
 
 </body>

@@ -1,12 +1,19 @@
 # FUCSS client & server styling generator  
 #### Fucss is fastest tool and method to write custom styling generator for riot, react and html.
 
-Fucss styling generator Hell YEAH!!!! (v0.7.4)  
-client: https://cdn.rawgit.com/egislook/fucss/v0.7.4/fucss.min.js  
+Fucss styling generator Hell YEAH!!!! (v0.7.5)  
+client: https://cdn.rawgit.com/egislook/fucss/v0.7.5/fucss.min.js  
 server: `npm install --save fucss`
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+## #0.7.5
+-------
+`fixed` **`dp:flx`** has no auto margin on its items. Now *align-items* & *justify-content* will work  
+`added` calc support **`w:calc(100pc-300px)`**
+`added` value **ini: initial** included **`bz:ini`**
+`added` value **st: static** included **`dp:st`**
 
 ## #0.7.4
 -------
