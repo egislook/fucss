@@ -154,6 +154,8 @@ fucss.properties = {
 
   //version 0.7.0
   vsb: 'visibility',
+  //version 0.7.6
+  an: 'animation'
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];
@@ -275,6 +277,8 @@ fucss.values = {
   //version 0.7.5
   ini: 'initial',
   st: 'static',
+  //version 0.7.6
+  inf: 'infinite'
 };
 
 //version 0.6.8
@@ -1035,9 +1039,10 @@ fucss.generateExtras = function(){
 // aninamtion loader
 fucss.generateAnimations = function(){
   var loader = {};
-  loader['@keyframes spin'] = 'to { transform: rotate(360deg); }';
-  loader['@keyframes fadeIn'] = 'from {opacity: 0.3;} to {opacity: 1;}';
-  loader['@keyframes fadeOut'] = 'from {opacity: 1;} to {opacity: 0.5;}';
+  loader['@keyframes spin']     = 'to { transform: rotate(360deg); }';
+  loader['@keyframes fadeIn']   = 'from {opacity: 0.3;} to {opacity: 1;}';
+  loader['@keyframes fadeOut']  = 'from {opacity: 1;} to {opacity: 0.5;}';
+  loader['@keyframes scaler']   = '0% { transform:scale(0);opacity:1 } to { transform:scale(1);opacity:0 }';
 
   var cssString = '';
   for(var key in loader){
