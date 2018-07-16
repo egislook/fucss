@@ -49,6 +49,8 @@ fucss.states = {
   root: 'root',
 };
 
+fucss.elements = ['before', 'after'];
+
 fucss.properties = {
   pdg: 'padding',
   mrg: 'margin',
@@ -155,7 +157,13 @@ fucss.properties = {
   //version 0.7.0
   vsb: 'visibility',
   //version 0.7.6
-  an: 'animation'
+  an: 'animation',
+  //version 0.7.7
+  afm: 'animation-fill-mode',
+  bv: 'backface-visibility',
+  zm: 'zoom',
+  cp: 'clip-path',
+  prsp: 'perspective',
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];
@@ -189,7 +197,9 @@ fucss.addons = {
   y: 'Y',
   z: 'z',
   //version 0.6.9
-  dl: 'delay'
+  dl: 'delay',
+  //version 0.7.7
+  atc: 'attachment',
 };
 
 fucss.values = {
@@ -278,7 +288,9 @@ fucss.values = {
   ini: 'initial',
   st: 'static',
   //version 0.7.6
-  inf: 'infinite'
+  inf: 'infinite',
+  //version 0.7.7
+  fwd: 'forwards',
 };
 
 //version 0.6.8
@@ -314,6 +326,8 @@ fucss.transforms = {
   scx: 'scaleX',
   scy: 'scaleY',
   scz: 'scaleZ',
+  //version 0.7.7
+  t3d: 'translate3d'
 }
 
 fucss.filters = {
@@ -533,8 +547,8 @@ fucss.generateStyling = function(opts){
       //shorthand functions
       prop    = setShortcutProp(prop, value, values) || prop;
       values  = setShortcutValues(prop, value, values) || values;
-
-      if(Object.keys(fucss.properties).indexOf(prop) === -1 && prop.indexOf(',') === -1)
+        
+      if((!~Object.keys(fucss.properties).indexOf(prop)) && !~prop.indexOf(','))
         return fucss.debug && console.warn('prop name "' + prop + '" is unknown. Check if class "' + className + '" is valid');
       if(!prop)
         return fucss.debug && console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"');
@@ -544,6 +558,8 @@ fucss.generateStyling = function(opts){
       prop  = combineProps(prop, props);
       props = modifyProps(props);
       value = modifyValue(values, prop);
+      
+      
       //if(prop.indexOf('transform') !== -1) console.log(prop, props, value);
 
       var cssRule = generateCssRule(className, prop, props, value, state, target);
@@ -824,8 +840,9 @@ fucss.generateStyling = function(opts){
 
     var firstAddon = props.length && props[0];
     var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
-
-    state ? className += (':' + state) : false;
+    var isElement = state && ~fucss.elements.indexOf(state);
+    
+    state ? className += ((isElement ? '::' : ':') + state) : false;
     var rules = '';
 
     className = className.split(',').join('\\,');
@@ -857,7 +874,10 @@ fucss.generateStyling = function(opts){
 
       className = className + ' ' + target.join(' ');
     }
-
+    
+    if(isElement)
+      rules = "content='';" + rules;
+      
     return '.' + className + '{' + rules + '}\n';
 
   }
@@ -916,7 +936,7 @@ fucss.generateColor = function(hex, modifier){
 
 
 fucss.harvestClassesFromHtml = function(html){
-  var myRegexp = (/class="(.*?)"/gi);
+  var myRegexp = (/class[a-z]*="(.*?)"/gi);
   var myArray;
   var allHarvestedClassNames = [];
 
@@ -929,27 +949,79 @@ fucss.harvestClassesFromHtml = function(html){
 }
 
 fucss.harvestClassesFromRiot = function(riot){
-
-  var myRegexp = (/class="(.*?)"/gi);
-  var myRegexp2 = (/{(.*?)}/gi);
-  var myRegexp3 = (/'(.*?)'/g);
-  var myArray, myArray2, myArray3;
+  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s+)/g, ' ')//.replace(/(\')/g, '');
+  //var myRegexp = (/class[a-z]*="(.*?)"/gi);
+  var patternMain = (/class[a-z]*\s*?=\s*?(?:\(\)\s*\=\>\s*)?(?:\"|\(\{\s)((?:.\s?)*?)(?:"|}\))/gi);
+  var patternObj = (/{(.*?)}/gi);
+  var patternInner = (/'(.*?)'/g);
   var allHarvestedClassNames = [];
+  
+  match(patternMain, riot, 1, function(res){
+    var result = res.match;
+    if(!~result.indexOf(':'))
+      return;
+      
+    if(!~result.indexOf("'"))
+      return strMerge(result);
+    
+    if(!~result.indexOf('{'))
+      return strMerge(match(patternInner, result));
+    
+    match(patternObj, result, 1, function(obj){
+      result = result.replace(obj.all, '');
+      return strMerge(match(patternInner, obj.match, 1, function(inner){
+        return strMerge(inner.match);
+      }));
+    });
+    return result.length && strMerge(match(patternInner, result));
+    //console.log(res);
+  })
+  
+  // while( (generalClasses = generalMatch.exec(riot)) !== null ) {
+  //   general = generalClasses[1];
+  //   if(~general.indexOf(':')){
+  //     if(~general.indexOf("'")){
+  //       if(~general.indexOf('{')){
+  //         while( (objectClasses = objectMatch.exec(general)) !== null ){
+  //           //console.log(objectClasses);
+  //         } 
+  //       } else
+  //         console.log(general);
+        
+  //       // while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
+  //       //   strMerge(myArray[1].replace(myArray2[0], ''));
+  //       //   while( (myArray3 = myRegexp3.exec(myArray2[1])) !== null ){
+  //       //     strMerge(myArray3[1]);
+  //       //   }
+  //       // }
+  //     } else
+  //       strMerge(general);
+  //   }
+  // }
+  
+  //console.log(allHarvestedClassNames);
 
-  while((myArray = myRegexp.exec(riot.replace(/(\r\n|\n|\r)/gm, ''))) !== null) {
-    if(myArray[0].indexOf("'") >= 0){
-      while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
-        strMerge(myArray[1].replace(myArray2[0], ''));
-        while( (myArray3 = myRegexp3.exec(myArray2[1])) !== null ){
-          strMerge(myArray3[1]);
-        }
-      }
-    } else
-      strMerge(myArray[1]);
+  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf(v) == i } );
+  function strMerge(str){
+    if(typeof str === 'string')
+      str = str.split(' ');
+    
+    //console.log(str);
+    allHarvestedClassNames = allHarvestedClassNames.concat(str);
   }
-
-  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
-  function strMerge(str){ allHarvestedClassNames = allHarvestedClassNames.concat(str.split(' ')) }
+  
+  function match(pattern, str, index, cb){
+    var all, result = [], index = index || 1;
+    while(all = pattern.exec(str)){
+      result.push(all[index]);
+      cb && cb({
+        all: all[0],
+        match: all[index]
+      })
+      //result += (' ' + all[index]);
+    }
+    return result;
+  }
 }
 
 fucss.harvestClassesFromJsx = function(jsx){
@@ -994,7 +1066,7 @@ fucss.generateGlobalExtras = function(){
     "body": 'margin: 0; text-align: center; border-width: 0;\
               font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;letter-spacing: 0.02em;',
     "*":    'outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
-    '*:not([display="flex"]) > *': 'margin: 0 auto;',
+    '*:not([class*="jc\\:"]) > *': 'margin: 0 auto;',
     // ".dp\\:flx > *": 'margin: 0;',
     "a":    'text-decoration: none; color: inherit;',
     "a, span, img, button, i, label": 'display: inline-block; vertical-align: middle;',
@@ -1003,7 +1075,7 @@ fucss.generateGlobalExtras = function(){
     "::selection": 'background: ' + fucss.colors.prim + '; color: ' + fucss.colors.white + ';',
 
     "[contenteditable]": 'cursor: text',
-    "[contenteditable]:empty:before" : 'content: attr(placeholder); opacity: 0.5; display: block;',
+    "[contenteditable]:empty:before" : 'content: attr(placeholder); opacity: 0.5; display: block;'
   }
   typeof window === 'object' && !!window.fucssGlobalExtras && Object.assign(globalExtras, window.fucssGlobalExtras);
 
@@ -1040,9 +1112,11 @@ fucss.generateExtras = function(){
 fucss.generateAnimations = function(){
   var loader = {};
   loader['@keyframes spin']     = 'to { transform: rotate(360deg); }';
-  loader['@keyframes fadeIn']   = 'from {opacity: 0.3;} to {opacity: 1;}';
-  loader['@keyframes fadeOut']  = 'from {opacity: 1;} to {opacity: 0.5;}';
+  loader['@keyframes fadeIn']   = 'from { opacity: 0.3; } to { opacity: 1; }';
+  loader['@keyframes fadeOut']  = 'from { opacity: 1; } to { opacity: 0.5; }';
   loader['@keyframes scaler']   = '0% { transform:scale(0);opacity:1 } to { transform:scale(1);opacity:0 }';
+  loader['@keyframes hide']     = 'to { position: absolute; visibility: hidden; }';
+  loader['@keyframes land']     = '0% { opacity: 0.3; transform: translateY(-3rem); } to { opacity: 1; transform: translateY(0); }';
 
   var cssString = '';
   for(var key in loader){

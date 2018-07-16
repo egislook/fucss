@@ -1,12 +1,27 @@
 # FUCSS client & server styling generator  
 #### Fucss is fastest tool and method to write custom styling generator for riot, react and html.
 
-Fucss styling generator Hell YEAH!!!! (v0.7.6)  
-client: https://cdn.rawgit.com/egislook/fucss/v0.7.6/fucss.min.js  
+Fucss styling generator Hell YEAH!!!! (v0.7.7)  
+client: https://cdn.rawgit.com/egislook/fucss/v0.7.7/fucss.min.js  
 server: `npm install --save fucss`
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
+
+## #0.7.7
+`fixed` **`jc:...`** has no auto margin on its items. Now *justify-content* will work.  
+`added` **class | classname | class...** attributes are supported.  
+`solved` **tt:uc** `text-transform: uppercase`  
+`added` **an:hide-1s** sets `osition: absolute; visibility: hidden;` after 1s  
+`added` **afm:fwd** support `animation-fill-mode: forwards`  
+`added` **bv:hd** support `backface-visibility:hidden`  
+`added` **bg-atc:fx** support `background-attachment:fixed` parallax  
+`added` **zm:2** support `zoom:2`  
+`added` **cp:ins(100px-50px)** support `clip-path: inset(100px 50px)`  
+`added` **t3d:0-0-0** support `transform: translate3d(0, 0, 0)`  
+`solved` **bft-blr:1px** support `backdrop-filter:blur(1px)`  
+`added` **prsp:1000** support `perspective:1000`
+`todo fix` **transition-delay** | multi transition fix required
 
 ## #0.7.6
 -------
