@@ -22,6 +22,7 @@ https://github.com/noneedsystem/fuico
 `solved` **bft-blr:1px** support `backdrop-filter:blur(1px)`  
 `added` **prsp:1000** support `perspective:1000`
 `todo fix` **transition-delay** | multi transition fix required
+`refactored` Parser. Now riot parser supports `classNames  = (value) => ({ 'classname': value })`  
 
 ## #0.7.6
 -------

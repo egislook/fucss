@@ -5,7 +5,7 @@ if(typeof window === 'object'){
   fucss.anim  = window.fucssAnim  !== undefined ? window.fucssAnim  : true;
   fucss.glob  = window.fucssGlob  !== undefined ? window.fucssGlob  : true;
   fucss.fux   = window.fucssFux   !== undefined ? window.fucssFux   : true;
-  fucss.debug = window.fucssDebug !== undefined ? window.fucssDebug : false;
+  fucss.debug = window.fucssDebug !== undefined ? window.fucssDebug : true;
 }
 
 fucss.seps = {
@@ -48,8 +48,6 @@ fucss.states = {
   rt: 'root',
   root: 'root',
 };
-
-fucss.elements = ['before', 'after'];
 
 fucss.properties = {
   pdg: 'padding',
@@ -840,9 +838,8 @@ fucss.generateStyling = function(opts){
 
     var firstAddon = props.length && props[0];
     var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
-    var isElement = state && ~fucss.elements.indexOf(state);
     
-    state ? className += ((isElement ? '::' : ':') + state) : false;
+    state ? className += (':' + state) : false;
     var rules = '';
 
     className = className.split(',').join('\\,');
@@ -874,9 +871,6 @@ fucss.generateStyling = function(opts){
 
       className = className + ' ' + target.join(' ');
     }
-    
-    if(isElement)
-      rules = "content='';" + rules;
       
     return '.' + className + '{' + rules + '}\n';
 
@@ -936,7 +930,7 @@ fucss.generateColor = function(hex, modifier){
 
 
 fucss.harvestClassesFromHtml = function(html){
-  var myRegexp = (/class[a-z]*="(.*?)"/gi);
+  var myRegexp = (/class="(.*?)"/gi);
   var myArray;
   var allHarvestedClassNames = [];
 
@@ -948,76 +942,75 @@ fucss.harvestClassesFromHtml = function(html){
   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
 }
 
+fucss.harvesttClassesFromRiot = function(riot){
+
+  var myRegexp = (/class[a-z]*?="(.*?)"/gi);
+  var myRegexp2 = (/{(.*?)}/gi);
+  var myRegexp3 = (/'(.*?)'/g);
+  var myArray, myArray2, myArray3;
+  var allHarvestedClassNames = [];
+
+  while((myArray = myRegexp.exec(riot.replace(/(\r\n|\n|\r)/gm, ''))) !== null) {
+    if(myArray[0].indexOf("'") >= 0){
+      while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
+        strMerge(myArray[1].replace(myArray2[0], ''));
+        while( (myArray3 = myRegexp3.exec(myArray2[1])) !== null ){
+          strMerge(myArray3[1]);
+        }
+      }
+    } else
+      strMerge(myArray[1]);
+  }
+
+  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
+  function strMerge(str){ allHarvestedClassNames = allHarvestedClassNames.concat(str.split(' ')) }
+}
+
 fucss.harvestClassesFromRiot = function(riot){
-  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s+)/g, ' ')//.replace(/(\')/g, '');
-  //var myRegexp = (/class[a-z]*="(.*?)"/gi);
-  var patternMain = (/class[a-z]*\s*?=\s*?(?:\(\)\s*\=\>\s*)?(?:\"|\(\{\s)((?:.\s?)*?)(?:"|}\))/gi);
+  // var patternMain = (/class[a-z]*="(.*?)"/gi);
+  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ') //.replace(/data:image(.*)?==/g, '');
+  var patternMain = (/class[a-z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
   var patternObj = (/{(.*?)}/gi);
   var patternInner = (/'(.*?)'/g);
   var allHarvestedClassNames = [];
   
-  match(patternMain, riot, 1, function(res){
-    var result = res.match;
+  match(patternMain, riot, function(result){
+    if(!result)
+      return;
+    //console.log(result);
     if(!~result.indexOf(':'))
       return;
       
     if(!~result.indexOf("'"))
       return strMerge(result);
+      
+    if(!~result.indexOf('{')){
+      return match(patternInner, result, strMerge);
+    }
     
-    if(!~result.indexOf('{'))
-      return strMerge(match(patternInner, result));
-    
-    match(patternObj, result, 1, function(obj){
-      result = result.replace(obj.all, '');
-      return strMerge(match(patternInner, obj.match, 1, function(inner){
-        return strMerge(inner.match);
-      }));
+    match(patternObj, result, function(res, rest){
+      result = result.replace(rest, '');
+      //console.log('RESULT => ', result.trim(), 'OBJ =>', obj.match);
+      match(patternInner, res, strMerge);
     });
-    return result.length && strMerge(match(patternInner, result));
-    //console.log(res);
+    return result.length && strMerge(result);
   })
-  
-  // while( (generalClasses = generalMatch.exec(riot)) !== null ) {
-  //   general = generalClasses[1];
-  //   if(~general.indexOf(':')){
-  //     if(~general.indexOf("'")){
-  //       if(~general.indexOf('{')){
-  //         while( (objectClasses = objectMatch.exec(general)) !== null ){
-  //           //console.log(objectClasses);
-  //         } 
-  //       } else
-  //         console.log(general);
-        
-  //       // while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
-  //       //   strMerge(myArray[1].replace(myArray2[0], ''));
-  //       //   while( (myArray3 = myRegexp3.exec(myArray2[1])) !== null ){
-  //       //     strMerge(myArray3[1]);
-  //       //   }
-  //       // }
-  //     } else
-  //       strMerge(general);
-  //   }
-  // }
-  
-  //console.log(allHarvestedClassNames);
 
   return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf(v) == i } );
   function strMerge(str){
+    str = str.trim();
+    if(!str.length) return;
     if(typeof str === 'string')
-      str = str.split(' ');
-    
-    //console.log(str);
+      str = str.trim().split(' ');
     allHarvestedClassNames = allHarvestedClassNames.concat(str);
+    return allHarvestedClassNames;
   }
   
-  function match(pattern, str, index, cb){
+  function match(pattern, str, cb, index){
     var all, result = [], index = index || 1;
     while(all = pattern.exec(str)){
       result.push(all[index]);
-      cb && cb({
-        all: all[0],
-        match: all[index]
-      })
+      cb && cb(all[index] || all[index+1], all[0])
       //result += (' ' + all[index]);
     }
     return result;
