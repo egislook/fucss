@@ -8,6 +8,10 @@ server: `npm install --save fucss`
 Fuico icon library  
 https://github.com/noneedsystem/fuico
 
+## FEATURES #0.7.8
+`todo fix` **transition-delay** | multi transition fix required  
+`todo improv` unit testing  
+
 ## #0.7.7
 `fixed` **`jc:...`** has no auto margin on its items. Now *justify-content* will work.  
 `added` **class | classname | class...** attributes are supported.  
@@ -21,7 +25,6 @@ https://github.com/noneedsystem/fuico
 `added` **t3d:0-0-0** support `transform: translate3d(0, 0, 0)`  
 `solved` **bft-blr:1px** support `backdrop-filter:blur(1px)`  
 `added` **prsp:1000** support `perspective:1000`
-`todo fix` **transition-delay** | multi transition fix required
 `refactored` Parser. Now riot parser supports `classNames  = (value) => ({ 'classname': value })`  
 
 ## #0.7.6

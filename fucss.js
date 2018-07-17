@@ -968,13 +968,13 @@ fucss.harvesttClassesFromRiot = function(riot){
 
 fucss.harvestClassesFromRiot = function(riot){
   // var patternMain = (/class[a-z]*="(.*?)"/gi);
-  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ') //.replace(/data:image(.*)?==/g, '');
+  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ').replace(/[⁗]/g, '"') //.replace(/data:image(.*)?==/g, '');
   var patternMain = (/class[a-z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
   var patternObj = (/{(.*?)}/gi);
-  var patternInner = (/'(.*?)'/g);
+  var patternInner = (/'(.*?)'/gi);
   var allHarvestedClassNames = [];
   
-  match(patternMain, riot, function(result){
+  match(patternMain, riot, function(result){ 
     if(!result)
       return;
     //console.log(result);
@@ -988,18 +988,21 @@ fucss.harvestClassesFromRiot = function(riot){
       return match(patternInner, result, strMerge);
     }
     
+    // console.log('WE START\n', result, '\n\n');
     match(patternObj, result, function(res, rest){
       result = result.replace(rest, '');
-      //console.log('RESULT => ', result.trim(), 'OBJ =>', obj.match);
+      //console.log('RESULT \n', result, '\n\n');
+      // console.log('RES\n', res, '\n\n');
+      match(patternInner, res, strMerge);
       match(patternInner, res, strMerge);
     });
-    return result.length && strMerge(result);
-  })
-
-  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf(v) == i } );
+    return strMerge(result);
+  });
+  
+  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf(v) === i } );
   function strMerge(str){
-    str = str.trim();
-    if(!str.length) return;
+    if(!~str.indexOf(':')) 
+      return;
     if(typeof str === 'string')
       str = str.trim().split(' ');
     allHarvestedClassNames = allHarvestedClassNames.concat(str);
