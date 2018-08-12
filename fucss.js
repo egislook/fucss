@@ -9,15 +9,15 @@ if(typeof window === 'object'){
 }
 
 fucss.seps = {
-  'value': ':',
-  'space': '-',
-  'target': '_',
-  'comma': '.',
-  'important': '!',
-  'and': '+',
-  'fStart': '(',
-  'fEnd': ')',
-  'next': '~',
+  'value':      ':',
+  'space':      '-',
+  'target':     '_',
+  'comma':      '.',
+  'important':  '!',
+  'and':        '+',
+  'fStart':     '(',
+  'fEnd':       ')',
+  'next':       '~',
 };
 
 fucss.media = {
@@ -162,6 +162,13 @@ fucss.properties = {
   zm: 'zoom',
   cp: 'clip-path',
   prsp: 'perspective',
+  //version 0.7.8
+  stk: 'stroke',
+  fi: 'fill',
+  pe: 'pointer-events',
+  ve: 'vector-effect',
+  aps: 'animation-play-state',
+  tan: 'text-anchor',
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];
@@ -198,6 +205,10 @@ fucss.addons = {
   dl: 'delay',
   //version 0.7.7
   atc: 'attachment',
+  //version 0.7.8
+  da: 'dasharray',
+  do: 'dashoffset',
+  
 };
 
 fucss.values = {
@@ -289,6 +300,14 @@ fucss.values = {
   inf: 'infinite',
   //version 0.7.7
   fwd: 'forwards',
+  //version 0.7.8
+  nss: 'non-scaling-stroke',
+  ln: 'linear',
+  pau: 'paused',
+  bob: 'bounding-box',
+  a: 'auto',
+  s: 'start',
+  e: 'end'
 };
 
 //version 0.6.8
@@ -369,6 +388,10 @@ fucss.colorazable = [
   'border-top-color',
   'border-bottom-color',
   'box-shadow',
+  'stroke',
+  'fill',
+  'outline',
+  'outline-color',
 ];
 
 fucss.propertable = [
@@ -433,6 +456,7 @@ fucss.colorMods = {
 fucss.config = {
   'prim': 'colors',
   'sec':  'colors',
+  'tert': 'colors',
   'txt':  'colors',
   'err':  'colors',
   'warn': 'colors',
@@ -512,63 +536,28 @@ fucss.generateStyling = function(opts){
   if(opts.riot && opts.returnStyle)
     htmlString = htmlString.replace(/\\'/g, "'");
   fucss[classHarvestingMethodName](htmlString)
-    .forEach(function(className){
+    .forEach(function( className ){
       classNumber++;
-      var target = className.split(fucss.seps.target);
-
-      var splitedClassName = target.shift().split(fucss.seps.value);
-
-      //props
-      var props = splitedClassName.shift().split(fucss.seps.space);
-
-      var mediaQuery = extractMediaQuery(props);
-      var state = extractState(props);
-
-      //fucss.values
-      var prop = props.shift();
-      //ignore props
-      if(fucss.ignore.indexOf(prop) !== -1)
-        return;
-
-      var value = splitedClassName.pop();
-      if(!value)
-        return fucss.debug && console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"');
       
-      var values = value && splitValue(value);
-
-      if(fucss.config[prop]){
-        value = fucss[fucss.config[prop]][value] || modifyColor(value) || value;
-        fucss[fucss.config[prop]][prop] = value;
+      var ruleObj = extractRuleValues(className);
+      if(!ruleObj)
         return;
-      }
-
-      //shorthand functions
-      prop    = setShortcutProp(prop, value, values) || prop;
-      values  = setShortcutValues(prop, value, values) || values;
         
-      if((!~Object.keys(fucss.properties).indexOf(prop)) && !~prop.indexOf(','))
-        return fucss.debug && console.warn('prop name "' + prop + '" is unknown. Check if class "' + className + '" is valid');
-      if(!prop)
-        return fucss.debug && console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"');
-      if(!fucss.properties[prop] && prop.indexOf(',') < 0)
-        cssMissing = cssMissing.concat([prop]);
-
-      prop  = combineProps(prop, props);
-      props = modifyProps(props);
-      value = modifyValue(values, prop);
+      if(ruleObj.chain.length)
+        ruleObj.chain = ruleObj.chain.map(function(val){ return extractRuleValues(val) });
       
+      //console.log(ruleObj);
+
+      var cssRule = generateCssRule(className, ruleObj);
+      classDone++;
       
       //if(prop.indexOf('transform') !== -1) console.log(prop, props, value);
-
-      var cssRule = generateCssRule(className, prop, props, value, state, target);
-      classDone++;
       //if(prop === 'transform') console.log(state, prop, props, value, cssRule);
-
-      mediaQuery
-        ? cssMediaQueries[mediaQuery] = cssMediaQueries[mediaQuery] ? (cssMediaQueries[mediaQuery] + cssRule) : cssRule
+  
+      ruleObj.mediaQuery
+        ? cssMediaQueries[ruleObj.mediaQuery] = cssMediaQueries[ruleObj.mediaQuery] ? (cssMediaQueries[ruleObj.mediaQuery] + cssRule) : cssRule
         : cssString += cssRule;
-
-    });
+      });
 
   //sets fucss.media queries at the end
   Object.keys(cssMediaQueries).length
@@ -607,7 +596,70 @@ fucss.generateStyling = function(opts){
   if(cssMissing.length)
     console.warn('Used as full prop [ ' + cssMissing + ' ]');
     
-  // value
+  //
+    
+  // from string to fucss array
+  function extractRuleValues(className){
+    
+    var target = className.split(fucss.seps.target);
+    var splitedClassName = target.shift().split(fucss.seps.value);
+    var chain = [];
+    
+    if(target.length){
+      chain = !~target[target.length - 1].indexOf(fucss.seps.value)
+        ? target.splice(0, target.length - 1)
+        : target.splice(0, target.length);
+    }
+
+    //props
+    var props = splitedClassName.shift().split(fucss.seps.space);
+
+    var mediaQuery = extractMediaQuery(props);
+    var state = extractState(props);
+
+    //fucss.values
+    var prop = props.shift();
+    //ignore props
+    if(~fucss.ignore.indexOf(prop))
+      return;
+
+    var value = splitedClassName.pop();
+    if(!value)
+      return fucss.debug && console.warn('No value specified. Use value seperator ' + fucss.seps.value + ' for "' + className + '"');
+    
+    var values = value && splitValue(value);
+
+    if(fucss.config[prop]){
+      value = fucss[fucss.config[prop]][value] || modifyColor(value) || value;
+      fucss[fucss.config[prop]][prop] = value;
+      return;
+    }
+
+    //shorthand functions
+    prop    = setShortcutProp(prop, value, values) || prop;
+    values  = setShortcutValues(prop, value, values) || values;
+      
+    if((!~Object.keys(fucss.properties).indexOf(prop)) && !~prop.indexOf(','))
+      return fucss.debug && console.warn('prop name "' + prop + '" is unknown. Check if class "' + className + '" is valid');
+    if(!prop)
+      return fucss.debug && console.warn('No prop specified. Use prop seperator ' + fucss.seps.space + ' for "' + className + '"');
+    if(!fucss.properties[prop] && prop.indexOf(',') < 0)
+      cssMissing = cssMissing.concat([prop]);
+
+    prop  = combineProps(prop, props);
+    props = modifyProps(props);
+    value = modifyValue(values, prop);
+    
+    var obj = {};
+    if(prop)        obj.prop = prop;
+    if(props)       obj.props = props;
+    if(value)       obj.value = value;
+    if(state)       obj.state = state;
+    if(target)      obj.target = target;
+    if(mediaQuery)  obj.mediaQuery = mediaQuery;
+    if(chain)       obj.chain = chain;
+    return obj;
+  }
   
   function splitValue(value){
     if(!~value.indexOf(fucss.seps.fEnd))
@@ -826,57 +878,74 @@ fucss.generateStyling = function(opts){
     return prop.join('-');
   }
 
-  function generateCssRule(className, prop, props, value, state, target){
+  function generateCssRule(className, ruleObj){
+    
+    var prop  = ruleObj.prop, 
+      props   = ruleObj.props, 
+      value   = ruleObj.value, 
+      state   = ruleObj.state, 
+      target  = ruleObj.target,
+      chain   = ruleObj.chain,
 
-    className = className.replace(fucss.seps.value, '\\:');
-    className = className.replace(fucss.seps.comma, '\\.');
-    className = className.replace(fucss.seps.important, '\\!');
-    className = className.replace(fucss.seps.and, '\\+');
-    className = className.replace(fucss.seps.fStart, '\\(');
-    className = className.replace(fucss.seps.fEnd, '\\)');
-    className = className.replace(fucss.seps.next, '\\~');
-
-    var firstAddon = props.length && props[0];
-    var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
+    className = className.replace(new RegExp(/\:/, 'g'), '\\:');
+    className = className.replace(new RegExp(/\./, 'g'), '\\.');
+    className = className.replace(new RegExp(/\!/, 'g'), '\\!');
+    className = className.replace(new RegExp(/\+/, 'g'), '\\+');
+    className = className.replace(new RegExp(/\(/, 'g'), '\\(');
+    className = className.replace(new RegExp(/\)/, 'g'), '\\)');
+    className = className.replace(new RegExp(/\~/, 'g'), '\\~');
+    className = className.replace(new RegExp(/\*/, 'g'), '\\*');
     
     state ? className += (':' + state) : false;
     var rules = '';
 
     className = className.split(',').join('\\,');
 
-    //grouped props by comma
-    var groupedProps = prop.split(',');
-
-    if(groupedProps && groupedProps.length > 1){
-      groupedProps.forEach(function(char){
-        rules += (fucss.properties[char] || char) + ':' + value + ';';
-      });
-    } else {
-
-      //grouped fucss.addons
-      if(!isGroup){
-        prop = [prop].concat(props).join('-');
-        rules = prop + ':' + value + ';';
-      }else{
-        firstAddon.split('').forEach(function(char){
-          rules += prop + '-' + fucss.addons[char] + ':' + value + ';';
-        });
-      }
-    }
+    rules += generateSingleRule(prop, value, props);
 
     if(target && target.length){
       var allIndex = target.indexOf('all');
-      if(allIndex !== -1)
-        target[allIndex] = '*';
-
+      if(~allIndex) target[allIndex] = '> *';
       className = className + ' ' + target.join(' ');
     }
+    
+    if(chain.length)
+      chain.forEach(function(val){
+        rules += generateSingleRule(val.prop, val.value, val.props)
+      });
       
     return '.' + className + '{' + rules + '}\n';
-
   }
 
   return true;
+}
+
+function generateSingleRule(prop, value, props){
+  
+  var rule = '';
+  var firstAddon = props.length && props[0];
+  var isGroup = fucss.groups.indexOf(firstAddon) !== -1;
+  //grouped props by comma
+  var groupedProps = prop.split(',');
+
+  if(groupedProps && groupedProps.length > 1){
+    groupedProps.forEach(function(char){
+      rule += (fucss.properties[char] || char) + ':' + value + ';';
+    });
+  } else {
+
+    //grouped fucss.addons
+    if(!isGroup){
+      prop = [prop].concat(props).join('-');
+      rule = prop + ':' + value + ';';
+    }else{
+      firstAddon.split('').forEach(function(char){
+        rule += prop + '-' + fucss.addons[char] + ':' + value + ';';
+      });
+    }
+  }
+  
+  return rule;
 }
 
 //---------- color section Starts
@@ -1060,8 +1129,9 @@ fucss.generateGlobalExtras = function(){
   var globalExtras = {
     "html, body": 'min-height: 100%; height: 100%;',
     "body": 'margin: 0; text-align: center; border-width: 0;\
-              font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;letter-spacing: 0.02em;',
-    "*":    'outline: 0; padding: 0; box-sizing: border-box; border-style: solid; border-width: 0; vertical-align: baseline;',
+              font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;letter-spacing: 0.02em;\
+              -webkit-font-smoothing: antialiased;text-rendering: optimizeLegibility;',
+    "*":    'outline: 0; padding: 0; box-sizing: border-box; margin: 0; border-style: solid; outline-style: solid; border-width: 0; vertical-align: baseline;',
     '*:not([class*="jc\\:"]) > *': 'margin: 0 auto;',
     // ".dp\\:flx > *": 'margin: 0;',
     "a":    'text-decoration: none; color: inherit;',
@@ -1108,11 +1178,22 @@ fucss.generateExtras = function(){
 fucss.generateAnimations = function(){
   var loader = {};
   loader['@keyframes spin']     = 'to { transform: rotate(360deg); }';
-  loader['@keyframes fadeIn']   = 'from { opacity: 0.3; } to { opacity: 1; }';
+  loader['@keyframes fadeIn']   = 'from { opacity: 0.2; } to { opacity: 1; }';
   loader['@keyframes fadeOut']  = 'from { opacity: 1; } to { opacity: 0.5; }';
   loader['@keyframes scaler']   = '0% { transform:scale(0);opacity:1 } to { transform:scale(1);opacity:0 }';
   loader['@keyframes hide']     = 'to { position: absolute; visibility: hidden; }';
   loader['@keyframes land']     = '0% { opacity: 0.3; transform: translateY(-3rem); } to { opacity: 1; transform: translateY(0); }';
+  loader['@keyframes dash']     = 'to { stroke-dashoffset: 0; }';
+  loader['@keyframes marquee']  = '0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }';
+  loader['@keyframes bounce']   = [
+    '0% { transform: scale(1,1) translateY(0); }',
+    '10% { transform: scale(1.1,.9) translateY(0); }', 
+    '30% { transform: scale(.9,1.1) translateY(-100px); }', 
+    '50% { transform: scale(1.05,.95) translateY(0); }', 
+    '57% { transform: scale(1,1) translateY(-7px); }', 
+    '64% { transform: scale(1,1) translateY(0); }',
+    '100% { transform: scale(1,1) translateY(0); }'
+  ].join(' ');
 
   var cssString = '';
   for(var key in loader){
@@ -1147,8 +1228,26 @@ if(typeof window === 'object')
   });
 
 fucss.storeHTML = function(str){
+  if(typeof str !== 'string')
+    str = '<div class="' + fucss.grab(str) + '" />';
+  
   fucss.HTML = fucss.HTML || [];
   fucss.HTML.unshift(str);
+}
+
+fucss.grab = function(val, data){
+  if(!val) return;
+  if(typeof val === 'string') return val;
+  if(typeof val === 'function') return fucss.grab(val(data));
+  if(val.constructor === Array) return val.join(' ');
+  if(typeof val === 'object') return fromObj(val);
+    
+  function fromObj(obj){
+    return Object.keys(obj).reduce(function(str, className){
+      return str + (obj[className] && className + ' ' || '');
+    }, '')
+  }
+    
 }
 
 if(typeof module === 'object')

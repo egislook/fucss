@@ -1,14 +1,23 @@
 # FUCSS client & server styling generator  
 #### Fucss is fastest tool and method to write custom styling generator for riot, react and html.
 
-Fucss styling generator Hell YEAH!!!! (v0.7.7)  
-client: https://cdn.rawgit.com/egislook/fucss/v0.7.7/fucss.min.js  
+Fucss styling generator Hell YEAH!!!!
+client: https://cdn.jsdelivr.net/npm/riothing/riothing.js  
 server: `npm install --save fucss`
 
 Fuico icon library  
 https://github.com/noneedsystem/fuico
 
-## FEATURES #0.7.8
+## #0.7.8
+`added` **fucss.grab** class generating function from objects. `fucss.grab({'p:20px': true} | (isTrue) => ({ 'p:20px': isTrue}), {isTrue: true})`  
+`improved` **fucss.storeHTML** now stores object inside div dummy elem for class harvesting  
+`added` **md-fs:16px_lh:1.3** class chaining support 
+```css 
+  @media only screen and (min-width: 768px) 
+    .md-fs\:16px_lh\:1\.3 {font-size: 16px; line-height: 1.3;}
+```  
+`solved` **bg:lg-70ndg-prim-sec** linear gradient implementation  
+---
 `todo fix` **transition-delay** | multi transition fix required  
 `todo improv` unit testing  
 
@@ -327,6 +336,7 @@ implemented global default rules
     od: 'order',
     flxg: 'flex-grow',
     flxs: 'flex-shrink',
+    flxw: 'flx-wrap',
     flxb: 'flex-basis',
     flx: 'flex',
     as: 'align-self',
