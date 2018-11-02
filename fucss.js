@@ -516,7 +516,7 @@ fucss.riotUseXhrRes = function(){
 
 fucss.generateStyling = function(opts){
 
-  console.time('Fucss');
+  opts.debug && console.time('Fucss');
   var classNumber = 0, classDone = 0;
   var cssString = '';
   var cssMediaQueries = {
@@ -525,18 +525,32 @@ fucss.generateStyling = function(opts){
     lg: []
   };
   var cssMissing = [];
-
-  var classHarvestingMethodName = opts && opts.jsx
-    ? 'harvestClassesFromJsx'
-    : opts && opts.riot || !!window.riot
-      ? 'harvestClassesFromRiot'
+  
+  if(!opts.classes){
+    var classHarvestingMethodName = 
+      !opts ? 'harvestClassesFromHtml'
+      : opts.jsx ? 'harvestClassesFromJsx'
+      : opts.webpack ? 'harvestClassesFromWebpack'
+      : opts.riot || typeof window === 'object' && !!window.riot ? 'harvestClassesFromRiot' 
       : 'harvestClassesFromHtml';
-
-  var htmlString = (opts && (opts.jsx || opts.riot || opts.html)) || document.body.outerHTML;
-  if(opts.riot && opts.returnStyle)
-    htmlString = htmlString.replace(/\\'/g, "'");
-  fucss[classHarvestingMethodName](htmlString)
-    .forEach(function( className ){
+    
+    var htmlString = (opts && (opts.jsx || opts.riot || opts.html || opts.webpack)) || document.body.outerHTML;
+    
+    if((opts.riot || opts.jsx) && opts.returnStyle)
+      htmlString = htmlString.replace(/\\'/g, "'");
+    
+    fucss.classes = fucss[classHarvestingMethodName](htmlString, opts);
+    
+    if(opts.returnClasses)
+      return fucss.classes;
+  }
+  
+  fucss.styles = classesToStyle(opts.classes || fucss.classes, opts);
+  if(opts.returnStyle)
+    return fucss.styles;
+  
+  function classesToStyle(classes, opts){
+    classes.forEach(function( className ){
       classNumber++;
       
       var ruleObj = extractRuleValues(className);
@@ -547,7 +561,7 @@ fucss.generateStyling = function(opts){
         ruleObj.chain = ruleObj.chain.map(function(val){ return extractRuleValues(val) });
       
       //console.log(ruleObj);
-
+  
       var cssRule = generateCssRule(className, ruleObj);
       classDone++;
       
@@ -557,47 +571,46 @@ fucss.generateStyling = function(opts){
       ruleObj.mediaQuery
         ? cssMediaQueries[ruleObj.mediaQuery] = cssMediaQueries[ruleObj.mediaQuery] ? (cssMediaQueries[ruleObj.mediaQuery] + cssRule) : cssRule
         : cssString += cssRule;
-      });
-
-  //sets fucss.media queries at the end
-  Object.keys(cssMediaQueries).length
-    && Object.keys(cssMediaQueries).forEach(function(mediaName){
-      var rule = mediaName.indexOf('x') !== -1 ? 'max-width' : 'min-width';
-
-      if(cssMediaQueries[mediaName].length){
-        cssString += '@media only screen and (' + rule + ': ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
-      }
     });
-
-  //console.log(cssString);
-  if(opts && opts.returnStyle){
-    opts.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
-    opts.anim  ? cssString += fucss.generateAnimations()   : false;
-    return cssString;
-  }else{
-    fucss.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
-    fucss.fux   ? cssString += fucss.generateExtras()       : false;
-    fucss.anim  ? cssString += fucss.generateAnimations()   : false;
-    //console.log(document.querySelector('style'));
-    if(!document.querySelector('style')){
-      var css = document.createElement('style');
-      css.type = 'text/css';
-      css.appendChild(document.createTextNode(cssString));
-      document.getElementsByTagName("head")[0].appendChild(css);
+  
+    //sets fucss.media queries at the end
+    Object.keys(cssMediaQueries).length
+      && Object.keys(cssMediaQueries).forEach(function(mediaName){
+        var rule = mediaName.indexOf('x') !== -1 ? 'max-width' : 'min-width';
+  
+        if(cssMediaQueries[mediaName].length){
+          cssString += '@media only screen and (' + rule + ': ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
+        }
+      });
+    //console.log(cssString);
+    if(opts && opts.returnStyle){
+      opts.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
+      opts.anim  ? cssString += fucss.generateAnimations()   : false;
+      return cssString;
     }else{
-      document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
+      fucss.glob  ? cssString = '/** Fucss globals */ \n' + fucss.generateGlobalExtras() + '/** Fucss class rules */ \n' + cssString : false;
+      fucss.fux   ? cssString += fucss.generateExtras()       : false;
+      fucss.anim  ? cssString += fucss.generateAnimations()   : false;
+      //console.log(document.querySelector('style'));
+      if(!document.querySelector('style')){
+        var css = document.createElement('style');
+        css.type = 'text/css';
+        css.appendChild(document.createTextNode(cssString));
+        document.getElementsByTagName("head")[0].appendChild(css);
+      }else{
+        document.querySelector('style').innerHTML = cssString + document.querySelector('style').innerHTML;
+      }
+  
     }
-
+  
+    console.log('Classes: ' + classDone + ' / ' + classNumber);
+    opts.debug && console.timeEnd('Fucss');
+  
+    if(cssMissing.length)
+      console.warn('Used as full prop [ ' + cssMissing + ' ]');
+ 
   }
-
-  console.log('Classes: ' + classDone + ' / ' + classNumber);
-  console.timeEnd('Fucss');
-
-  if(cssMissing.length)
-    console.warn('Used as full prop [ ' + cssMissing + ' ]');
-    
-  //
-    
+  
   // from string to fucss array
   function extractRuleValues(className){
     
@@ -1011,39 +1024,84 @@ fucss.harvestClassesFromHtml = function(html){
   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
 }
 
-fucss.harvesttClassesFromRiot = function(riot){
+// fucss.harvestClassesFromJsx = function(jsx){
+//   var ptrn = (/(className=\"(.*?)\")|(classNames\(\{([\S\s]*?)\}\))|(className: \"(.*?)\"\,)|/ig);
+//   var arr;
+//   var allHarvestedClassNames = [];
+//   var cl;
+//   while ((arr = ptrn.exec(jsx))) {
+//     if(!arr) return;
+//     //gets all className class list
+//     if(arr[2]){
+//       cl = arr[2].split(' ');
+//       if(cl){
+//         allHarvestedClassNames = allHarvestedClassNames.concat(cl);
+//       }
+//     }
+//     //gets all classNames library class list
+//     else if(arr[4]){
+//       var classNamesList = arr[4].replace(/\r\n|\n|\r/gm, '').split(',');
+//       if(classNamesList && classNamesList.length){
+//         classNamesList.forEach(function(cl){
+//           if(!cl) return;
+//           cl = cl.split(':').shift();
+//           if(!cl) return;
+//           cl = cl.split("'");
+//           if(!cl || cl && cl.length < 2) return;
+//           cl = cl[1] && !!cl[1].length && cl[1].split(' ');
+//           if(!cl || cl && !cl.length) return;
 
-  var myRegexp = (/class[a-z]*?="(.*?)"/gi);
-  var myRegexp2 = (/{(.*?)}/gi);
-  var myRegexp3 = (/'(.*?)'/g);
-  var myArray, myArray2, myArray3;
+//           allHarvestedClassNames = allHarvestedClassNames.concat(cl);
+//         });
+//       }
+//     }
+//   }
+
+//   return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+// }
+
+fucss.harvestClassesFromJsx = function(string, opts){
+
+  // string = 'className="w:100pc"';
+  // console.log(string);
+  string = string.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ').replace(/[⁗]/g, '"');
+  var patternMain = (/className="(.*?)"/gi);
   var allHarvestedClassNames = [];
-
-  while((myArray = myRegexp.exec(riot.replace(/(\r\n|\n|\r)/gm, ''))) !== null) {
-    if(myArray[0].indexOf("'") >= 0){
-      while( (myArray2 = myRegexp2.exec(myArray[0])) !== null ){
-        strMerge(myArray[1].replace(myArray2[0], ''));
-        while( (myArray3 = myRegexp3.exec(myArray2[1])) !== null ){
-          strMerge(myArray3[1]);
-        }
-      }
-    } else
-      strMerge(myArray[1]);
-  }
+  
+  matchClassPattern(patternMain, string, function(result){
+    if(!result || !~result.indexOf(':'))
+      return;
+    allHarvestedClassNames = matchedClassPatternMerge(result, allHarvestedClassNames);
+  });
 
   return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
-  function strMerge(str){ allHarvestedClassNames = allHarvestedClassNames.concat(str.split(' ')) }
+}
+
+fucss.harvestClassesFromWebpack = function(string, opts){
+
+  // string = 'classNames: "w:100pc"';
+  var patternMain = (/className: "(.*?)",/gi);
+  var allHarvestedClassNames = [];
+  
+  matchClassPattern(patternMain, string, function(result){
+    if(!result || !~result.indexOf(':'))
+      return;
+    result = result.replace('" + " " + "', ' ');
+    allHarvestedClassNames = matchedClassPatternMerge(result, allHarvestedClassNames);
+  });
+
+  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
 }
 
 fucss.harvestClassesFromRiot = function(riot){
   // var patternMain = (/class[a-z]*="(.*?)"/gi);
-  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ').replace(/[⁗]/g, '"') //.replace(/data:image(.*)?==/g, '');
+  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ').replace(/[⁗]/g, '"'); //.replace(/data:image(.*)?==/g, '');
   var patternMain = (/class[a-z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
   var patternObj = (/{(.*?)}/gi);
   var patternInner = (/'(.*?)'/gi);
   var allHarvestedClassNames = [];
   
-  match(patternMain, riot, function(result){ 
+  matchClassPattern(patternMain, riot, function(result){ 
     if(!result)
       return;
     //console.log(result);
@@ -1051,78 +1109,50 @@ fucss.harvestClassesFromRiot = function(riot){
       return;
       
     if(!~result.indexOf("'"))
-      return strMerge(result);
+      return merge(result);
       
     if(!~result.indexOf('{')){
-      return match(patternInner, result, strMerge);
+      return matchClassPattern(patternInner, result, merge);
     }
     
     // console.log('WE START\n', result, '\n\n');
-    match(patternObj, result, function(res, rest){
+    matchClassPattern(patternObj, result, function(res, rest){
       result = result.replace(rest, '');
       //console.log('RESULT \n', result, '\n\n');
       // console.log('RES\n', res, '\n\n');
-      match(patternInner, res, strMerge);
-      match(patternInner, res, strMerge);
+      matchClassPattern(patternInner, res, merge);
+      matchClassPattern(patternInner, res, merge);
     });
-    return strMerge(result);
+    return merge(result);
   });
   
   return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf(v) === i } );
-  function strMerge(str){
-    if(!~str.indexOf(':')) 
-      return;
-    if(typeof str === 'string')
-      str = str.trim().split(' ');
-    allHarvestedClassNames = allHarvestedClassNames.concat(str);
-    return allHarvestedClassNames;
-  }
   
-  function match(pattern, str, cb, index){
-    var all, result = [], index = index || 1;
-    while(all = pattern.exec(str)){
-      result.push(all[index]);
-      cb && cb(all[index] || all[index+1], all[0])
-      //result += (' ' + all[index]);
-    }
-    return result;
-  }
+  function merge(str){ allHarvestedClassNames = matchedClassPatternMerge(str, allHarvestedClassNames); return allHarvestedClassNames; }
 }
 
-fucss.harvestClassesFromJsx = function(jsx){
-  var ptrn = (/(className=\"(.*?)\")|(classNames\(\{([\S\s]*?)\}\))/ig);
-  var arr;
-  var allHarvestedClassNames = [];
-  var cl;
-  while ((arr = ptrn.exec(jsx))) {
-    if(!arr) return;
-    //gets all className class list
-    if(arr[2]){
-      cl = arr[2].split(' ');
-      if(cl){
-        allHarvestedClassNames = allHarvestedClassNames.concat(cl);
-      }
-    }
-    //gets all classNames library class list
-    else if(arr[4]){
-      var classNamesList = arr[4].replace(/\r\n|\n|\r/gm, '').split(',');
-      if(classNamesList && classNamesList.length){
-        classNamesList.forEach(function(cl){
-          if(!cl) return;
-          cl = cl.split(':').shift();
-          if(!cl) return;
-          cl = cl.split("'");
-          if(!cl || cl && cl.length < 2) return;
-          cl = cl[1] && !!cl[1].length && cl[1].split(' ');
-          if(!cl || cl && !cl.length) return;
 
-          allHarvestedClassNames = allHarvestedClassNames.concat(cl);
-        });
-      }
-    }
+function matchClassPattern(pattern, str, cb, index){
+  var all, result = [], index = index || 1;
+  
+  while(all = pattern.exec(str)){
+    result.push(all[index]);
+    cb && cb(all[index] || all[index+1], all[0])
+    //result += (' ' + all[index]);
   }
+  
+  return result;
+}
 
-  return allHarvestedClassNames.filter (function (v, i, a) { return a.indexOf (v) == i });
+function matchedClassPatternMerge(str, classes){
+  
+  if(!~str.indexOf(':')) 
+    return;
+  if(typeof str === 'string')
+    str = str.trim().split(' ');
+  str = str.filter( s => ~s.indexOf(':') );
+  classes = classes.concat(str);
+  return classes;
 }
 
 fucss.generateGlobalExtras = function(){
@@ -1249,6 +1279,8 @@ fucss.grab = function(val, data){
   }
     
 }
+
+fucss.store = fucss.store || {};
 
 if(typeof module === 'object')
   module.exports = fucss;
