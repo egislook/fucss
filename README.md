@@ -1,12 +1,39 @@
 # FUCSS client & server styling generator  
-#### Fucss is fastest tool and method to write custom styling generator for riot, react and html.
+#### Fucss is fastest tool and method to write custom styling generator for riot, react, webpack and plain html.
 
-Fucss styling generator Hell YEAH!!!!
-client: https://cdn.jsdelivr.net/npm/riothing/riothing.js  
-server: `npm install --save fucss`
+Fucss styling generator Hell YEAH!!!!  
+client: https://cdn.jsdelivr.net/npm/fucss/fucss.js  
+server: `npm install --save fucss`  
+next: `npm install --save next-fucss`  
+fuico: https://github.com/noneedsystem/fuico
 
-Fuico icon library  
-https://github.com/noneedsystem/fuico
+
+## Example
+You just implement fucss to your project using only client `script` or server side options `fucss` | `next-fucss`
+
+#### button.js
+```javascript
+export default ({ text }) => (
+ <button className="p:15px-30px br:5px bs:1 bd:0 bg:prim c:white m:10px fl:r">{text}</button>
+);
+```
+#### output.css
+
+```css
+/** Fucss class rules */ 
+.p\:15px-30px{padding:15px 30px;}
+.br\:5px{border-radius:5px;}
+.bd\:0{border:0;}
+.bg\:prim{background:#DE3E3E;}
+.c\:white{color:#fff;}
+.m\:20px{margin:20px;}
+.hv-tf\:5px:hover{transform:5px;}
+.fl\:r{float:right;}
+.m\:50px{margin:50px;}
+```
+
+## #0.7.9
+`added` tools to generate jsx, webpack classes and styling separately
 
 ## #0.7.8
 `added` **fucss.grab** class generating function from objects. `fucss.grab({'p:20px': true} | (isTrue) => ({ 'p:20px': isTrue}), {isTrue: true})`  
@@ -16,8 +43,8 @@ https://github.com/noneedsystem/fuico
   @media only screen and (min-width: 768px) 
     .md-fs\:16px_lh\:1\.3 {font-size: 16px; line-height: 1.3;}
 ```  
+
 `solved` **bg:lg-70ndg-prim-sec** linear gradient implementation  
----
 `todo fix` **transition-delay** | multi transition fix required  
 `todo improv` unit testing  
 
