@@ -427,13 +427,13 @@
   		</footer>
 	  </main>
 
-	  <script src="https://rawgit.com/riot/riot/master/riot.min.js"></script>
 		<script type="riot/tag" src="testpub/app.html"></script>
 		<script src="https://rawgit.com/riot/riot/master/riot+compiler.min.js"></script>
 
 		<script>
-		  riot.compile('./testpub/comp.html', function(js){
-				let style = fucss.generateStyling({html: js, returnStyle: true, glob: true, mediaQueries: false});
+		  riot.compile('./testpub/test.jsx', function(js){
+		    console.log('COMPILE');
+				let style = fucss.generateStyling({ riot: js, returnClasses: true, glob: false, mediaQueries: false});
 				// console.log(js);
 				console.log(style);
 			});

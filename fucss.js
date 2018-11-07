@@ -1093,10 +1093,14 @@ fucss.harvestClassesFromWebpack = function(string, opts){
   return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
 }
 
-fucss.harvestClassesFromRiot = function(riot){
-  // var patternMain = (/class[a-z]*="(.*?)"/gi);
-  riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' ').replace(/[⁗]/g, '"'); //.replace(/data:image(.*)?==/g, '');
-  var patternMain = (/class[a-z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
+fucss.harvestClassesFromRiot = function(riot, opts){
+  
+  riot = riot.replace(/[⁗]/g, '"');
+  
+  if(opts.escape)
+    riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' '); //.replace(/data:image(.*)?==/g, '');
+  
+  var patternMain = (/class[a-zA-Z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
   var patternObj = (/{(.*?)}/gi);
   var patternInner = (/'(.*?)'/gi);
   var allHarvestedClassNames = [];
