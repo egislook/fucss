@@ -1214,7 +1214,7 @@ fucss.generateAnimations = function(){
   loader['@keyframes hide']     = 'to { position: absolute; visibility: hidden; }';
   loader['@keyframes land']     = '0% { opacity: 0.3; transform: translateY(-3rem); } to { opacity: 1; transform: translateY(0); }';
   loader['@keyframes dash']     = 'to { stroke-dashoffset: 0; }';
-  loader['@keyframes marquee']  = '0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }';
+  loader['@keyframes marquee']  = '0% { transform: translateX(0); } 100% { transform: translateX(-50%); }';
   loader['@keyframes bounce']   = [
     '0% { transform: scale(1,1) translateY(0); }',
     '10% { transform: scale(1.1,.9) translateY(0); }', 
