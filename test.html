@@ -433,7 +433,7 @@
 		<script>
 		  riot.compile('./testpub/test.jsx', function(js){
 		    console.log('COMPILE');
-				let style = fucss.generateStyling({ riot: js, returnClasses: true, glob: false, mediaQueries: false});
+				let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
 				// console.log(js);
 				console.log(style);
 			});

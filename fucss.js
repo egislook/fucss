@@ -536,8 +536,8 @@ fucss.generateStyling = function(opts){
     
     var htmlString = (opts && (opts.jsx || opts.riot || opts.html || opts.webpack)) || document.body.outerHTML;
     
-    if((opts.riot || opts.jsx) && opts.returnStyle)
-      htmlString = htmlString.replace(/\\'/g, "'");
+    // if((opts.riot || opts.jsx) && opts.returnStyle)
+    //   htmlString = htmlString.replace(/\\'/g, "'");
     
     fucss.classes = fucss[classHarvestingMethodName](htmlString, opts);
     
@@ -1074,7 +1074,7 @@ fucss.harvestClassesFromJsx = function(string, opts){
     allHarvestedClassNames = matchedClassPatternMerge(result, allHarvestedClassNames);
   });
 
-  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
+  return filterDuplicates(allHarvestedClassNames);
 }
 
 fucss.harvestClassesFromWebpack = function(string, opts){
@@ -1090,7 +1090,7 @@ fucss.harvestClassesFromWebpack = function(string, opts){
     allHarvestedClassNames = matchedClassPatternMerge(result, allHarvestedClassNames);
   });
 
-  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf (v) == i } );
+  return filterDuplicates(allHarvestedClassNames);
 }
 
 fucss.harvestClassesFromRiot = function(riot, opts){
@@ -1130,11 +1130,14 @@ fucss.harvestClassesFromRiot = function(riot, opts){
     return merge(result);
   });
   
-  return allHarvestedClassNames.filter( function(v, i, a){ return a.indexOf(v) === i } );
+  return filterDuplicates(allHarvestedClassNames);
   
   function merge(str){ allHarvestedClassNames = matchedClassPatternMerge(str, allHarvestedClassNames); return allHarvestedClassNames; }
 }
 
+function filterDuplicates(arr){
+  return arr.filter( function(v, i, a){ return a.indexOf(v) === i } );
+}
 
 function matchClassPattern(pattern, str, cb, index){
   var all, result = [], index = index || 1;
@@ -1150,11 +1153,17 @@ function matchClassPattern(pattern, str, cb, index){
 
 function matchedClassPatternMerge(str, classes){
   
+  fucss.incorrect = fucss.incorrect || [];
   if(!~str.indexOf(':')) 
     return;
   if(typeof str === 'string')
     str = str.trim().split(' ');
-  str = str.filter( s => ~s.indexOf(':') );
+    
+  str = str.filter( s => {
+    var validClass = ~s.indexOf(':') && !~s.indexOf('>') && !~s.indexOf('"');
+    !validClass && fucss.incorrect.push(s) && console.log('FUCSS incorrect:', s);
+    return validClass;
+  });
   classes = classes.concat(str);
   return classes;
 }
@@ -1285,6 +1294,7 @@ fucss.grab = function(val, data){
 }
 
 fucss.store = fucss.store || {};
+fucss.incorrect = [];
 
 if(typeof module === 'object')
   module.exports = fucss;
