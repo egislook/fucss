@@ -1088,7 +1088,7 @@ fucss.harvestClassesFromWebpack = function(string, opts){
   var patternMain = (/className: "(.*?)",/gi);
   var allHarvestedClassNames = [];
   
-  matchClassPattern(patternMain, string, function(result){
+  matchClasrsPattern(patternMain, string, function(result){
     if(!result || !~result.indexOf(':'))
       return;
     result = result.replace('" + " " + "', ' ');
@@ -1131,6 +1131,7 @@ fucss.harvestClassesFromRiot = function(riot, opts){
       result = result.split(',');
       return result.map(function(res){ 
         var r = res.split(patternObjSplit);
+        r = ~r[0].indexOf(':') ? r[0] : r[1];
         matchClassPattern(patternInner, r, merge);
       });
     }
