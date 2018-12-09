@@ -1088,7 +1088,7 @@ fucss.harvestClassesFromWebpack = function(string, opts){
   var patternMain = (/className: "(.*?)",/gi);
   var allHarvestedClassNames = [];
   
-  matchClasrsPattern(patternMain, string, function(result){
+  matchClassPattern(patternMain, string, function(result){
     if(!result || !~result.indexOf(':'))
       return;
     result = result.replace('" + " " + "', ' ');
@@ -1105,7 +1105,7 @@ fucss.harvestClassesFromRiot = function(riot, opts){
   if(opts.escape)
     riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' '); //.replace(/data:image(.*)?==/g, '');
   
-  var patternMain = (/class[a-zA-Z]*[ ]*=[ ]*"(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
+  var patternMain = (/class[a-zA-Z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
   var patternObjSplit = ': ';
   var patternObj = (/{(.*?)}/gi);
   var patternInner = (/'(.*?)'/gi);
@@ -1127,11 +1127,15 @@ fucss.harvestClassesFromRiot = function(riot, opts){
     
     // console.log({ result });
     if(~result.indexOf(patternObjSplit)){
-      // console.log('match', { patternObjSplit }, result.substring(0, 10));
-      result = result.split(',');
+      
+      result = result.split(', ');
+      
       return result.map(function(res){ 
         var r = res.split(patternObjSplit);
         r = ~r[0].indexOf(':') ? r[0] : r[1];
+        
+        // var numberio = 100; while(numberio){ console.log('match', {r}); numberio--; }
+        
         matchClassPattern(patternInner, r, merge);
       });
     }
@@ -1178,6 +1182,10 @@ function matchedClassPatternMerge(str, classes){
     !validClass && fucss.incorrect.push(s) && false && console.log('FUCSS incorrect:', s);
     return validClass;
   });
+  if(!classes){
+    console.log('EMPTY');
+    return [];
+  }
   // console.log({ classes });
   classes = classes.concat(str);
   return classes;
