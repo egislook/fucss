@@ -52,6 +52,19 @@ analysis.map(item => {
 			return 
 		}
 	})
+});
+
+const classNamesSomething = {
+  classMidColumnTextTitle: 'fw:600 ta:l c:black100 fs:85pc',
+  classMidColumnTextAddress: 'ta:l c:black100 fs:85pc fw:500',
+  classMidColumnTextStatus: 'ta:l c:red fs:85pc fw:500'
+}
+
+const classNameTest = "ta:l c:red fs:85pc fw:500"
+
+const classNames = (test) => fucss({
+  'bg:black p:2px': test === 'test',
+  'bd-clp:clp': true
 })
 
 console.log(isDataValid)

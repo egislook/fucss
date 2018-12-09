@@ -169,6 +169,7 @@ fucss.properties = {
   ve: 'vector-effect',
   aps: 'animation-play-state',
   tan: 'text-anchor',
+  wb: 'word-break',
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];
@@ -208,6 +209,8 @@ fucss.addons = {
   //version 0.7.8
   da: 'dasharray',
   do: 'dashoffset',
+  clp: 'collapse'.
+  
   
 };
 
@@ -307,7 +310,10 @@ fucss.values = {
   bob: 'bounding-box',
   a: 'auto',
   s: 'start',
-  e: 'end'
+  e: 'end',
+  //version 0.8...
+  clp: 'collapse',
+  ba: 'break-all'
 };
 
 //version 0.6.8
@@ -1100,32 +1106,42 @@ fucss.harvestClassesFromRiot = function(riot, opts){
   if(opts.escape)
     riot = riot.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s+)/g, ' '); //.replace(/data:image(.*)?==/g, '');
   
-  var patternMain = (/class[a-zA-Z]*="(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
+  var patternMain = (/class[a-zA-Z]*[ ]*=[ ]*"(.*?)"|class[a-zA-Z]*[=> ({a-zA-Z,})]*{(.*?)}/gi);
+  var patternObjSplit = ': ';
   var patternObj = (/{(.*?)}/gi);
   var patternInner = (/'(.*?)'/gi);
   var allHarvestedClassNames = [];
   
-  matchClassPattern(patternMain, riot, function(result){ 
+  matchClassPattern(patternMain, riot, function(result){
+    
     if(!result)
       return;
-    //console.log(result);
+    
+    // if(~result.indexOf('return'))
+    //   return;
+    // console.log({ result });
     if(!~result.indexOf(':'))
       return;
       
     if(!~result.indexOf("'"))
       return merge(result);
-      
-    if(!~result.indexOf('{')){
-      return matchClassPattern(patternInner, result, merge);
-    }
     
+    // console.log({ result });
+    if(~result.indexOf(patternObjSplit)){
+      // console.log('match', { patternObjSplit }, result.substring(0, 10));
+      result = result.split(',');
+      return result.map(function(res){ 
+        var r = res.split(patternObjSplit);
+        matchClassPattern(patternInner, r, merge);
+      });
+    }
     // console.log('WE START\n', result, '\n\n');
     matchClassPattern(patternObj, result, function(res, rest){
       result = result.replace(rest, '');
       //console.log('RESULT \n', result, '\n\n');
       // console.log('RES\n', res, '\n\n');
       matchClassPattern(patternInner, res, merge);
-      matchClassPattern(patternInner, res, merge);
+      // matchClassPattern(patternInner, res, merge);
     });
     return merge(result);
   });
@@ -1141,11 +1157,9 @@ function filterDuplicates(arr){
 
 function matchClassPattern(pattern, str, cb, index){
   var all, result = [], index = index || 1;
-  
   while(all = pattern.exec(str)){
     result.push(all[index]);
     cb && cb(all[index] || all[index+1], all[0])
-    //result += (' ' + all[index]);
   }
   
   return result;
@@ -1161,9 +1175,10 @@ function matchedClassPatternMerge(str, classes){
     
   str = str.filter( s => {
     var validClass = ~s.indexOf(':') && !~s.indexOf('>') && !~s.indexOf('"');
-    !validClass && fucss.incorrect.push(s) && console.log('FUCSS incorrect:', s);
+    !validClass && fucss.incorrect.push(s) && false && console.log('FUCSS incorrect:', s);
     return validClass;
   });
+  // console.log({ classes });
   classes = classes.concat(str);
   return classes;
 }
