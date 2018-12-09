@@ -209,9 +209,8 @@ fucss.addons = {
   //version 0.7.8
   da: 'dasharray',
   do: 'dashoffset',
-  clp: 'collapse'.
-  
-  
+  //version 0.8.0
+  clp: 'collapse'
 };
 
 fucss.values = {
