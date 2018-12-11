@@ -47,6 +47,7 @@ fucss.states = {
   //version 0.6.8
   rt: 'root',
   root: 'root',
+  vld: 'valid',
 };
 
 fucss.properties = {

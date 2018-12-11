@@ -1,12 +1,16 @@
 import { fucss } from 'next-fucss/utils';
 
+const classNameSelect = (active) => fucss({
+  'vld-bd-c:ts': true,
+});
+
 const classNameData = ({ isGreen, isYellow, color, bold = false, mobile }) => fucss({
   'bd-w:1px bd-c:greya5 ta:l p:12px-10px va:m': true,
   'c:green': color === 'green',
   'c:yellow': isYellow,
   'fw:600': bold,
   'mdx-dp:n': !mobile
-})
+});
 
 export default ({ data, fields }) => {
   
