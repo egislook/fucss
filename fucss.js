@@ -313,7 +313,8 @@ fucss.values = {
   e: 'end',
   //version 0.8...
   clp: 'collapse',
-  ba: 'break-all'
+  ba: 'break-all',
+  cbx: 'content-box',
 };
 
 //version 0.6.8

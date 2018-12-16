@@ -1,5 +1,9 @@
 import { fucss } from 'next-fucss/utils';
 
+const classNames = () => fucss({
+  'bd:1px-sld-green': true
+})
+
 const classNameSelect = (active) => fucss({
   'vld-bd-c:ts': true,
 });
