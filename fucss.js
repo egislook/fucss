@@ -1158,7 +1158,7 @@ fucss.harvestClassesFromRiot = function(riot, opts){
 }
 
 function filterDuplicates(arr){
-  return arr.filter( function(v, i, a){ return a.indexOf(v) === i } );
+  return Array.isArray(arr) && arr.filter( function(v, i, a){ return a.indexOf(v) === i } ) || [];
 }
 
 function matchClassPattern(pattern, str, cb, index){
@@ -1172,6 +1172,9 @@ function matchClassPattern(pattern, str, cb, index){
 }
 
 function matchedClassPatternMerge(str, classes){
+  
+  if(!str)
+    return;
   
   fucss.incorrect = fucss.incorrect || [];
   if(!~str.indexOf(':')) 
