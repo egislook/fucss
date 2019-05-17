@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/noneedsystem/fuico/0.0.2/style.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+
+  <script>
+    var fucssValues = {
+      main: '#ffcb05',
+      grey: '#dadada',
+    };
+
+    var fucssExtras = {
+      'fux-grd-blue': 'background: linear-gradient(to right, rgba(25,32,68,0.9) 0%, rgba(25,32,68,0) 100%);'
+    };
+
+    var fucssInit = false;
+    
+  </script>
+  <script src="./fucss.js"></script>
+  <!--<script src="fucss.js"></script>-->
+  <title>Just fucss testing file</title>
+  <style>
+  </style>
+
+</head>
+
+<body>
+
+		<script>
+		  const classes = 'p:15px-30px br:5px bs:1 bd:0 bg:prim c:white m-t:30px hv-bg:000000_c:blue'.split(' ');
+			// let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
+			let style = fucss.generateStyling({ classes, returnStyle: true, onlyRules: true, escape: true });
+			console.log(style);
+		//   riot.compile('./testpub/test2.jsx', function(js){
+		//     console.log('COMPILE');
+		//     const classess = 'p:15px-30px br:5px bs:1 bd:0 bg:prim c:white m-t:30px hv-bg:green'.split(' ');
+		// 		// let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
+		// 		let style = fucss.generateStyling({ classess, returnStyle: true, onlyRules: true, escape: true, glob: false });
+		// 		// console.log(js);
+		// 		console.log(style);
+		// 	});
+		</script>
+
+</body>
+
+</html>

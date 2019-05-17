@@ -924,11 +924,13 @@ fucss.generateStyling = function(opts){
     className = className.split(',').join('\\,');
 
     rules += generateSingleRule(prop, value, props);
+    var targetStr = '&';
 
     if(target && target.length){
       var allIndex = target.indexOf('all');
       if(~allIndex) target[allIndex] = '> *';
-      className = className + ' ' + target.join(' ');
+      targetStr = target.join(' ');
+      className = className + ' ' + targetStr;
     }
     
     if(chain.length)
@@ -936,8 +938,10 @@ fucss.generateStyling = function(opts){
         rules += generateSingleRule(val.prop, val.value, val.props)
       });
       
+    // console.log({ state, rules });
+      
     if(opts.onlyRules)
-      return rules;
+      return state ? (targetStr + ':' + state + '{ ' + rules + ' }') : rules;
       
     return '.' + className + '{' + rules + '}\n';
   }

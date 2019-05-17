@@ -15,7 +15,7 @@
       'fux-grd-blue': 'background: linear-gradient(to right, rgba(25,32,68,0.9) 0%, rgba(25,32,68,0) 100%);'
     };
 
-    var fucssInit = true;
+    var fucssInit = false;
     
   </script>
   <script src="./fucss.js"></script>
@@ -431,14 +431,18 @@
 		<script src="https://rawgit.com/riot/riot/master/riot+compiler.min.js"></script>
 
 		<script>
-		  riot.compile('./testpub/test2.jsx', function(js){
-		    console.log('COMPILE');
-		    const classess = [ 'bd:1px-sld-green', 'vld-bd-c:ts', 'c:green' ];
-				// let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
-				let style = fucss.generateStyling({ classess, returnStyle: true, onlyRules: true, escape: true, glob: false });
-				// console.log(js);
-				console.log(style);
-			});
+		  const classess = 'p:15px-30px br:5px bs:1 bd:0 bg:prim c:white m-t:30px hv-bg:000000'.split(' ');
+			// let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
+			let style = fucss.generateStyling({ classess, returnStyle: true, onlyRules: true, escape: true, glob: false });
+			console.log(classess, style);
+		//   riot.compile('./testpub/test2.jsx', function(js){
+		//     console.log('COMPILE');
+		//     const classess = 'p:15px-30px br:5px bs:1 bd:0 bg:prim c:white m-t:30px hv-bg:green'.split(' ');
+		// 		// let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
+		// 		let style = fucss.generateStyling({ classess, returnStyle: true, onlyRules: true, escape: true, glob: false });
+		// 		// console.log(js);
+		// 		console.log(style);
+		// 	});
 		</script>
 
 </body>
