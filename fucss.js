@@ -522,7 +522,7 @@ fucss.riotUseXhrRes = function(){
 }
 
 fucss.generateStyling = function(opts){
-  opts = opts || {};
+  opts = opts || new Object();
   opts.debug && console.time('Fucss');
   var classNumber = 0, classDone = 0;
   var cssString = '';
