@@ -433,7 +433,9 @@
 		<script>
 		  riot.compile('./testpub/test2.jsx', function(js){
 		    console.log('COMPILE');
-				let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
+		    const classess = [ 'bd:1px-sld-green', 'vld-bd-c:ts', 'c:green' ];
+				// let style = fucss.generateStyling({ riot: js, returnClasses: true, escape: true, glob: false, mediaQueries: false});
+				let style = fucss.generateStyling({ classess, returnStyle: true, onlyRules: true, escape: true, glob: false });
 				// console.log(js);
 				console.log(style);
 			});

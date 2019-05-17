@@ -569,7 +569,7 @@ fucss.generateStyling = function(opts){
       
       //console.log(ruleObj);
   
-      var cssRule = generateCssRule(className, ruleObj);
+      var cssRule = generateCssRule(className, ruleObj, opts);
       classDone++;
       
       //if(prop.indexOf('transform') !== -1) console.log(prop, props, value);
@@ -898,7 +898,9 @@ fucss.generateStyling = function(opts){
     return prop.join('-');
   }
 
-  function generateCssRule(className, ruleObj){
+  function generateCssRule(className, ruleObj, opts){
+    
+    // console.log(opts);
     
     var prop  = ruleObj.prop, 
       props   = ruleObj.props, 
@@ -933,6 +935,9 @@ fucss.generateStyling = function(opts){
       chain.forEach(function(val){
         rules += generateSingleRule(val.prop, val.value, val.props)
       });
+      
+    if(opts.onlyRules)
+      return rules;
       
     return '.' + className + '{' + rules + '}\n';
   }
