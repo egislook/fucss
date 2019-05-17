@@ -476,16 +476,16 @@ if(typeof window === 'object'){
   !!window.fucssColors && Object.assign(fucss.colors, window.fucssColors);
 }
 
-if(typeof window === 'object'){
-  window.onload=function(){
+// if(typeof window === 'object'){
+//   window.onload=function(){
 
-    //initiating the generator
-    fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
-    fucss.init && !window.riot && fucss.generateStyling();
-    //fucss.init && !!window.riot && fucss.riotExtractNGenerate();
-    fucss.init && !!window.riot && fucss.riotUseXhrRes();
-  };
-}
+//     //initiating the generator
+//     fucss.watch && setInterval(fucss.generateStyling, fucss.watch);
+//     fucss.init && !window.riot && fucss.generateStyling();
+//     //fucss.init && !!window.riot && fucss.riotExtractNGenerate();
+//     fucss.init && !!window.riot && fucss.riotUseXhrRes();
+//   };
+// }
 
 fucss.riotExtractNGenerate = function(){
   var _tags = document.querySelectorAll('script[type="riot/tag"');
@@ -522,7 +522,7 @@ fucss.riotUseXhrRes = function(){
 }
 
 fucss.generateStyling = function(opts){
-  opts = opts || new Object();
+  opts = opts || {};
   opts.debug && console.time('Fucss');
   var classNumber = 0, classDone = 0;
   var cssString = '';
