@@ -171,6 +171,11 @@ fucss.properties = {
   aps: 'animation-play-state',
   tan: 'text-anchor',
   wb: 'word-break',
+  
+  bds: 'border-spacing',
+  bdc: 'border-collapse',
+  ec: 'empty-cells',
+  tof: 'text-overflow'
 };
 
 fucss.units = ['px', 'em', 'pc', 'vh', 'vw', 'dg', 's'];
@@ -211,7 +216,8 @@ fucss.addons = {
   da: 'dasharray',
   do: 'dashoffset',
   //version 0.8.0
-  clp: 'collapse'
+  clp: 'collapse',
+  spc: 'spacing',
 };
 
 fucss.values = {
@@ -315,6 +321,8 @@ fucss.values = {
   clp: 'collapse',
   ba: 'break-all',
   cbx: 'content-box',
+  
+  ell: 'ellipsis'
 };
 
 //version 0.6.8
@@ -1212,10 +1220,10 @@ fucss.generateGlobalExtras = function(){
               font-family: "Helvetica Neue", "Calibri Light", Roboto, sans-serif;letter-spacing: 0.02em;\
               -webkit-font-smoothing: antialiased;text-rendering: optimizeLegibility;',
     "*":    'outline: 0; padding: 0; box-sizing: border-box; margin: 0; border-style: solid; outline-style: solid; border-width: 0; vertical-align: baseline;',
-    '*:not([class*="jc\\:"]) > *': 'margin: 0 auto;',
+    // '*:not([class*="jc\\:"]) > *': 'margin: 0 auto;',
     // ".dp\\:flx > *": 'margin: 0;',
     "a":    'text-decoration: none; color: inherit;',
-    "a, span, img, button, i, label": 'display: inline-block; vertical-align: middle;',
+    "a, span, img, button, i, label": 'display: inline-block;',
     "button, a, i, label, img": 'cursor: pointer; font-style: normal;',
     "input, button, select, option, textarea": 'font-size: 100%; font-family: inherit;',
     "::selection": 'background: ' + fucss.colors.prim + '; color: ' + fucss.colors.white + ';',
