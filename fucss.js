@@ -24,9 +24,11 @@ fucss.media = {
   sm: 400,
   md: 768,
   lg: 1024,
+  xl: 1280,
   smx: 401,
   mdx: 769,
   lgx: 1025,
+  xlx: 1281
 };
 
 fucss.states = {
