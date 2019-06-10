@@ -1,6 +1,6 @@
 {
   "name": "fucss",
-  "version": "0.8.14",
+  "version": "0.8.15",
   "description": "Fucss is fastest tool and method to write custom styling generator for riot, react and html.",
   "main": "fucss.js",
   "scripts": {
