@@ -594,7 +594,7 @@ fucss.generateStyling = function(opts){
     //sets fucss.media queries at the end
     Object.keys(cssMediaQueries).length
       && Object.keys(cssMediaQueries).forEach(function(mediaName){
-        var rule = mediaName.indexOf('x') !== -1 ? 'max-width' : 'min-width';
+        var rule = (mediaName.indexOf('x') === mediaName.length - 1) ? 'max-width' : 'min-width';
   
         if(cssMediaQueries[mediaName].length){
           cssString += '@media only screen and (' + rule + ': ' + fucss.media[mediaName] + 'px) {\n' + cssMediaQueries[mediaName] + '}\n';
