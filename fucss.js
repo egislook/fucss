@@ -539,7 +539,8 @@ fucss.generateStyling = function(opts){
   var cssMediaQueries = {
     sm: [],
     md: [],
-    lg: []
+    lg: [],
+    xl: []
   };
   var cssMissing = [];
   
