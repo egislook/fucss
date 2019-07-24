@@ -1207,10 +1207,7 @@ function matchedClassPatternMerge(str, classes){
     !validClass && fucss.incorrect.push(s) && false && console.log('FUCSS incorrect:', s);
     return validClass;
   });
-  if(!classes){
-    console.log('EMPTY');
-    return [];
-  }
+  if(!classes){ return []; }
   // console.log({ classes });
   classes = classes.concat(str);
   return classes;
