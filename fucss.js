@@ -1299,7 +1299,7 @@ fucss.xhrMiddle = function(fn){
     realXHR.addEventListener('readystatechange', function() {
       if(realXHR.readyState==4 && realXHR.status==200){
         fn && fn({
-          text: realXHR.responseText,
+          text: realXHR.responseType === 'blob' ? realXHR.statusText : realXHR.responseText,
           url:  realXHR.responseURL,
         }, realXHR)
       }
